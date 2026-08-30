@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import Reveal from "@/components/Reveal";
 import FloatingIllust from "@/components/FloatingIllust";
 import SocialLinks from "@/components/SocialIcons";
-import { CHORD_TOOL_PATH, IMAIKE_FORM_URL, IMAIKE_PATH } from "@/components/SiteHeader";
+import { CHORD_TOOL_PATH, IMAIKE_FORM_URL, IMAIKE_PATH, TRIAL_FORM_URL } from "@/components/SiteHeader";
 import { Curve, Equalizer, Headphones, SingleNote } from "@/components/Illustrations";
 
 // サイトマップは全ページ共通。トップ内のアンカーは下層からも辿れるよう絶対パスで書く
@@ -21,16 +21,14 @@ const FOOTER_LINKS = [
   { href: "/privacypolicy/", label: "プライバシーポリシー", en: "PRIVACY" },
 ];
 
-const MAIL = "info@hellojazzacademy.com";
-
 // 締めのCTAだけは、いま見ているページで売っているものに合わせて差し替える
 const ONLINE_CTA = {
   heading: ["はじめの一音を、", "いっしょに鳴らしませんか。"],
   lead: "30分の体験レッスンでは、レッスンの雰囲気の確認はもちろん、いま弾けること・弾きたい曲・お悩みをお聞かせください。楽器がなくても構いません。",
   button: "体験レッスンに申し込む",
   price: "30min ¥1,500",
-  href: `mailto:${MAIL}?subject=${encodeURIComponent("体験レッスンのお申し込み")}`,
-  external: false,
+  href: TRIAL_FORM_URL,
+  external: true,
   note: ["レッスンはZoomまたはFaceTime。", "お支払いはSquare請求書にて承ります。"],
 };
 
@@ -80,7 +78,7 @@ export default function SiteFooter() {
               </p>
             </Reveal>
 
-            <Reveal delay={140} className="mt-9 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-7">
+            <Reveal delay={140} className="mt-9">
               <a
                 href={cta.href}
                 {...(cta.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
@@ -88,12 +86,6 @@ export default function SiteFooter() {
               >
                 {cta.button}
                 <span className="font-en text-sm font-medium text-violet">{cta.price}</span>
-              </a>
-              <a
-                href={`mailto:${MAIL}`}
-                className="font-en text-sm tracking-[0.14em] text-paper/80 underline decoration-cyan/60 underline-offset-[6px] transition-opacity duration-200 hover:opacity-60"
-              >
-                {MAIL}
               </a>
             </Reveal>
           </div>

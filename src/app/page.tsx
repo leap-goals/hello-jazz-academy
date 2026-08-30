@@ -4,7 +4,7 @@ import Reveal from "@/components/Reveal";
 import FloatingIllust from "@/components/FloatingIllust";
 import PaymentBrands from "@/components/PaymentBrands";
 import SectionLabel from "@/components/SectionLabel";
-import { IMAIKE_PATH } from "@/components/SiteHeader";
+import { IMAIKE_PATH, TRIAL_FORM_URL } from "@/components/SiteHeader";
 import {
   BeamedNotes,
   Curve,
@@ -81,26 +81,27 @@ const RATIOS = [
   },
 ];
 
+// 旧サイト(online.md)の文言をそのまま採用。体験レッスンの料金だけ現行の¥1,500に更新している
 const FLOW_STEPS = [
   {
     en: "APPLY",
-    title: "フォームより お申し込み",
-    body: "申し込み確認後、ご希望の連絡方法より、日程調整のご連絡を差し上げます。",
+    title: "フォームよりお申し込み",
+    body: "体験レッスンをご希望の方は、問い合わせフォームからお申し込みください。お申し込み確認後、希望の連絡方法に基づいて、アンケートと日程調整のご連絡を差し上げます。",
   },
   {
     en: "MAIL",
     title: "メールを確認",
-    body: "入力したメールアドレス宛に体験レッスンの料金を簡単にウェブ決済可能な請求書をお送りします。お支払い確認後、予約が完了となります。",
+    body: "ご登録いただいたメールアドレス宛に、体験レッスンの料金を簡単に決済できるウェブ決済(体験レッスン費用¥1,500)の案内をお送りします。お支払いが確認され次第、予約が確定しますので、メールを必ずご確認ください。",
   },
   {
     en: "LESSON",
     title: "体験レッスン当日",
-    body: "レッスンの開始時間になったら、ZOOMにアクセスし、マイクとカメラをオンにしてください。Facetimeの場合は、講師より通話致します。",
+    body: "レッスン開始時間になりましたら、事前にお伝えしたZOOMリンクにアクセスし、マイクとカメラをオンにしてください。Facetimeをご利用の場合は、講師からの通話をお待ちください。初めての方でも安心してご参加いただけます。",
   },
   {
     en: "JOIN",
     title: "入会申し込み",
-    body: "体験レッスン終了後、入会申し込みフォームを送らせて頂きます。その後、初回レッスンのご案内をささせて頂きます。",
+    body: "体験レッスン終了後、入会申し込みフォームをお送りいたします。入会手続きが完了次第、初回レッスンの日程や詳細をご案内いたします。",
   },
 ];
 
@@ -298,7 +299,7 @@ export default function Home() {
             </p>
           </Reveal>
           <Reveal delay={340} className="mt-10 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-8">
-            <a href="#contact" className="btn btn-primary text-base">
+            <a href={TRIAL_FORM_URL} target="_blank" rel="noopener noreferrer" className="btn btn-primary text-base">
               体験レッスンに申し込む
               <span className="font-en text-sm font-medium text-paper/75">30min ¥1,500</span>
             </a>
@@ -586,7 +587,7 @@ export default function Home() {
               </Reveal>
               <Reveal delay={200}>
                 <p className="mt-8 font-body text-sm leading-9 text-ink-soft md:text-base md:leading-10">
-                  幼少期から音楽に親しみ、11歳からギターを始め、ポップスやブルースを中心に演奏。高校卒業後にジャズピアノと出会い、後藤浩二氏に師事。さらにPeter
+                  幼少期から音楽に親しみ、11歳からギターを始め、ポップスやブルースを中心に演奏。高校卒業後にジャズピアノと出会い、後藤浩二氏に師事。さらに、Peter
                   Martin氏から学び、音楽の幅を広げる。現在はジャズを中心に、名古屋のライブハウスや四日市ジャズフェスティバルなどのイベントに出演するほか、オリジナル曲の作曲にも積極的に取り組んでいる。
                 </p>
                 <p className="mt-6 font-body text-sm leading-9 text-ink-soft md:text-base">
@@ -631,7 +632,7 @@ export default function Home() {
                 />
                 <div className="relative aspect-[4/5] w-full overflow-hidden border-2 border-ink">
                   <Image
-                    src="/images/teacher-risa.jpeg"
+                    src="/images/teacher-risaki.jpeg"
                     alt="河地里咲先生"
                     fill
                     sizes="(min-width: 768px) 40vw, 100vw"
@@ -645,15 +646,16 @@ export default function Home() {
               <Reveal delay={120}>
                 <Badge tone="paused">受付休止中</Badge>
                 <h3 className="mt-6 font-display text-2xl font-bold text-ink md:text-3xl">
-                  河地 里咲
+                  河地里咲
                 </h3>
                 <p className="mt-2 font-en text-sm tracking-[0.2em] text-ink-soft">
-                  RISA KAWACHI — FOUNDER
+                  RISAKI KAWACHI
                 </p>
               </Reveal>
+              {/* 旧サイト本文からの書き起こし(WebFetchで現行公開ページを確認済み) */}
               <Reveal delay={200}>
                 <p className="mt-8 font-body text-sm leading-9 text-ink-soft md:text-base md:leading-10">
-                  4歳からエレクトーンを始め、その後ピアノへと進む。名古屋音楽大学の音楽療法学科に進学するも、本格的にジャズを学ぶために2年目でジャズポピュラーコース・ジャズピアノ専攻へ転科。在学中、ジャズ・即興・作曲アレンジの分野で著名な水野修平氏に師事。さらに馬淵明彦氏からダルクローズ・リトミックを学び、幼児教育への理解を一層深める。現在はハロージャズアカデミーの主宰兼講師。
+                  4歳からエレクトーンを始め、その後ピアノへと進む。名古屋音楽大学の音楽療法学科に初めは進学するも、本格的にジャズを学ぶために2年目でジャズポピュラーコース、ジャズピアノ専攻へと転科。在学中、ジャズ、即興、作曲アレンジの分野で著名な水野修平氏に師事。さらに、馬淵明彦氏からダルクローズリトミックを学び、幼児教育への理解を一層深める。現在は、ハロージャズアカデミーの主宰兼講師。
                 </p>
                 <p className="mt-6 border-l-2 border-magenta pl-5 font-body text-sm leading-9 text-ink">
                   現在は休業中のため、対面・オンラインともに新規レッスンの受付を休止しています。再開の際は「お知らせ」でご案内します。

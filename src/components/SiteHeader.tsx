@@ -27,6 +27,9 @@ export const CHORD_TOOL_PATH = "/tools/chord-scale-analyzer";
 // 今池の対面レッスンの申し込みはHubSpotのフォームで受ける
 export const IMAIKE_FORM_URL = "https://share.hsforms.com/1loLPVQtPQ1-NgA-F8kpuWwdtnw5";
 
+// オンラインの体験レッスンの申し込みも同じくHubSpotのフォームで受ける
+export const TRIAL_FORM_URL = "https://share-na2.hsforms.com/1S5stbn3TSFWNdjswTHg8Lwdtnw5";
+
 const HOME_NAV = [
   { href: "/#lesson", label: "レッスンについて", en: "LESSON" },
   { href: "/#teacher", label: "講師紹介", en: "INSTRUCTOR" },
@@ -67,8 +70,8 @@ export default function SiteHeader() {
         short: "体験レッスン",
         label: "体験レッスンに申し込む",
         price: "30min ¥1,500",
-        href: "/#contact",
-        external: false,
+        href: TRIAL_FORM_URL,
+        external: true,
       };
 
   // 全画面メニューを開いている間は背面をスクロールさせない
