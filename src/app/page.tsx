@@ -104,70 +104,85 @@ const FLOW_STEPS = [
   },
 ];
 
-const SETUP_NOTES = [
+// 教材・機材・規約は読み物というより「必要になったとき引く」情報なので、
+// 見出しだけを並べて畳んでおき、必要な項目だけ開ける形にする
+const FAQ_GROUPS = [
   {
-    en: "CAMERA",
-    title: "スマホやタブレットの配置について",
-    paragraphs: [
-      "テレビ通話用のスマホまたは、タブレット、パソコンは、ピアノから横からの画角で配置していただけると、姿勢やフォームの指導がスムーズです。",
-      "スマホスタンドなどは、特に指定はございませんが脚立タイプが使用しやすいです。",
-    ],
-    illust: <Microphone className="w-full" />,
-  },
-  {
-    en: "ZOOM",
-    title: "ZOOMの設定について",
-    paragraphs: [
-      "マイクとカメラはオンにして頂き、「ミュージシャン用オリジナルサウンド」をオンにする必要があります。",
-      "1.＜ミュージシャン用のオリジナルサウンド＞に○をつけます。",
-      "2.＜高忠実度音楽モード＞と＜エコー除去＞にチェックが入っている状態にします。",
-    ],
-    illust: <Mixer className="w-full" />,
-  },
-  {
-    en: "FACETIME",
-    title: "FaceTimeについて",
-    paragraphs: [
-      "Apple端末をご利用の方には、FaceTimeでのご利用をお願いしております。音の遅延が少なく、スムーズにレッスンを進められるためです。",
-      "FaceTimeが使える端末は、iPhone 4以降（iOS 4以降を搭載）、iPad 2以降・iPad mini（初代以降）、Macです。",
-    ],
-    illust: <Laptop className="w-full" />,
-  },
-];
-
-const POLICIES = [
-  {
-    en: "SCHEDULE",
-    title: "レッスンスケジュール",
-    paragraphs: [
-      "レッスンは固定の曜日・時間帯で隔週月2回のペースで行います。一度決定したスケジュールを基本としますが、やむを得ない事情でご都合がつかない場合、月に1回まで無料で振替が可能です。振替をご希望の場合は、前日までにご相談いただければ対応が可能ですが、振替対応が難しい場合もございますので、振替がご希望の場合にはお早めにお知らせください。",
-      "なお、当日のキャンセルについては振替ができず、キャンセル料が発生しますのでご注意ください。スムーズなレッスン運営のため、ご理解いただけますと幸いです。",
+    en: "MATERIALS",
+    label: "教材",
+    items: [
+      {
+        title: "教室の楽譜データライブラリー",
+        paragraphs: [
+          "入会後、教室で楽譜共有しているGoogle Driveのリンクをお送りします。様々な楽譜を豊富に用意してますので、ご自由にご利用ください。",
+          "また、レッスン時にこちらのフォルダから楽譜を用意してもらうように指示することもございます。レッスン前に、印刷したり、タブレットで見れるように準備しておきましょう。",
+          "その他の教材につきましては、講師から指定のものを生徒様に購入して頂く場合もございます。",
+        ],
+      },
     ],
   },
   {
-    en: "CANCEL POLICY",
-    title: "キャンセルポリシー",
-    paragraphs: [
-      "講師都合によるキャンセルに関しては、無料でのキャンセル、払い戻し、振替で対応いたします。ただし、当日欠席には100%キャンセル料が発生します（返金不可）。",
-      "体調不良等がある場合には、前日までにご連絡いただければ振替対応させていただきます。ご理解とご協力をお願いいたします。",
-      "また、毎月2回でのコースにおいて、試験やお仕事、ご旅行など1回のレッスンしか受講できない月においては、年4回までキャンセルが可能です。その場合は、1回分のレッスン料金の請求になります。",
+    en: "SETUP",
+    label: "オンラインレッスンの注意点",
+    items: [
+      {
+        title: "スマホやタブレットの配置について",
+        paragraphs: [
+          "テレビ通話用のスマホまたは、タブレット、パソコンは、ピアノから横からの画角で配置していただけると、姿勢やフォームの指導がスムーズです。",
+          "スマホスタンドなどは、特に指定はございませんが脚立タイプが使用しやすいです。",
+        ],
+      },
+      {
+        title: "ZOOMの設定について",
+        paragraphs: [
+          "マイクとカメラはオンにして頂き、「ミュージシャン用オリジナルサウンド」をオンにする必要があります。",
+          "1.＜ミュージシャン用のオリジナルサウンド＞に○をつけます。",
+          "2.＜高忠実度音楽モード＞と＜エコー除去＞にチェックが入っている状態にします。",
+        ],
+      },
+      {
+        title: "FaceTimeについて",
+        paragraphs: [
+          "Apple端末をご利用の方には、FaceTimeでのご利用をお願いしております。音の遅延が少なく、スムーズにレッスンを進められるためです。",
+          "FaceTimeが使える端末は、iPhone 4以降（iOS 4以降を搭載）、iPad 2以降・iPad mini（初代以降）、Macです。",
+        ],
+      },
     ],
   },
   {
-    en: "SUSPENSION",
-    title: "休会について",
-    paragraphs: [
-      "休会につきましては、2ヶ月以内の場合レッスン枠を確保し手続きなどは不要で休会が可能です。2ヶ月以上、無期限の場合は、退会の手続きが必要です。場合によってはレッスン枠を確保した上で休会も可能ですので、まずはご相談ください。",
-      "再入会の際には、入会費はかかりません。",
-    ],
-  },
-  {
-    en: "WITHDRAWAL",
-    title: "退会について",
-    paragraphs: [
-      "退会をご希望の場合、その旨を講師にご連絡頂き、退会希望月の前月末日までに退会フォームのご提出をお願いいたします。",
-      "例えば、4月末日をもって退会をご希望の場合は、3月末日までに退会フォームを完了していただく必要があります。",
-      "ご提出が上記の期限を過ぎた場合、残念ながら次月分の月謝が発生いたします。この点につきましては、教室の運営上の規定に基づいており、どうかご了承ください。",
+    en: "GUIDE",
+    label: "受講のご案内",
+    items: [
+      {
+        title: "レッスンスケジュール",
+        paragraphs: [
+          "レッスンは固定の曜日・時間帯で隔週月2回のペースで行います。一度決定したスケジュールを基本としますが、やむを得ない事情でご都合がつかない場合、月に1回まで無料で振替が可能です。振替をご希望の場合は、前日までにご相談いただければ対応が可能ですが、振替対応が難しい場合もございますので、振替がご希望の場合にはお早めにお知らせください。",
+          "なお、当日のキャンセルについては振替ができず、キャンセル料が発生しますのでご注意ください。スムーズなレッスン運営のため、ご理解いただけますと幸いです。",
+        ],
+      },
+      {
+        title: "キャンセルポリシー",
+        paragraphs: [
+          "講師都合によるキャンセルに関しては、無料でのキャンセル、払い戻し、振替で対応いたします。ただし、当日欠席には100%キャンセル料が発生します（返金不可）。",
+          "体調不良等がある場合には、前日までにご連絡いただければ振替対応させていただきます。ご理解とご協力をお願いいたします。",
+          "また、毎月2回でのコースにおいて、試験やお仕事、ご旅行など1回のレッスンしか受講できない月においては、年4回までキャンセルが可能です。その場合は、1回分のレッスン料金の請求になります。",
+        ],
+      },
+      {
+        title: "休会について",
+        paragraphs: [
+          "休会につきましては、2ヶ月以内の場合レッスン枠を確保し手続きなどは不要で休会が可能です。2ヶ月以上、無期限の場合は、退会の手続きが必要です。場合によってはレッスン枠を確保した上で休会も可能ですので、まずはご相談ください。",
+          "再入会の際には、入会費はかかりません。",
+        ],
+      },
+      {
+        title: "退会について",
+        paragraphs: [
+          "退会をご希望の場合、その旨を講師にご連絡頂き、退会希望月の前月末日までに退会フォームのご提出をお願いいたします。",
+          "例えば、4月末日をもって退会をご希望の場合は、3月末日までに退会フォームを完了していただく必要があります。",
+          "ご提出が上記の期限を過ぎた場合、残念ながら次月分の月謝が発生いたします。この点につきましては、教室の運営上の規定に基づいており、どうかご了承ください。",
+        ],
+      },
     ],
   },
 ];
@@ -770,76 +785,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ========================= MATERIALS ========================= */}
+      {/* ============================ FAQ ============================ */}
       <section
-        id="materials"
-        className="paper-rule relative overflow-hidden bg-paper-deep px-4 py-24 md:px-8 md:py-32"
-      >
-        <div className="relative mx-auto max-w-6xl md:grid md:grid-cols-12 md:gap-12">
-          <Reveal className="md:col-span-5">
-            <SectionLabel>MATERIALS</SectionLabel>
-            <h2 className="mt-6 font-display text-2xl font-bold leading-[1.7] text-ink md:text-3xl">
-              教材について
-            </h2>
-            <p className="mt-6 font-display text-base font-bold text-ink md:text-lg">
-              教室の楽譜データライブラリー
-            </p>
-            <SheetMusic className="mt-10 hidden w-40 md:block" />
-          </Reveal>
-
-          <Reveal delay={120} className="mt-8 md:col-span-7 md:mt-2">
-            <div className="flex flex-col gap-6">
-              <p className="font-body text-sm leading-8 text-ink-soft">
-                入会後、教室で楽譜共有しているGoogle Driveのリンクをお送りします。様々な楽譜を豊富に用意してますので、ご自由にご利用ください。
-              </p>
-              <p className="font-body text-sm leading-8 text-ink-soft">
-                また、レッスン時にこちらのフォルダから楽譜を用意してもらうように指示することもございます。レッスン前に、印刷したり、タブレットで見れるように準備しておきましょう。
-              </p>
-              <p className="font-body text-sm leading-8 text-ink-soft">
-                その他の教材につきましては、講師から指定のものを生徒様に購入して頂く場合もございます。
-              </p>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* =========================== SETUP =========================== */}
-      <section id="setup" className="relative overflow-hidden bg-paper px-4 py-24 md:px-8 md:py-32">
-        <div className="relative mx-auto max-w-6xl">
-          <Reveal>
-            <SectionLabel>SETUP</SectionLabel>
-            <h2 className="mt-6 font-display text-2xl font-bold leading-[1.7] text-ink md:text-4xl">
-              オンラインレッスンの注意点
-            </h2>
-          </Reveal>
-
-          <div className="mt-12 grid gap-10 md:mt-16 md:grid-cols-3 md:gap-8">
-            {SETUP_NOTES.map((n, i) => (
-              <Reveal key={n.en} delay={i * 110}>
-                {/* イラストの縦寸法はまちまちなので、枠の高さを揃えて見出しの起点を合わせる */}
-                <div className="flex h-24 items-end md:h-28">
-                  <div className="w-20 md:w-24">{n.illust}</div>
-                </div>
-                <p className="mt-6 font-en text-[0.7rem] tracking-[0.24em] text-cyan">{n.en}</p>
-                <h3 className="mt-3 font-display text-base font-bold text-ink md:text-lg">
-                  {n.title}
-                </h3>
-                <div className="mt-4 flex flex-col gap-4">
-                  {n.paragraphs.map((p) => (
-                    <p key={p} className="font-body text-sm leading-8 text-ink-soft">
-                      {p}
-                    </p>
-                  ))}
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ========================== POLICY ========================== */}
-      <section
-        id="policy"
+        id="faq"
         className="paper-rule relative overflow-hidden bg-paper-deep px-4 py-24 md:px-8 md:py-32"
       >
         <FloatingIllust
@@ -851,9 +799,9 @@ export default function Home() {
           <Metronome className="w-full" />
         </FloatingIllust>
 
-        <div className="relative mx-auto max-w-6xl">
+        <div className="relative mx-auto max-w-4xl">
           <Reveal>
-            <SectionLabel>GUIDE</SectionLabel>
+            <SectionLabel>FAQ</SectionLabel>
             <h2 className="mt-6 font-display text-2xl font-bold leading-[1.7] text-ink md:text-4xl">
               受講のご案内
             </h2>
@@ -868,27 +816,44 @@ export default function Home() {
             </div>
           </Reveal>
 
-          <div className="mt-10 grid gap-6 md:mt-12 md:grid-cols-2">
-            {POLICIES.map((p, i) => (
-              <Reveal
-                key={p.en}
-                delay={i * 90}
-                className="border border-ink/25 bg-paper p-6 md:p-8"
-              >
-                <p className="font-en text-[0.7rem] tracking-[0.24em] text-violet">{p.en}</p>
-                <h3 className="mt-3 font-display text-base font-bold text-ink md:text-lg">
-                  {p.title}
+          {FAQ_GROUPS.map((group, gi) => (
+            <Reveal key={group.en} delay={gi * 80} className="mt-12 md:mt-16">
+              <div className="flex items-baseline gap-4">
+                <p className="font-en text-[0.7rem] tracking-[0.24em] text-violet">{group.en}</p>
+                <h3 className="font-display text-base font-bold text-ink md:text-lg">
+                  {group.label}
                 </h3>
-                <div className="mt-4 flex flex-col gap-4">
-                  {p.paragraphs.map((text) => (
-                    <p key={text} className="font-body text-sm leading-8 text-ink-soft">
-                      {text}
-                    </p>
-                  ))}
-                </div>
-              </Reveal>
-            ))}
-          </div>
+              </div>
+
+              <div className="mt-5 border-t border-ink/25">
+                {group.items.map((item) => (
+                  <details
+                    key={item.title}
+                    className="group border-b border-ink/25 [&_summary::-webkit-details-marker]:hidden"
+                  >
+                    <summary className="flex cursor-pointer list-none items-center gap-4 py-5 font-display text-sm font-bold text-ink transition-opacity duration-200 hover:opacity-60 md:text-base">
+                      <span className="flex-1">{item.title}</span>
+                      {/* 十字を45度回すと×になる。開閉の状態がそのまま形になる */}
+                      <span
+                        aria-hidden="true"
+                        className="relative h-4 w-4 shrink-0 transition-transform duration-300 ease-out group-open:rotate-45"
+                      >
+                        <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-ink" />
+                        <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-ink" />
+                      </span>
+                    </summary>
+                    <div className="flex flex-col gap-4 pb-7 pr-8">
+                      {item.paragraphs.map((text) => (
+                        <p key={text} className="font-body text-sm leading-8 text-ink-soft">
+                          {text}
+                        </p>
+                      ))}
+                    </div>
+                  </details>
+                ))}
+              </div>
+            </Reveal>
+          ))}
         </div>
       </section>
 
