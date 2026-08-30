@@ -65,6 +65,142 @@ const MARQUEE_WORDS = [
   "作曲・アレンジ",
 ];
 
+// 教室案内資料より。数字は「初心者でも大丈夫」を裏づける根拠として置いている
+const RATIOS = [
+  {
+    title: "初心者と経験者の割合",
+    note: "入会希望者の半数が音楽初心者",
+    major: { label: "初心者", percent: 70 },
+    minor: { label: "経験者", percent: 30 },
+  },
+  {
+    title: "ジャズを学ぶ割合",
+    note: null,
+    major: { label: "ジャズ", percent: 60 },
+    minor: { label: "ポップス", percent: 40 },
+  },
+];
+
+const FLOW_STEPS = [
+  {
+    en: "APPLY",
+    title: "フォームより お申し込み",
+    body: "申し込み確認後、ご希望の連絡方法より、日程調整のご連絡を差し上げます。",
+  },
+  {
+    en: "MAIL",
+    title: "メールを確認",
+    body: "入力したメールアドレス宛に体験レッスンの料金を簡単にウェブ決済可能な請求書をお送りします。お支払い確認後、予約が完了となります。",
+  },
+  {
+    en: "LESSON",
+    title: "体験レッスン当日",
+    body: "レッスンの開始時間になったら、ZOOMにアクセスし、マイクとカメラをオンにしてください。Facetimeの場合は、講師より通話致します。",
+  },
+  {
+    en: "JOIN",
+    title: "入会申し込み",
+    body: "体験レッスン終了後、入会申し込みフォームを送らせて頂きます。その後、初回レッスンのご案内をささせて頂きます。",
+  },
+];
+
+const SETUP_NOTES = [
+  {
+    en: "CAMERA",
+    title: "スマホやタブレットの配置について",
+    paragraphs: [
+      "テレビ通話用のスマホまたは、タブレット、パソコンは、ピアノから横からの画角で配置していただけると、姿勢やフォームの指導がスムーズです。",
+      "スマホスタンドなどは、特に指定はございませんが脚立タイプが使用しやすいです。",
+    ],
+    illust: <Microphone className="w-full" />,
+  },
+  {
+    en: "ZOOM",
+    title: "ZOOMの設定について",
+    paragraphs: [
+      "マイクとカメラはオンにして頂き、「ミュージシャン用オリジナルサウンド」をオンにする必要があります。",
+      "1.＜ミュージシャン用のオリジナルサウンド＞に○をつけます。",
+      "2.＜高忠実度音楽モード＞と＜エコー除去＞にチェックが入っている状態にします。",
+    ],
+    illust: <Mixer className="w-full" />,
+  },
+  {
+    en: "FACETIME",
+    title: "FaceTimeについて",
+    paragraphs: [
+      "Apple端末をご利用の方には、FaceTimeでのご利用をお願いしております。音の遅延が少なく、スムーズにレッスンを進められるためです。",
+      "FaceTimeが使える端末は、iPhone 4以降（iOS 4以降を搭載）、iPad 2以降・iPad mini（初代以降）、Macです。",
+    ],
+    illust: <Laptop className="w-full" />,
+  },
+];
+
+const POLICIES = [
+  {
+    en: "SCHEDULE",
+    title: "レッスンスケジュール",
+    paragraphs: [
+      "レッスンは固定の曜日・時間帯で隔週月2回のペースで行います。一度決定したスケジュールを基本としますが、やむを得ない事情でご都合がつかない場合、月に1回まで無料で振替が可能です。振替をご希望の場合は、前日までにご相談いただければ対応が可能ですが、振替対応が難しい場合もございますので、振替がご希望の場合にはお早めにお知らせください。",
+      "なお、当日のキャンセルについては振替ができず、キャンセル料が発生しますのでご注意ください。スムーズなレッスン運営のため、ご理解いただけますと幸いです。",
+    ],
+  },
+  {
+    en: "CANCEL POLICY",
+    title: "キャンセルポリシー",
+    paragraphs: [
+      "講師都合によるキャンセルに関しては、無料でのキャンセル、払い戻し、振替で対応いたします。ただし、当日欠席には100%キャンセル料が発生します（返金不可）。",
+      "体調不良等がある場合には、前日までにご連絡いただければ振替対応させていただきます。ご理解とご協力をお願いいたします。",
+      "また、毎月2回でのコースにおいて、試験やお仕事、ご旅行など1回のレッスンしか受講できない月においては、年4回までキャンセルが可能です。その場合は、1回分のレッスン料金の請求になります。",
+    ],
+  },
+  {
+    en: "SUSPENSION",
+    title: "休会について",
+    paragraphs: [
+      "休会につきましては、2ヶ月以内の場合レッスン枠を確保し手続きなどは不要で休会が可能です。2ヶ月以上、無期限の場合は、退会の手続きが必要です。場合によってはレッスン枠を確保した上で休会も可能ですので、まずはご相談ください。",
+      "再入会の際には、入会費はかかりません。",
+    ],
+  },
+  {
+    en: "WITHDRAWAL",
+    title: "退会について",
+    paragraphs: [
+      "退会をご希望の場合、その旨を講師にご連絡頂き、退会希望月の前月末日までに退会フォームのご提出をお願いいたします。",
+      "例えば、4月末日をもって退会をご希望の場合は、3月末日までに退会フォームを完了していただく必要があります。",
+      "ご提出が上記の期限を過ぎた場合、残念ながら次月分の月謝が発生いたします。この点につきましては、教室の運営上の規定に基づいており、どうかご了承ください。",
+    ],
+  },
+];
+
+/** 割合のドーナツ。数字が主役なので、環は輪郭だけを担わせる */
+function Donut({ percent }: { percent: number }) {
+  const radius = 52;
+  const circumference = 2 * Math.PI * radius;
+
+  return (
+    <svg viewBox="0 0 140 140" className="w-full" role="presentation">
+      <circle
+        cx="70"
+        cy="70"
+        r={radius}
+        fill="none"
+        stroke="var(--color-violet)"
+        strokeWidth="20"
+      />
+      <circle
+        cx="70"
+        cy="70"
+        r={radius}
+        fill="none"
+        stroke="var(--color-magenta)"
+        strokeWidth="20"
+        strokeDasharray={`${(percent / 100) * circumference} ${circumference}`}
+        transform="rotate(-90 70 70)"
+      />
+    </svg>
+  );
+}
+
 function Badge({ tone, children }: { tone: "open" | "paused"; children: React.ReactNode }) {
   if (tone === "open") {
     return (
@@ -351,6 +487,50 @@ export default function Home() {
         <Curve className="block h-12 w-full rotate-180 text-ink md:h-20" />
       </section>
 
+      {/* ========================= STUDENTS ========================= */}
+      <section id="students" className="relative overflow-hidden bg-paper px-4 py-20 md:px-8 md:py-28">
+        <div className="relative mx-auto max-w-5xl">
+          <Reveal>
+            <SectionLabel>STUDENTS</SectionLabel>
+            <h2 className="mt-6 font-display text-2xl font-bold leading-[1.7] text-ink md:text-4xl">
+              生徒さんの割合
+            </h2>
+          </Reveal>
+
+          <div className="mt-12 grid gap-12 md:mt-16 md:grid-cols-2 md:gap-16">
+            {RATIOS.map((r, i) => (
+              <Reveal key={r.title} delay={i * 120}>
+                <h3 className="border-b border-rule pb-4 text-center font-body text-sm text-ink md:text-base">
+                  {r.title}
+                </h3>
+                <div className="mt-8 flex items-center justify-center gap-5 md:gap-7">
+                  <div className="shrink-0 text-right">
+                    <p className="font-display text-base font-bold text-ink md:text-lg">
+                      {r.minor.label}
+                    </p>
+                    <p className="font-en text-xl text-ink-soft md:text-2xl">{r.minor.percent}%</p>
+                  </div>
+                  <div className="w-28 shrink-0 md:w-36">
+                    <Donut percent={r.major.percent} />
+                  </div>
+                  <div className="shrink-0">
+                    <p className="font-display text-base font-bold text-ink md:text-lg">
+                      {r.major.label}
+                    </p>
+                    <p className="font-en text-xl text-ink-soft md:text-2xl">{r.major.percent}%</p>
+                  </div>
+                </div>
+                {r.note ? (
+                  <p className="mt-6 text-center font-body text-xs leading-7 text-ink-soft">
+                    {r.note}
+                  </p>
+                ) : null}
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ======================== INSTRUCTORS ======================== */}
       <section id="teacher" className="relative overflow-hidden bg-paper px-4 py-20 md:px-8 md:py-28">
         <FloatingIllust
@@ -543,6 +723,172 @@ export default function Home() {
               月1回まで無料で振替が可能です（前日までにご相談ください）。
             </p>
           </Reveal>
+        </div>
+      </section>
+
+      {/* =========================== FLOW =========================== */}
+      <section id="flow" className="relative overflow-hidden bg-paper px-4 py-24 md:px-8 md:py-32">
+        <FloatingIllust
+          className="right-[-3rem] top-16 hidden w-32 md:block"
+          speed={0.16}
+          rotate={10}
+          driftMs={9200}
+        >
+          <SingleNote className="w-full" />
+        </FloatingIllust>
+
+        <div className="relative mx-auto max-w-6xl">
+          <Reveal>
+            <SectionLabel>FLOW</SectionLabel>
+            <h2 className="mt-6 font-display text-2xl font-bold leading-[1.7] text-ink md:text-4xl">
+              入会までの流れ
+            </h2>
+            <p className="mt-6 font-display text-lg font-bold text-ink md:text-xl">
+              体験レッスン　受講料¥1,500
+            </p>
+          </Reveal>
+
+          {/* 4ステップは順序そのものが情報なので、番号を打って一列に並べる */}
+          <ol className="mt-12 grid gap-8 md:mt-16 md:grid-cols-4 md:gap-6">
+            {FLOW_STEPS.map((s, i) => (
+              <Reveal key={s.en} as="li" delay={i * 100} className="border-t-2 border-ink pt-5">
+                <div className="flex items-baseline gap-3">
+                  <span className="font-en text-2xl font-semibold text-violet md:text-3xl">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="font-en text-[0.7rem] tracking-[0.24em] text-ink-soft">
+                    {s.en}
+                  </span>
+                </div>
+                <h3 className="mt-4 font-display text-base font-bold text-ink md:text-lg">
+                  {s.title}
+                </h3>
+                <p className="mt-3 font-body text-sm leading-8 text-ink-soft">{s.body}</p>
+              </Reveal>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* ========================= MATERIALS ========================= */}
+      <section
+        id="materials"
+        className="paper-rule relative overflow-hidden bg-paper-deep px-4 py-24 md:px-8 md:py-32"
+      >
+        <div className="relative mx-auto max-w-6xl md:grid md:grid-cols-12 md:gap-12">
+          <Reveal className="md:col-span-5">
+            <SectionLabel>MATERIALS</SectionLabel>
+            <h2 className="mt-6 font-display text-2xl font-bold leading-[1.7] text-ink md:text-3xl">
+              教材について
+            </h2>
+            <p className="mt-6 font-display text-base font-bold text-ink md:text-lg">
+              教室の楽譜データライブラリー
+            </p>
+            <SheetMusic className="mt-10 hidden w-40 md:block" />
+          </Reveal>
+
+          <Reveal delay={120} className="mt-8 md:col-span-7 md:mt-2">
+            <div className="flex flex-col gap-6">
+              <p className="font-body text-sm leading-8 text-ink-soft">
+                入会後、教室で楽譜共有しているGoogle Driveのリンクをお送りします。様々な楽譜を豊富に用意してますので、ご自由にご利用ください。
+              </p>
+              <p className="font-body text-sm leading-8 text-ink-soft">
+                また、レッスン時にこちらのフォルダから楽譜を用意してもらうように指示することもございます。レッスン前に、印刷したり、タブレットで見れるように準備しておきましょう。
+              </p>
+              <p className="font-body text-sm leading-8 text-ink-soft">
+                その他の教材につきましては、講師から指定のものを生徒様に購入して頂く場合もございます。
+              </p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* =========================== SETUP =========================== */}
+      <section id="setup" className="relative overflow-hidden bg-paper px-4 py-24 md:px-8 md:py-32">
+        <div className="relative mx-auto max-w-6xl">
+          <Reveal>
+            <SectionLabel>SETUP</SectionLabel>
+            <h2 className="mt-6 font-display text-2xl font-bold leading-[1.7] text-ink md:text-4xl">
+              オンラインレッスンの注意点
+            </h2>
+          </Reveal>
+
+          <div className="mt-12 grid gap-10 md:mt-16 md:grid-cols-3 md:gap-8">
+            {SETUP_NOTES.map((n, i) => (
+              <Reveal key={n.en} delay={i * 110}>
+                {/* イラストの縦寸法はまちまちなので、枠の高さを揃えて見出しの起点を合わせる */}
+                <div className="flex h-24 items-end md:h-28">
+                  <div className="w-20 md:w-24">{n.illust}</div>
+                </div>
+                <p className="mt-6 font-en text-[0.7rem] tracking-[0.24em] text-cyan">{n.en}</p>
+                <h3 className="mt-3 font-display text-base font-bold text-ink md:text-lg">
+                  {n.title}
+                </h3>
+                <div className="mt-4 flex flex-col gap-4">
+                  {n.paragraphs.map((p) => (
+                    <p key={p} className="font-body text-sm leading-8 text-ink-soft">
+                      {p}
+                    </p>
+                  ))}
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ========================== POLICY ========================== */}
+      <section
+        id="policy"
+        className="paper-rule relative overflow-hidden bg-paper-deep px-4 py-24 md:px-8 md:py-32"
+      >
+        <FloatingIllust
+          className="left-[-4rem] bottom-10 hidden w-40 md:block"
+          speed={0.2}
+          rotate={-12}
+          driftMs={10200}
+        >
+          <Metronome className="w-full" />
+        </FloatingIllust>
+
+        <div className="relative mx-auto max-w-6xl">
+          <Reveal>
+            <SectionLabel>GUIDE</SectionLabel>
+            <h2 className="mt-6 font-display text-2xl font-bold leading-[1.7] text-ink md:text-4xl">
+              受講のご案内
+            </h2>
+          </Reveal>
+
+          <Reveal delay={120} className="mt-10 md:mt-14">
+            <div className="flex flex-col gap-4 border-2 border-ink bg-brand-yellow px-6 py-7 md:flex-row md:items-center md:gap-8 md:px-10 md:py-8">
+              <Record className="w-12 shrink-0 motion-safe:animate-spin-slow md:w-14" />
+              <p className="font-display text-base font-bold leading-[1.8] text-ink md:text-xl">
+                月に一回振替無料 / 年4回までキャンセルOK
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="mt-10 grid gap-6 md:mt-12 md:grid-cols-2">
+            {POLICIES.map((p, i) => (
+              <Reveal
+                key={p.en}
+                delay={i * 90}
+                className="border border-ink/25 bg-paper p-6 md:p-8"
+              >
+                <p className="font-en text-[0.7rem] tracking-[0.24em] text-violet">{p.en}</p>
+                <h3 className="mt-3 font-display text-base font-bold text-ink md:text-lg">
+                  {p.title}
+                </h3>
+                <div className="mt-4 flex flex-col gap-4">
+                  {p.paragraphs.map((text) => (
+                    <p key={text} className="font-body text-sm leading-8 text-ink-soft">
+                      {text}
+                    </p>
+                  ))}
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 

@@ -12,6 +12,8 @@ const FOOTER_LINKS = [
   { href: "/#lesson", label: "レッスンについて", en: "LESSON" },
   { href: "/#teacher", label: "講師紹介", en: "INSTRUCTOR" },
   { href: "/#price", label: "料金", en: "PRICE" },
+  { href: "/#flow", label: "入会までの流れ", en: "FLOW" },
+  { href: "/#policy", label: "受講のご案内", en: "GUIDE" },
   { href: IMAIKE_PATH, label: "今池での対面レッスン", en: "IN PERSON" },
   { href: "/#access", label: "アクセス", en: "ACCESS" },
   { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", en: "CHORD TOOL", external: true },
