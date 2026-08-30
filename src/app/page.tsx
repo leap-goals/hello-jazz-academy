@@ -820,7 +820,7 @@ export default function Home() {
             <Reveal key={group.en} delay={gi * 80} className="mt-12 md:mt-16">
               <div className="flex items-baseline gap-4">
                 <p className="font-en text-[0.7rem] tracking-[0.24em] text-violet">{group.en}</p>
-                <h3 className="font-display text-base font-bold text-ink md:text-lg">
+                <h3 className="font-display text-lg font-bold text-ink md:text-xl">
                   {group.label}
                 </h3>
               </div>
@@ -831,23 +831,41 @@ export default function Home() {
                     key={item.title}
                     className="group border-b border-ink/25 [&_summary::-webkit-details-marker]:hidden"
                   >
-                    <summary className="flex cursor-pointer list-none items-center gap-4 py-5 font-display text-sm font-bold text-ink transition-opacity duration-200 hover:opacity-60 md:text-base">
-                      <span className="flex-1">{item.title}</span>
-                      {/* 十字を45度回すと×になる。開閉の状態がそのまま形になる */}
+                    <summary className="flex cursor-pointer list-none items-start gap-4 py-5 transition-opacity duration-200 hover:opacity-60 md:gap-6">
                       <span
                         aria-hidden="true"
-                        className="relative h-4 w-4 shrink-0 transition-transform duration-300 ease-out group-open:rotate-45"
+                        className="w-5 shrink-0 font-en text-xl leading-7 text-violet md:w-6 md:text-2xl"
+                      >
+                        Q
+                      </span>
+                      <span className="flex-1 font-display text-sm font-bold leading-7 text-ink md:text-base">
+                        {item.title}
+                      </span>
+                      {/* 縦棒だけを畳んで + を − に変える。開いている状態が形で分かる */}
+                      <span
+                        aria-hidden="true"
+                        className="relative mt-2 h-3.5 w-3.5 shrink-0"
                       >
                         <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-ink" />
-                        <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-ink" />
+                        <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-ink transition-transform duration-300 ease-out group-open:scale-y-0" />
                       </span>
                     </summary>
-                    <div className="flex flex-col gap-4 pb-7 pr-8">
-                      {item.paragraphs.map((text) => (
-                        <p key={text} className="font-body text-sm leading-8 text-ink-soft">
-                          {text}
-                        </p>
-                      ))}
+
+                    {/* 回答は質問文と同じ位置から始める。Qの真下にAが落ちる */}
+                    <div className="flex items-start gap-4 pb-7 md:gap-6">
+                      <span
+                        aria-hidden="true"
+                        className="w-5 shrink-0 font-en text-xl leading-8 text-magenta md:w-6 md:text-2xl"
+                      >
+                        A
+                      </span>
+                      <div className="flex flex-1 flex-col gap-4 pr-8">
+                        {item.paragraphs.map((text) => (
+                          <p key={text} className="font-body text-sm leading-8 text-ink-soft">
+                            {text}
+                          </p>
+                        ))}
+                      </div>
                     </div>
                   </details>
                 ))}
