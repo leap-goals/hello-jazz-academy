@@ -36,19 +36,14 @@ const LEGACY_POST_REDIRECT_TARGET = '/news/';
 const LEGACY_POST_REASON = "'post'型の旧ブログ記事。現行ナビゲーションの「お知らせ」(newsカスタム投稿タイプ)とは別物のため移行対象外";
 
 // sitemap.xml上に残っていた、実体のない/削除済みの旧URL
-const STALE_LEGACY_URLS = [
-  {
-    old_path: '/?page_id=83',
-    to: '/',
-    reason:
-      '旧「教室について」ページ。既に削除済み(404/rest_forbidden)。河地里咲講師のプロフィールは現在トップページに統合される方針',
-  },
-  {
-    old_path: '/?page_id=20',
-    to: '/',
-    reason: 'post-sitemap.xmlに残存する実体不明の旧URL(REST APIでも存在せず、古いキャッシュの残骸と推測)',
-  },
-];
+//
+// 注意: クエリ文字列付きURL(`/?page_id=83`等)はCloudflare Pagesの_redirectsでは
+// マッチング対象外(クエリ文字列は無視される)。旧「/?page_id=83 -> /」のような行は
+// 実質「/ -> /」と解釈され、トップページが無限リダイレクトループに陥る重大な不具合になる
+// (2026-08-30 本番で発生・確認済み)。静的サイトはクエリ文字列を無視して同じファイルを
+// 返すため、これらのURLはリダイレクトを書かなくても実害はない。よってここには
+// クエリ文字列を含むold_pathを追加しないこと。
+const STALE_LEGACY_URLS = [];
 
 function toPath(link) {
   const u = new URL(link);

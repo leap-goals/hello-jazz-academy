@@ -252,19 +252,5 @@
     "new_path": "/news/",
     "reason": "'post'型の旧ブログ記事。現行ナビゲーションの「お知らせ」(newsカスタム投稿タイプ)とは別物のため移行対象外",
     "category": "redirect"
-  },
-  {
-    "source_type": "stale-sitemap-url",
-    "old_path": "/?page_id=83",
-    "new_path": "/",
-    "reason": "旧「教室について」ページ。既に削除済み(404/rest_forbidden)。河地里咲講師のプロフィールは現在トップページに統合される方針",
-    "category": "redirect"
-  },
-  {
-    "source_type": "stale-sitemap-url",
-    "old_path": "/?page_id=20",
-    "new_path": "/",
-    "reason": "post-sitemap.xmlに残存する実体不明の旧URL(REST APIでも存在せず、古いキャッシュの残骸と推測)",
-    "category": "redirect"
   }
 ]
