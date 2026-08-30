@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Reveal from "@/components/Reveal";
 import FloatingIllust from "@/components/FloatingIllust";
-import { IMAIKE_PATH } from "@/components/SiteHeader";
+import { CHORD_TOOL_PATH, IMAIKE_PATH } from "@/components/SiteHeader";
 import { Curve, Equalizer, Headphones, Microphone, SingleNote } from "@/components/Illustrations";
 
 // サイトマップは全ページ共通。トップ内のアンカーは下層からも辿れるよう絶対パスで書く
@@ -14,6 +14,7 @@ const FOOTER_LINKS = [
   { href: "/#price", label: "料金", en: "PRICE" },
   { href: IMAIKE_PATH, label: "今池での対面レッスン", en: "IN PERSON" },
   { href: "/#access", label: "アクセス", en: "ACCESS" },
+  { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", en: "CHORD TOOL", external: true },
   { href: "/privacypolicy/", label: "プライバシーポリシー", en: "PRIVACY" },
 ];
 
@@ -101,12 +102,11 @@ export default function SiteFooter() {
           {/* サイトマップ */}
           <div className="mt-12 grid gap-10 md:grid-cols-[1.4fr_1fr] md:gap-16">
             <ul>
-              {FOOTER_LINKS.map((link, i) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="group flex items-baseline gap-4 py-3 transition-opacity duration-200 hover:opacity-60"
-                  >
+              {FOOTER_LINKS.map((link, i) => {
+                const linkClassName =
+                  "group flex items-baseline gap-4 py-3 transition-opacity duration-200 hover:opacity-60";
+                const linkContent = (
+                  <>
                     <span className="font-en text-sm tracking-[0.2em] text-paper">{link.en}</span>
                     <span className="font-body text-xs text-paper/65">{link.label}</span>
                     <Reveal
@@ -118,9 +118,23 @@ export default function SiteFooter() {
                       {null}
                     </Reveal>
                     <span className="hidden h-1.5 w-1.5 rounded-full bg-cyan sm:block" />
-                  </Link>
-                </li>
-              ))}
+                  </>
+                );
+
+                return (
+                  <li key={link.href}>
+                    {"external" in link && link.external ? (
+                      <a href={link.href} target="_blank" rel="noopener noreferrer" className={linkClassName}>
+                        {linkContent}
+                      </a>
+                    ) : (
+                      <Link href={link.href} className={linkClassName}>
+                        {linkContent}
+                      </Link>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
 
             <div className="flex flex-col justify-between gap-8">

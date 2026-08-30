@@ -13,12 +13,17 @@ import { BeamedNotes, Equalizer, Keyboard, Record } from "@/components/Illustrat
  */
 export const IMAIKE_PATH = "/imaike_jazzpiano_lesson/";
 
+// 別アプリ(vanilla JSの単体ツール)として public/tools/ に配置しているため、
+// Next.jsのLinkによるソフトナビゲーションは使わずタブで開く
+export const CHORD_TOOL_PATH = "/tools/chord-scale-analyzer";
+
 const HOME_NAV = [
   { href: "/#lesson", label: "レッスンについて", en: "LESSON" },
   { href: "/#teacher", label: "講師紹介", en: "INSTRUCTOR" },
   { href: "/#price", label: "料金", en: "PRICE" },
   { href: IMAIKE_PATH, label: "今池の対面レッスン", en: "IN PERSON" },
   { href: "/#access", label: "アクセス", en: "ACCESS" },
+  { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", en: "CHORD TOOL", external: true },
   { href: "/#contact", label: "お問い合わせ", en: "CONTACT" },
 ];
 
@@ -28,6 +33,7 @@ const IMAIKE_NAV = [
   { href: `${IMAIKE_PATH}#price`, label: "料金", en: "PRICE" },
   { href: `${IMAIKE_PATH}#policy`, label: "受講のご案内", en: "GUIDE" },
   { href: `${IMAIKE_PATH}#access`, label: "会場とスケジュール", en: "ACCESS" },
+  { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", en: "CHORD TOOL", external: true },
   { href: "/", label: "オンラインレッスン", en: "ONLINE" },
 ];
 
@@ -155,17 +161,15 @@ export default function SiteHeader() {
 
         <nav className="relative flex h-full flex-col justify-center px-6 md:px-16">
           <ul className="mx-auto w-full max-w-3xl">
-            {navLinks.map((link, i) => (
-              <li key={link.href} className="overflow-hidden border-b border-rule">
-                <Link
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="flex items-baseline gap-4 py-3.5 transition-transform duration-[600ms] ease-out md:gap-8 md:py-5"
-                  style={{
-                    transform: open ? "translateY(0)" : "translateY(110%)",
-                    transitionDelay: open ? `${120 + i * 60}ms` : "0ms",
-                  }}
-                >
+            {navLinks.map((link, i) => {
+              const navItemClassName =
+                "flex items-baseline gap-4 py-3.5 transition-transform duration-[600ms] ease-out md:gap-8 md:py-5";
+              const navItemStyle = {
+                transform: open ? "translateY(0)" : "translateY(110%)",
+                transitionDelay: open ? `${120 + i * 60}ms` : "0ms",
+              };
+              const navItemContent = (
+                <>
                   <span className="font-en text-xs tracking-[0.22em] text-violet md:text-sm">
                     {String(i + 1).padStart(2, "0")}
                   </span>
@@ -175,9 +179,30 @@ export default function SiteHeader() {
                   <span className="ml-auto font-en text-xs tracking-[0.2em] text-ink-soft md:text-sm">
                     {link.en}
                   </span>
-                </Link>
-              </li>
-            ))}
+                </>
+              );
+
+              return (
+                <li key={link.href} className="overflow-hidden border-b border-rule">
+                  {"external" in link && link.external ? (
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setOpen(false)}
+                      className={navItemClassName}
+                      style={navItemStyle}
+                    >
+                      {navItemContent}
+                    </a>
+                  ) : (
+                    <Link href={link.href} onClick={() => setOpen(false)} className={navItemClassName} style={navItemStyle}>
+                      {navItemContent}
+                    </Link>
+                  )}
+                </li>
+              );
+            })}
           </ul>
 
           <div
