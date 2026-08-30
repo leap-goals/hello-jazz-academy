@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import FloatingIllust from "@/components/FloatingIllust";
+import PaymentBrands from "@/components/PaymentBrands";
 import SectionLabel from "@/components/SectionLabel";
 import { IMAIKE_PATH } from "@/components/SiteHeader";
 import {
@@ -12,7 +13,6 @@ import {
   Keyboard,
   Laptop,
   Metronome,
-  Microphone,
   Mixer,
   Record,
   SheetMusic,
@@ -237,7 +237,8 @@ export default function Home() {
   return (
     <main id="top" className="flex-1">
       {/* ============================ HERO ============================ */}
-      <section className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden px-4 pb-20 pt-28 md:px-8 md:pb-24 md:pt-32">
+      {/* ヘッダーが2段の帯になったぶん、上の余白は帯の高さより広く取る */}
+      <section className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden px-4 pb-20 pt-32 md:px-8 md:pb-24 md:pt-36">
         {/* 天からインクが降ってきて紙に吸われる、リソの刷り始め */}
         <div
           aria-hidden="true"
@@ -275,15 +276,6 @@ export default function Home() {
         >
           <Keyboard className="w-full" />
         </FloatingIllust>
-        <FloatingIllust
-          className="left-[2%] top-[30vh] hidden w-24 md:block"
-          speed={0.24}
-          rotate={9}
-          driftMs={8400}
-          driftDelayMs={1200}
-        >
-          <Microphone className="w-full" />
-        </FloatingIllust>
 
         <div className="relative mx-auto w-full max-w-6xl">
           <Reveal>
@@ -306,12 +298,9 @@ export default function Home() {
             </p>
           </Reveal>
           <Reveal delay={340} className="mt-10 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-8">
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-4 rounded-full bg-magenta px-8 py-4 text-paper transition-transform duration-300 ease-out hover:-translate-y-1"
-            >
-              <span className="font-display text-base font-bold">体験レッスンに申し込む</span>
-              <span className="font-en text-sm text-paper/80">30min ¥1,500</span>
+            <a href="#contact" className="btn btn-primary text-base">
+              体験レッスンに申し込む
+              <span className="font-en text-sm font-medium text-paper/75">30min ¥1,500</span>
             </a>
             <a
               href="#lesson"
@@ -333,7 +322,7 @@ export default function Home() {
       </section>
 
       {/* ========================= MANIFESTO ========================= */}
-      <section className="paper-rule relative overflow-hidden bg-paper-deep px-4 py-24 md:px-8 md:py-36">
+      <section className="relative overflow-hidden bg-paper-deep px-4 py-24 md:px-8 md:py-36">
         <FloatingIllust
           className="left-[-3rem] top-16 w-32 md:left-[6%] md:w-44"
           speed={0.22}
@@ -610,11 +599,11 @@ export default function Home() {
                 */}
                 <Link
                   href={IMAIKE_PATH}
-                  className="group mt-8 flex flex-wrap items-center justify-between gap-5 border-2 border-ink bg-yellow-soft px-6 py-5 transition-transform duration-300 ease-out hover:-translate-y-1"
+                  className="group mt-8 flex flex-wrap items-center justify-between gap-5 border-2 border-ink bg-yellow-soft px-6 py-5 transition-colors duration-200 hover:bg-brand-yellow"
                 >
                   <span className="block">
-                    <span className="flex items-center gap-2 font-en text-xs tracking-[0.24em] text-magenta">
-                      <Equalizer className="text-magenta" />
+                    <span className="flex items-center gap-2 font-en text-xs tracking-[0.24em] text-violet">
+                      <Equalizer className="text-violet" />
                       IN PERSON — IMAIKE
                     </span>
                     <span className="mt-3 block font-display text-base font-bold leading-[1.7] text-ink md:text-lg">
@@ -676,7 +665,7 @@ export default function Home() {
       </section>
 
       {/* =========================== PRICE =========================== */}
-      <section id="price" className="paper-rule relative overflow-hidden bg-paper-deep px-4 py-24 md:px-8 md:py-32">
+      <section id="price" className="relative overflow-hidden bg-paper-deep px-4 py-24 md:px-8 md:py-32">
         <FloatingIllust
           className="bottom-6 left-[-5rem] hidden w-72 md:block"
           speed={0.18}
@@ -734,9 +723,13 @@ export default function Home() {
           </div>
           <Reveal delay={280}>
             <p className="mt-8 font-body text-xs leading-7 text-ink-soft">
-              お支払いはSquare請求書にて承っております。レッスンは固定の曜日・時間で隔週（月2回）。
+              レッスンは固定の曜日・時間で隔週（月2回）。
               月1回まで無料で振替が可能です（前日までにご相談ください）。
             </p>
+            <PaymentBrands
+              className="mt-10 border-t border-ink/20 pt-8"
+              label="メールでお送りするSquareの請求書から、各カードでお支払いいただけます。"
+            />
           </Reveal>
         </div>
       </section>
@@ -788,7 +781,7 @@ export default function Home() {
       {/* ============================ FAQ ============================ */}
       <section
         id="faq"
-        className="paper-rule relative overflow-hidden bg-paper-deep px-4 py-24 md:px-8 md:py-32"
+        className="relative overflow-hidden bg-paper-deep px-4 py-24 md:px-8 md:py-32"
       >
         <FloatingIllust
           className="left-[-4rem] bottom-10 hidden w-40 md:block"

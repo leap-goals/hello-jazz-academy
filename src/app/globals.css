@@ -78,15 +78,68 @@ body {
   mix-blend-mode: multiply;
 }
 
-/* 五線紙の罫。セクションの地として敷く */
-.paper-rule {
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 41px,
-    var(--color-rule) 41px,
-    var(--color-rule) 42px
-  );
+/* ---- ボタン ----------------------------------------------------------- */
+
+/*
+ * IKEAのボタンに倣い、形と役割をここで一度だけ決めてしまう。
+ *   - 角丸は全周(ピル)、面はベタ塗り。影もグラデーションも縁取りの飾りも付けない
+ *   - ホバーで浮かせない。位置は動かさず、色を一段沈めるだけ
+ *   - 主ボタンはバイオレット1色。ページごとのアクセント色(マゼンタ等)は使わない
+ *     ので、トップでも今池でも「押せるもの」の見え方が変わらない
+ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  border-radius: 999px;
+  padding: 0.9rem 1.75rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-violet);
+  outline-offset: 3px;
+}
+
+/* 紙の上の主ボタン */
+.btn-primary {
+  background-color: var(--color-violet);
+  color: var(--color-paper);
+}
+.btn-primary:hover {
+  background-color: var(--color-violet-deep);
+}
+
+/* 紙の上の副ボタン。面を持たず、線だけで枠を示す */
+.btn-secondary {
+  background-color: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--color-ink);
+  color: var(--color-ink);
+}
+.btn-secondary:hover {
+  background-color: rgb(29 21 34 / 0.06);
+}
+
+/* インクの面(フッター等)の上に置く主ボタン */
+.btn-inverse {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}
+.btn-inverse:hover {
+  background-color: var(--color-paper-deep);
+}
+
+.btn-sm {
+  gap: 0.5rem;
+  padding: 0.5rem 1.1rem;
 }
 
 /*

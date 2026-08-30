@@ -3,7 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import FloatingIllust from "@/components/FloatingIllust";
+import PaymentBrands from "@/components/PaymentBrands";
 import SectionLabel from "@/components/SectionLabel";
+import { IMAIKE_FORM_URL } from "@/components/SiteHeader";
 import {
   BeamedNotes,
   Curve,
@@ -121,7 +123,7 @@ export default function ImaikeLesson() {
   return (
     <main id="top" className="flex-1">
       {/* ===================== HERO（一枚のフライヤーとして組む） ===================== */}
-      <section className="relative overflow-hidden px-4 pb-16 pt-28 md:px-8 md:pb-24 md:pt-36">
+      <section className="relative overflow-hidden px-4 pb-16 pt-32 md:px-8 md:pb-24 md:pt-40">
         <div
           aria-hidden="true"
           className="speckle-fade pointer-events-none absolute inset-x-0 top-0 h-[30vh]"
@@ -181,15 +183,17 @@ export default function ImaikeLesson() {
               className="mt-9 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-7"
             >
               <a
-                href="#contact"
-                className="inline-flex items-center gap-4 rounded-full bg-magenta px-8 py-4 text-paper transition-transform duration-300 ease-out hover:-translate-y-1"
+                href={IMAIKE_FORM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary text-base"
               >
-                <span className="font-display text-base font-bold">レッスンを申し込む</span>
-                <span className="font-en text-sm text-paper/80">60min ¥10,000</span>
+                レッスンを申し込む
+                <span className="font-en text-sm font-medium text-paper/75">60min ¥10,000</span>
               </a>
               <a
                 href="#price"
-                className="font-en text-sm tracking-[0.16em] text-ink underline decoration-magenta/50 underline-offset-[6px] transition-opacity duration-200 hover:opacity-55"
+                className="font-en text-sm tracking-[0.16em] text-ink underline decoration-violet/50 underline-offset-[6px] transition-opacity duration-200 hover:opacity-55"
               >
                 VIEW PRICE
               </a>
@@ -243,7 +247,7 @@ export default function ImaikeLesson() {
       </div>
 
       {/* ===================== ABOUT（罫紙に貼った一枚の紙） ===================== */}
-      <section className="paper-rule relative overflow-hidden bg-paper-deep px-4 py-20 md:px-8 md:py-28">
+      <section className="relative overflow-hidden bg-paper-deep px-4 py-20 md:px-8 md:py-28">
         <FloatingIllust
           className="right-[-2.5rem] top-10 w-28 md:right-[4%] md:w-36"
           speed={0.26}
@@ -447,11 +451,18 @@ export default function ImaikeLesson() {
                   />
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between gap-4 px-6 py-6 md:px-12">
-                  <p className="font-body text-xs leading-7 text-ink-soft">
-                    いずれも1回あたりの料金です。入会金・継続の契約はありません。
-                  </p>
-                  <p className="font-en text-xs tracking-[0.24em] text-ink">60 MIN / 1 LESSON</p>
+                <div className="px-6 py-6 md:px-12">
+                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <p className="font-body text-xs leading-7 text-ink-soft">
+                      いずれも1回あたりの料金です。入会金・継続の契約はありません。
+                    </p>
+                    <p className="font-en text-xs tracking-[0.24em] text-ink">60 MIN / 1 LESSON</p>
+                  </div>
+                  {/* 半券の中は紙地なので、決済ブランドはここに刷る */}
+                  <PaymentBrands
+                    className="mt-6 border-t border-ink/15 pt-6"
+                    label="月初めにお送りする請求書から、各カードでお支払いいただけます。"
+                  />
                 </div>
               </div>
             </Reveal>
