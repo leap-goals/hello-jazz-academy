@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>コード・スケール理論 インタラクティブ・アナライザー</title>
+<style>
+  :root{
+    --purple:#5f20ca;
+    --pink:#cc38cb;
+    --lightblue:#93d1f4;
+    --yellow:#fde306;
+
+    --purple-text:#a480ea;
+    --purple-fill:#241a42;
+    --pink-text:#e26fe0;
+    --pink-fill:#341a3a;
+    --blue-fill:#122735;
+    --yellow-bg:rgba(253,227,6,.16);
+
+    --bg:#130f20;
+    --bg-card:#1c1533;
+    --bg-pre:#0e0a19;
+    --bg-raised:#241b3d;
+    --border:rgba(147,209,244,.22);
+    --text:#f4f1fb;
+    --text-dim:#a89bc9;
+    --text-dim-blue:#7fa0bd;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:16px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    padding-bottom:56px;
+  }
+  .wrap{ max-width:640px; margin:0 auto; padding:0 16px; }
+
+  /* ---------- Header ---------- */
+  header.top{
+    padding:20px 16px 16px;
+    background:
+      radial-gradient(130% 160% at 12% -20%, rgba(204,56,203,.30), transparent 55%),
+      linear-gradient(160deg,#2a1458 0%,#190f30 55%,#130f20 100%);
+    border-bottom:1px solid var(--border);
+  }
+  header.top .kicker{
+    font-size:11px; letter-spacing:.14em; color:var(--pink-text);
+    text-transform:uppercase; margin:0 0 6px; font-weight:700;
+  }
+  header.top h1{ font-size:19px; margin:0 0 6px; line-height:1.4; color:#f4f1fb; }
+  header.top p{ margin:0; font-size:12.5px; color:var(--text-dim); line-height:1.6; }
+
+  /* ---------- Sticky control bar ---------- */
+  #controlbar{
+    position:sticky; top:0; z-index:40;
+    display:flex; align-items:center; gap:8px;
+    padding:9px 12px;
+    background:rgba(19,15,32,.92);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  #navToggle{
+    display:flex; align-items:center; gap:6px;
+    background:var(--purple-fill); color:#f4f1fb;
+    border:1px solid rgba(164,128,234,.3); border-radius:10px;
+    padding:9px 12px; font-size:13px; font-weight:700;
+    font-family:inherit; -webkit-appearance:none; appearance:none;
+    flex:0 0 auto;
+  }
+  #navToggle .ico{ color:var(--purple-text); font-size:15px; line-height:1; }
+  #navToggle .chev{ font-size:10px; color:var(--text-dim); transition:transform .2s; margin-left:1px; }
+  #navToggle.open .chev{ transform:rotate(180deg); }
+
+  .keywrap{ flex:1 1 auto; display:flex; align-items:center; gap:7px; min-width:0; }
+  .keywrap label{ font-size:11px; color:var(--text-dim); flex:0 0 auto; letter-spacing:.02em; }
+  #keySelect{
+    flex:1 1 auto; min-width:0;
+    background:var(--bg-raised); color:#f4f1fb;
+    border:1px solid rgba(147,209,244,.3); border-radius:10px;
+    padding:9px 10px; font-size:14.5px; font-weight:700;
+    font-family:inherit; -webkit-appearance:none; appearance:none;
+    background-image:linear-gradient(45deg,transparent 50%,var(--lightblue) 50%),linear-gradient(135deg,var(--lightblue) 50%,transparent 50%);
+    background-position:calc(100% - 16px) center, calc(100% - 11px) center;
+    background-size:5px 5px, 5px 5px; background-repeat:no-repeat;
+  }
+
+  /* ---------- Nav panel (degree grid) ---------- */
+  #navPanel{
+    max-height:0; overflow:hidden;
+    background:#100c1c;
+    border-bottom:1px solid var(--border);
+    transition:max-height .28s ease;
+  }
+  #navPanel.open{ max-height:70vh; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+  #navPanel .inner{ padding:14px 16px 18px; }
+  .navGroupLabel{
+    font-size:11px; color:var(--text-dim-blue); text-transform:uppercase;
+    letter-spacing:.08em; font-weight:700; margin:14px 0 7px;
+  }
+  .navGroupLabel:first-child{ margin-top:0; }
+  .navGrid{ display:flex; flex-wrap:wrap; gap:6px; }
+  .navChip{
+    background:var(--bg-card); color:#f4f1fb;
+    border:1px solid var(--border); border-radius:8px;
+    padding:7px 10px; font-size:12.5px; font-weight:600;
+    font-family:inherit; text-align:left; line-height:1.3;
+  }
+  .navChip b{ display:block; font-size:13px; }
+  .navChip.b-tonic{ border-color:rgba(164,128,234,.4); }
+  .navChip.b-tonic b{ color:var(--purple-text); }
+  .navChip.b-dominant{ border-color:rgba(226,111,224,.4); }
+  .navChip.b-dominant b{ color:var(--pink-text); }
+  .navChip.b-sub{ border-color:rgba(147,209,244,.4); }
+  .navChip.b-sub b{ color:var(--lightblue); }
+  .navChip.b-plain b{ color:#f4f1fb; }
+
+  /* ---------- Sections / accordions ---------- */
+  main{ padding-top:8px; }
+  .intro-callout{
+    background:#1b1438; border:1px solid #302453; border-left:4px solid var(--purple);
+    border-radius:10px; padding:13px 14px; font-size:13.5px; line-height:1.75; margin:0 0 24px;
+    color:#f4f1fb;
+  }
+  .intro-callout b{ color:var(--purple-text); }
+
+  /* Sections are flattened (no boxed card) so the score gets the full page width */
+  details.accgroup{
+    background:none; border:none; border-radius:0; box-shadow:none;
+    margin:0; padding:24px 0 26px;
+    border-top:1px solid var(--border);
+  }
+  details.accgroup:first-of-type{ border-top:none; padding-top:0; }
+  details.accgroup > summary{
+    list-style:none; cursor:pointer; padding:0 0 4px;
+    display:flex; align-items:center; gap:10px;
+    font-size:16px; font-weight:700; color:var(--purple-text);
+  }
+  details.accgroup > summary::-webkit-details-marker{ display:none; }
+  details.accgroup > summary .chev{
+    margin-left:auto; color:var(--text-dim); font-size:12px; transition:transform .2s; flex:0 0 auto;
+  }
+  details.accgroup[open] > summary .chev{ transform:rotate(180deg); }
+  details.accgroup > summary .snum{
+    display:flex; align-items:center; justify-content:center;
+    width:26px; height:26px; border-radius:8px; flex:0 0 auto;
+    background:var(--purple-fill); color:var(--purple-text); font-size:12.5px; font-weight:800;
+  }
+  details.accgroup > summary .stag{
+    font-size:10px; color:var(--lightblue); background:var(--blue-fill);
+    border:1px solid rgba(147,209,244,.3); border-radius:6px; padding:2px 6px;
+    font-weight:700; flex:0 0 auto;
+  }
+  .acc-lead{
+    padding:0 0 12px; margin:0; font-size:12.5px; color:var(--text-dim); line-height:1.65;
+  }
+  .acc-body{ padding:4px 0 0; }
+
+  /* ---------- Chord entry (flat list row, no boxed card) ---------- */
+  .xcard{
+    background:none; border:none; border-radius:0;
+    padding:0; margin:0; position:relative;
+    scroll-margin-top:96px;
+  }
+  .cardswrap .xcard{ padding:22px 0; }
+  .cardswrap .xcard:first-child{ padding-top:6px; }
+  .cardswrap .xcard:not(:first-child){ border-top:1px solid var(--border); }
+  .xcard.flash{ animation:flashhl 1.1s ease; }
+  @keyframes flashhl{
+    0%{ box-shadow:0 0 0 2px rgba(147,209,244,.85); }
+    100%{ box-shadow:0 0 0 0 rgba(147,209,244,0); }
+  }
+
+  .xcard .toprow{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+  .degbadge{
+    display:inline-flex; align-items:center; font-size:11px; font-weight:800;
+    padding:3px 8px; border-radius:7px; letter-spacing:.02em;
+    background:var(--purple-fill); color:var(--purple-text); border:1px solid rgba(164,128,234,.3);
+  }
+  .degbadge.hl-dominant{ background:linear-gradient(120deg,var(--purple-fill),var(--pink-fill)); color:var(--pink-text); border-color:rgba(226,111,224,.3); }
+  .degbadge.hl-sub{ background:var(--blue-fill); color:var(--lightblue); border-color:rgba(147,209,244,.28); }
+  .degbadge.hl-plain{ background:var(--pink-fill); color:var(--pink-text); border-color:rgba(226,111,224,.22); }
+
+  /* Tonal-function badge (T / SD / SDm) — sits next to the degree badge so the
+     harmonic role reads at a glance without opening the note text. */
+  .fnbadge{
+    display:inline-flex; align-items:center; font-size:10px; font-weight:800;
+    padding:3px 7px; border-radius:6px; letter-spacing:.03em;
+    background:var(--purple-fill); color:var(--purple-text); border:1px solid rgba(164,128,234,.35);
+  }
+  .fnbadge.fn-sub{ background:var(--blue-fill); color:var(--lightblue); border-color:rgba(147,209,244,.3); }
+
+  .xcard .chordname{ font-size:21px; font-weight:800; color:#f4f1fb; }
+  .xcard .chordalt{ font-size:12px; color:var(--text-dim); font-weight:500; }
+
+  .xcard .scaleline{
+    font-size:14.5px; color:var(--lightblue); margin:0 0 10px; font-weight:600;
+  }
+  .xcard .scaleline .gloss{ color:var(--text-dim-blue); font-weight:400; }
+
+  .rowlabel{
+    font-size:10.5px; color:var(--text-dim); text-transform:uppercase;
+    letter-spacing:.07em; font-weight:700; margin:9px 0 5px;
+  }
+  .chiprow{ display:flex; flex-wrap:wrap; gap:6px; }
+  .chip{
+    display:inline-flex; align-items:baseline; gap:4px;
+    background:var(--blue-fill); border:1px solid rgba(147,209,244,.3);
+    border-radius:8px; padding:5px 9px;
+  }
+  .chip .cn{ font-size:15.5px; font-weight:800; color:var(--lightblue); }
+  .chip .cl{ font-size:11px; color:var(--text-dim-blue); }
+  .chip.empty{ background:transparent; border:1px dashed var(--border); color:var(--text-dim); font-size:12px; padding:5px 9px; }
+
+  .avoidbar{
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    background:var(--yellow-bg); border:1px solid rgba(253,227,6,.35);
+    border-radius:9px; padding:8px 10px; margin-top:4px;
+  }
+  .avoidbar .aico{ font-size:14px; flex:0 0 auto; }
+  .avoidbar .an{ font-size:16.5px; font-weight:800; color:var(--yellow); }
+  .avoidbar .al{ font-size:11px; color:#e8dd8f; }
+  .avoidbar.none{ background:transparent; border:1px solid var(--border); }
+  .avoidbar.none .an{ font-size:12.5px; font-weight:600; color:var(--lightblue); }
+
+  .funcline{ margin-top:10px; font-size:12.5px; color:var(--pink-text); font-weight:600; }
+  .xcard .note{ margin-top:8px; font-size:12.5px; color:var(--text-dim); line-height:1.65; }
+  .xcard .note b{ color:var(--purple-text); font-weight:600; }
+
+  /* No outer box here: the score/avoid boxes below already carry the visual weight,
+     wrapping them again just shrinks them (this is what made the III chord look cramped) */
+  .dualwrap{ display:grid; grid-template-columns:minmax(0,1fr); gap:18px; }
+  @media (min-width:480px){ .dualwrap{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; } }
+  .dualbox{ background:none; border:none; border-radius:0; padding:0; }
+  .dualbox .dtitle{ font-size:11.5px; font-weight:700; color:#f4f1fb; margin-bottom:8px; }
+  .dualwrap > .dualbox:not(:first-child){ border-top:1px solid var(--border); padding-top:16px; }
+  @media (min-width:480px){
+    .dualwrap > .dualbox:not(:first-child){ border-top:none; padding-top:0; border-left:1px solid var(--border); padding-left:16px; }
+  }
+
+  /* ---------- Scale notation (VexFlow) ---------- */
+  .vf-staff{
+    background:var(--bg-pre); border:1px solid var(--border); border-radius:9px;
+    padding:8px 4px; margin:0 0 10px; overflow-x:auto; -webkit-overflow-scrolling:touch;
+    line-height:0;
+  }
+  .vf-staff svg{ display:block; }
+  /* Ledger lines (notes like C4 sitting outside the 5-line staff) render as thin
+     <line> elements; VexFlow draws them dim regardless of note color, so force a
+     brighter stroke here rather than relying on the notation library's default. */
+  .vf-staff svg line{ stroke:#f4f1fb; }
+  .dualbox .vf-staff{ margin:0 0 8px; }
+
+  /* ---------- reference (static) tables ---------- */
+  pre{
+    margin:0; background:var(--bg-pre); border:1px solid var(--border); border-radius:9px;
+    padding:12px 13px; overflow-x:auto; -webkit-overflow-scrolling:touch;
+    white-space:pre; font-size:12.5px; line-height:1.8;
+  }
+  code{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace; color:#e4e1f4; }
+  .table-scroll{ overflow-x:auto; -webkit-overflow-scrolling:touch; border:1px solid var(--border); border-radius:9px; background:var(--bg-pre); margin:8px 0; }
+  .table-scroll pre{ border:none; }
+  pre::-webkit-scrollbar, .table-scroll::-webkit-scrollbar{ height:6px; }
+  pre::-webkit-scrollbar-thumb, .table-scroll::-webkit-scrollbar-thumb{ background:rgba(147,209,244,.4); border-radius:3px; }
+  pre::-webkit-scrollbar-track, .table-scroll::-webkit-scrollbar-track{ background:transparent; }
+  h4.mini{ font-size:12px; color:var(--text-dim); margin:14px 4px 7px; text-transform:uppercase; letter-spacing:.06em; font-weight:700; }
+  .refcard{ background:var(--bg-raised); border:1px solid var(--border); border-radius:10px; padding:11px 12px; margin:8px 4px; font-size:13px; color:var(--text-dim); line-height:1.7; }
+  .refcard b{ color:#f4f1fb; }
+
+  a{ color:var(--pink-text); }
+
+  @media (min-width:480px){
+    .xcard .chordname{ font-size:21px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <p class="kicker">Interactive Chord-Scale Analyzer</p>
+  <h1>コード・スケール理論 アナライザー</h1>
+  <p>度数から即ジャンプ。キーを選べば全コード・アボイド・テンションが実音名に切り替わります。</p>
+</header>
+
+<div id="controlbar">
+  <button id="navToggle" type="button" aria-expanded="false">
+    <span class="ico">&#9776;</span><span>度数ナビ</span><span class="chev">&#9660;</span>
+  </button>
+  <div class="keywrap">
+    <label for="keySelect">Key</label>
+    <select id="keySelect" aria-label="キーを選択"></select>
+  </div>
+</div>
+
+<div id="navPanel"><div class="inner" id="navPanelInner"></div></div>
+
+<div class="wrap">
+<main>
+
+  <div class="intro-callout">
+    <b>アボイドノートとは</b> — コードトーンの半音上に位置し、強打・保持すると強い不協和を生む音。経過音としてなら問題ない。「弾いてはいけない」ではなく<b>「取扱注意」</b>の音。<br>
+    以下の各カードは選択中のキーに合わせて自動的に音名が切り替わります。黄色バー = アボイド、水色チップ = 使用可能テンション。<br>
+    コード名の隣のバッジ = 調性内の機能(<b>T</b>=トニック、<b>SD</b>=サブドミナント、<b>SDm</b>=サブドミナント・マイナー)。
+  </div>
+
+  <!-- Accordion sections are populated by JS below -->
+  <div id="sectionsRoot"></div>
+
+
+</main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/build/cjs/vexflow.js"></script>
+<script>
+/* ============================================================
+   THEORY ENGINE
+============================================================ */
+const LETTERS = ['C','D','E','F','G','A','B'];
+const LETTER_PC = {C:0,D:2,E:4,F:5,G:7,A:9,B:11};
+const mod12 = n => ((n % 12) + 12) % 12;
+const mod7  = n => ((n % 7) + 7) % 7;
+const pc    = note => mod12(LETTER_PC[note.letter] + note.acc);
+function accStr(acc){
+  return acc===0?'':acc===1?'#':acc===2?'x':acc===-1?'b':acc===-2?'bb':(acc>0?'#':'b')+Math.abs(acc);
+}
+const noteName = note => note.letter + accStr(note.acc);
+function displayNote(note){
+  let {letter, acc} = note;
+  if(letter==='E' && acc===1) return {letter:'F', acc:0};
+  if(letter==='B' && acc===1) return {letter:'C', acc:0};
+  if(letter==='C' && acc===-1) return {letter:'B', acc:0};
+  if(letter==='F' && acc===-1) return {letter:'E', acc:0};
+  if(Math.abs(acc) >= 2){
+    const target = pc(note);
+    let best=null, bestAbs=99;
+    for(const L of LETTERS){
+      const norm = (((target - LETTER_PC[L])+6)%12+12)%12-6;
+      if(Math.abs(norm) < bestAbs){ bestAbs=Math.abs(norm); best={letter:L, acc:norm}; }
+    }
+    if(best && bestAbs<=1) return best;
+  }
+  return {letter, acc};
+}
+const nd = note => noteName(displayNote(note));
+function buildScale(root, pattern){
+  const rootPc = pc(root);
+  const startIdx = LETTERS.indexOf(root.letter);
+  const scale = [];
+  for(let i=0;i<pattern.length;i++){
+    const letter = LETTERS[mod7(startIdx+i)];
+    let acc = mod12(rootPc+pattern[i]) - LETTER_PC[letter];
+    acc = ((acc+6)%12+12)%12-6;
+    scale.push({letter, acc});
+  }
+  return scale;
+}
+const MAJOR  = [0,2,4,5,7,9,11];
+const MELMIN = [0,2,3,5,7,9,11];
+const HARMIN = [0,2,3,5,7,8,11];
+const SCALES = {major:MAJOR, melmin:MELMIN, harmin:HARMIN};
+
+/* ---- Mode -> interval pattern, for scale notation (VexFlow) ---- */
+const MODE_PATTERNS = {
+  'Ionian':          [0,2,4,5,7,9,11],
+  'Dorian':          [0,2,3,5,7,9,10],
+  'Phrygian':        [0,1,3,5,7,8,10],
+  'Lydian':          [0,2,4,6,7,9,11],
+  'Mixolydian':      [0,2,4,5,7,9,10],
+  'Aeolian':         [0,2,3,5,7,8,10],
+  'Locrian':         [0,1,3,5,6,8,10],
+  'Minor-Major':     [0,2,3,5,7,9,11],
+  'Phrygian(#6)':    [0,1,3,5,7,9,10],
+  'Lydian Augmented':[0,2,4,6,8,9,11],
+  'Lydian Dominant': [0,2,4,6,7,9,10],
+  'Locrian #2':      [0,2,3,5,6,8,10],
+  'Altered':         [0,1,3,4,6,8,10],
+  'Whole Tone':      [0,2,4,6,8,10],
+  'Half-Whole Dim':  [0,1,3,4,6,7,9,10],
+  'Whole-Half Dim':  [0,2,3,5,6,8,9,11]
+};
+function getEntryScaleNotes(root, modeKey){
+  const pattern = MODE_PATTERNS[modeKey];
+  if(!root || !pattern) return null;
+  const scale = buildScale(root, pattern);
+  const startIdx = LETTERS.indexOf(root.letter);
+  // Decided once, from the scale's head note, never mid-scale: dropping the whole scale
+  // an octave only helps if the new head is still B3 or above (any lower needs a second
+  // ledger line and gets hard to read). Letters run C..B within an octave, so B is the
+  // only root where that still holds.
+  const base = (startIdx === LETTERS.indexOf('B')) ? 3 : 4;
+  return scale.map((n,i)=>({ letter:n.letter, acc:n.acc, octave: base + Math.floor((startIdx+i)/7) }));
+}
+function vfAcc(acc){
+  if(acc===0) return '';
+  if(acc>0) return '#'.repeat(acc);
+  return 'b'.repeat(-acc);
+}
+const KEYS = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
+const KEY_SEED = {
+  C:{letter:'C',acc:0}, Db:{letter:'D',acc:-1}, D:{letter:'D',acc:0},
+  Eb:{letter:'E',acc:-1}, E:{letter:'E',acc:0}, F:{letter:'F',acc:0},
+  Gb:{letter:'G',acc:-1}, G:{letter:'G',acc:0}, Ab:{letter:'A',acc:-1},
+  A:{letter:'A',acc:0}, Bb:{letter:'B',acc:-1}, B:{letter:'B',acc:0}
+};
+const SPELL = {
+  'b9':{deg:2,mod:-1}, '9':{deg:2,mod:0}, '#9':{deg:2,mod:1},
+  '3':{deg:3,mod:0}, 'b3':{deg:3,mod:-1},
+  '4':{deg:4,mod:0}, '11':{deg:4,mod:0}, '#11':{deg:4,mod:1},
+  '5':{deg:5,mod:0}, 'b5':{deg:5,mod:-1}, '#5':{deg:5,mod:1},
+  '13':{deg:6,mod:0}, '6':{deg:6,mod:0}, 'b13':{deg:6,mod:-1},
+  'b7':{deg:7,mod:-1}, '7':{deg:7,mod:0}
+};
+function spellDegree(root, code){
+  if(code === '1') return displayNote(root);
+  const s = SPELL[code];
+  if(!s) return null;
+  const base = buildScale(root, MAJOR)[s.deg-1];
+  return displayNote({letter:base.letter, acc:base.acc+s.mod});
+}
+function spellName(root, code){ const n = spellDegree(root, code); return n?noteName(n):code; }
+function cardRoot(keyName, parent, idx){ return buildScale(KEY_SEED[keyName], SCALES[parent])[idx]; }
+function cardRootName(keyName, parent, idx){ return nd(cardRoot(keyName, parent, idx)); }
+
+/* ============================================================
+   BLUES SCALES — chord-independent "key-center" scales (Hal Crook:
+   non-harmonic material used as a deliberate special effect, not
+   resolved like ordinary avoid notes).
+============================================================ */
+const BLUES_INTERVALS = {
+  minor: ['1','b3','4','b5','5','b7'],
+  major: ['1','9','b3','3','5','13']
+};
+function buildBluesScale(root, bluesType){
+  const codes = BLUES_INTERVALS[bluesType];
+  const startIdx = LETTERS.indexOf(root.letter);
+  // Same "never drop the head below B3" rule as buildScale-based cards (see getEntryScaleNotes).
+  const base = (startIdx === LETTERS.indexOf('B')) ? 3 : 4;
+  return codes.map(code=>{
+    const degIdx = code==='1' ? 0 : SPELL[code].deg - 1;
+    const note = spellDegree(root, code);
+    return { letter:note.letter, acc:note.acc, octave: base + Math.floor((startIdx+degIdx)/7) };
+  });
+}
+
+/* ============================================================
+   DATA
+============================================================ */
+const T = (code,label) => ({code, label: label||code});
+const A = (code,label) => ({code, label: label||code});
+
+const DATA = {
+  major: {
+    title:'メジャースケール・ハーモニー', num:'①', tag:null,
+    lead:'選択中のキーのメジャースケールを基準に、I〜VIIの各モード。',
+    quick:[
+      ['I','CM7','C Ionian','4th','9,13,(#11)'],['II','D-7','D Dorian','なし','9,11,13'],
+      ['III','E-7','E Phrygian','b9,b13','(制限あり)'],['IV','FM7(#11)','F Lydian','なし','9,#11,13'],
+      ['V','G7','G Mixolydian','4th','9,13'],['VI','A-7','A Aeolian','b13','9,11'],
+      ['VII','Bm7b5','B Locrian','b9','11,b13']
+    ],
+    cards:[
+      { id:'maj-1', deg:'I', hl:'tonic', fn:'T', parent:'major', idx:0, suf:'△7', altText:'(maj7)', mode:'Ionian', scaleMode:'Ionian', gloss:'メジャースケール',
+        avoid:[A('4','4th')], tension:[T('9'),T('13')], tensionExtra:T('#11','#11(リディアン化)'), func:'I = トニック',
+        note:'4thは保持・強打で強い不協和、経過音なら可。半音上げて#11にすると<b>リディアン</b>化しアボイドが解消。' },
+      { id:'maj-2', deg:'II', hl:'plain', fn:'SDm', parent:'major', idx:1, suf:'-7', mode:'Dorian', scaleMode:'Dorian',
+        avoid:[], tension:[T('9'),T('11'),T('13')], func:'II',
+        note:'アボイドノートが存在しない数少ないダイアトニックコード。7音すべてを自由に使用できる。' },
+      { id:'maj-3', deg:'III', hl:'plain', fn:'T', parent:'major', idx:2, suf:'-7', mode:'Phrygian / Dorian(選択可)', dual:true,
+        dualA:{ title:'Phrygianで弾く場合', avoid:[A('b9'),A('b13')], scaleMode:'Phrygian' },
+        dualB:{ title:'Dorianで弾く場合(Dメジャーキー由来)', avoid:[], scaleMode:'Dorian' },
+        tension:[], func:'III',
+        note:'III-VI-II-V進行のIII部分。フリジアンはb9・b13が通常のm7ボイシングと衝突しやすく、ドリアンを選ぶ奏者も多い。' },
+      { id:'maj-4', deg:'IV', hl:'sub', fn:'SD', parent:'major', idx:3, suf:'△7(#11)', mode:'Lydian', scaleMode:'Lydian',
+        avoid:[], tension:[T('9'),T('#11'),T('13')], func:'IV',
+        note:'#11そのものがこのモードの特徴音であり、アボイドが存在しない。' },
+      { id:'maj-5', deg:'V', hl:'dominant', parent:'major', idx:4, suf:'7', mode:'Mixolydian', scaleMode:'Mixolydian', gloss:'ドミナントスケール',
+        avoid:[A('4','4th(11th)')], tension:[T('9'),T('13')], func:'V = ドミナント',
+        note:'4thは保持・強打で不協和。<b>sus4</b>化すると4thがコードトーンとなりアボイドが解消する。' },
+      { id:'maj-6', deg:'VI', hl:'tonic', fn:'T', parent:'major', idx:5, suf:'-7', mode:'Aeolian', scaleMode:'Aeolian',
+        avoid:[A('b13','♭13th(♭6th)')], tension:[T('9'),T('11')], func:'VI = トニック代理',
+        note:'I△7のトニック代理として機能。5th上の半音(♭13th)がアボイドだが、経過音や控えめな使用なら問題ない。' },
+      { id:'maj-7', deg:'VII', hl:'dominant', parent:'major', idx:6, suf:'m7b5', altText:'(ø)', mode:'Locrian', scaleMode:'Locrian',
+        avoid:[A('b9')], tension:[T('11'),T('b13')], func:'VII',
+        note:'初期ビバップ期の第一選択。b9は保持で強い不協和。アボイドのない代替スケール(Locrian#2)は②-VI参照。' }
+    ]
+  },
+  melmin:{
+    title:'メロディックマイナー・ハーモニー', num:'②', tag:null,
+    lead:'選択中のキーのメロディックマイナー(上行形)を基準に。全体的にアボイドノートが少ないのが特徴。',
+    quick:[
+      ['I','C-M7','C Minor-Major','なし','9,11,13'],['II','Dsus(b9)','D Phrygian(#6)','なし','b9,11,13'],
+      ['III','EbM7(#5)','Eb Lydian Aug.','なし','9,#11'],['IV','F7(#11)','F Lydian Dominant','なし','9,#11,13'],
+      ['VI','Am7b5','A Locrian #2','なし','9,11,b13'],
+      ['VII','B7alt','B Altered','なし','b9,#9,#11,b13']
+    ],
+    cards:[
+      { id:'mm-1', deg:'I', hl:'tonic', fn:'T', parent:'melmin', idx:0, suf:'-△7', altText:'(-6として代用可)', mode:'Minor-Major', scaleMode:'Minor-Major',
+        avoid:[], tension:[T('9'),T('11'),T('13')], func:'I = トニックマイナー(-7としては機能しない)',
+        note:'マイナー・メジャーコードは、II-7ではなく独立した「トニックマイナー」として機能する。' },
+      { id:'mm-2', deg:'II', hl:'plain', fn:'SDm', parent:'melmin', idx:1, suf:'sus(b9)', mode:'Phrygian(#6)', scaleMode:'Phrygian(#6)',
+        avoid:[], tension:[T('b9'),T('11','11(sus4)'),T('13','13(natural)')], func:'II',
+        note:'通常のフリジアンは♭13だが、本モードは13がnaturalな点が識別ポイント。' },
+      { id:'mm-3', deg:'III', hl:'plain', fn:'T', parent:'melmin', idx:2, suf:'△7(#5)', mode:'Lydian Augmented', scaleMode:'Lydian Augmented',
+        avoid:[], tension:[T('9'),T('#11')], func:'III',
+        note:'#4(リディアン)と+5(オーグメント)の両特徴を併せ持つ。メジャー7th+5系コードに使用。' },
+      { id:'mm-4', deg:'IV', hl:'dominant', parent:'melmin', idx:3, suf:'7(#11)', mode:'Lydian Dominant', scaleMode:'Lydian Dominant',
+        avoid:[], tension:[T('9'),T('#11'),T('13')], func:'IV',
+        note:'メジャースケールのリディアンと違い短7度を持つドミナント7thに適用。+11が特徴音。' },
+      { id:'mm-6', deg:'VI', hl:'dominant', fn:'SDm', parent:'melmin', idx:5, suf:'m7b5', altText:'(ø)', mode:'Locrian #2', scaleMode:'Locrian #2',
+        avoid:[], tension:[T('9','9(natural)'),T('11'),T('b13')], func:'マイナーキーのII',
+        note:'通常のロクリアン(①-VII)との違いは2度=natural9であること。この1音の差でアボイドが消える。' },
+      { id:'mm-7', deg:'VII', hl:'dominant', parent:'melmin', idx:6, suf:'7alt', mode:'Altered', scaleMode:'Altered', gloss:'super Locrian',
+        avoid:[], tension:[T('b9'),T('#9'),T('#11'),T('b13')], func:'マイナーキーのV代理',
+        note:'7thを可能な限りすべての方向へ変化させたコード。natural系の音は一切含まれない。' }
+    ]
+  },
+  dim:{
+    title:'ディミニッシュ・スケール・ハーモニー', num:'③', tag:null,
+    lead:'8音の対称スケール。短3度ごとに同一構造が反復するため、アボイドノートは存在しない。', quick:null,
+    cards:[
+      { id:'dim-1', deg:'V7♭9', hl:'dominant', parent:'major', idx:4, suf:'7b9', mode:'コンビネーション・ディミニッシュ', scaleMode:'Half-Whole Dim', gloss:'半音-全音',
+        avoid:'sym', tension:[T('b9'),T('#9'),T('#11'),T('13','13(natural)'),T('5','5(natural)')], func:'V = ドミナント',
+        note:'短3度上のドミナント7♭9とルート以外が完全に互換。ボイシングもそのまま短3度移調できる。' },
+      { id:'dim-2', deg:'dim7', hl:'plain', parent:'major', idx:4, suf:'°7', mode:'全音-半音ディミニッシュ', scaleMode:'Whole-Half Dim',
+        avoid:'sym', tension:[], func:'後続コードに対するV7♭9の代理',
+        note:'半音進行のクロマチックなベースラインを作るために置かれる「変装したドミナント」。' }
+    ]
+  },
+  wt:{
+    title:'ホールトーン・スケール・ハーモニー', num:'④', tag:null,
+    lead:'全音のみで構成される6音の対称スケール。アボイドノートは存在しないが半音を含まないため響きの幅は狭い。', quick:null,
+    cards:[
+      { id:'wt-1', deg:'V7(+5)', hl:'dominant', parent:'major', idx:4, suf:'7(+5)', mode:'Whole Tone', scaleMode:'Whole Tone',
+        avoid:'sym', tension:[T('9','9(natural)'),T('#11'),T('b13','+5(=b13)')], func:'V = ドミナント',
+        note:'同じホールトーンスケールを共有する全音間隔の他ドミナント7+5コードにも転用可能。' }
+    ]
+  },
+  special:{
+    title:'特殊コード', num:'⑤', tag:null, lead:'単一のダイアトニック・モードに収まらない、機能的に特殊なコード群。', quick:null,
+    cards:[
+      { id:'sp-1', deg:'Phrygian Chord', hl:'plain', parent:'major', idx:2, suf:'sus(b9)', altText:'(Phryg)', mode:'Phrygian', scaleMode:'Phrygian',
+        avoid:[], tension:[T('b9'),T('11','11(4th)')], func:'II-Vを1コードに凝縮した終止(V-I的進行)',
+        note:'スパニッシュ・カデンツ的なフリジアン・コード。構成音はroot・b9・11・5th(3rd/7thを含まない)。' },
+      { id:'sp-2', deg:'Sus Chord', hl:'sub', parent:'major', idx:4, suf:'sus', mode:'Mixolydian', scaleMode:'Mixolydian', gloss:'V7と同一スケール',
+        avoid:[], tension:[], func:'II-Vを1コードに凝縮したもの',
+        note:'V7では4thがアボイドだが、susボイシングでは4thがコードトーン化し不協和が解消される。' },
+      { id:'sp-3', deg:'Minor 6th Chord', hl:'tonic', fn:'T', parent:'major', idx:1, suf:'-6', mode:null,
+        avoid:[], tension:[], func:'-7としては機能せず、トニックマイナーとして機能',
+        note:'"Summertime"等の1曲目のコードのように、独立したI(マイナー)として使われる。' },
+      { id:'sp-4', deg:'Diminished 7th', hl:'dominant', parent:'major', idx:0, suf:'°7', mode:null,
+        avoid:[], tension:[], func:'後続コードに対する変装したV7♭9(ドミナント代理)',
+        note:'半音階的なベース進行(クロマチック・アプローチ)を作るために置かれる用法が最も多い。' }
+    ]
+  },
+  blues:{
+    title:'ブルーノート・スケール', num:'⑦', tag:'NHT', type:'blues', quick:null,
+    lead:'コードではなくキーセンターに従属するスケール。Hal Crook理論における「ノン・ハーモニック・マテリアル(NHT)」の一種で、本来は解決すべき非和声音をブルース進行では意図的な特殊効果としてそのまま鳴らす。',
+    cards:[
+      { id:'blues-minor', type:'blues', bluesType:'minor', hl:'plain', navLabel:'マイナー・ブルース',
+        title:'マイナー・ブルーノート・スケール', subtitle:'ヘキサトニック・ブルース',
+        degreesLabel:'1, ♭3, 4, ♭5, 5, ♭7',
+        chords:[ {suf:'7', note:'I7/IV7/V7全てに共通(キーセンター)'}, {suf:'-7', note:''}, {suf:'△7', note:'特殊効果(アウトサイド・カラー)'} ],
+        tension:[ T('b3','♯9'), T('4','11'), T('b5','♯11/♭13'), T('5','5'), T('b7','♭7') ],
+        func:'キーセンター・ペダル / 不安定なトニック(または、ドミナント上の緊張)',
+        avoidNote:'ブルース進行では概念なし(意図的なぶつけ)。機能和声上は♭3・♭5がNHT(要解決)だが、ブルース進行では解決不要。',
+        note:'まずマイナー・ペンタトニック(1,♭3,4,5,♭7)を固め、♭5を4→♭5→5のクロマチック経過音として加える練習が定石(Hal Crook)。慣れたら♭3・♭5を解決せず保持し、進行が変わっても同じキーのブルーノート・スケールを弾き通す「キーセンター・アプローチ」に発展させる。' },
+      { id:'blues-major', type:'blues', bluesType:'major', hl:'sub', navLabel:'メジャー・ブルース',
+        title:'メジャー・ブルーノート・スケール', subtitle:'メジャー・ブルース',
+        degreesLabel:'1, 2, ♭3, 3, 5, 6',
+        chords:[ {suf:'△7', note:''}, {suf:'6', note:''}, {suf:'7', note:'♭7を別途経過的に追加'} ],
+        tension:[ T('9','9'), T('b3','♯9'), T('3','3'), T('5','5'), T('13','13') ],
+        func:'メジャー・トニックのブルージーな彩り(イオニアン+♭3+♯5相当のハイブリッド)',
+        avoidNote:'♭3はメジャーコード上ではNHT(半音下の3rdへ解決推奨)。ブルース進行ではあえて解決せず保持する。',
+        note:'♭3を3rdへ解決せずに伸ばすことでブルージーな味わいが生まれる。コンピングでは♭3をトップノートに置いたクローズ・ボイシングが効果的。常用するスケールではなく、ソロの要所(アクセント)で使う特殊効果として控えめに使用する。' }
+    ]
+  }
+};
+
+function pentaWorked(keyName){
+  const maj = buildScale(KEY_SEED[keyName], MAJOR);
+  const I = maj[0], II = maj[1], V = maj[4];
+  const avoidI = nd(spellDegree(I,'4')), avoidV = nd(spellDegree(V,'4'));
+  const remain = maj.filter(n => noteName(n)!==avoidI && noteName(n)!==avoidV).map(noteName);
+  return { I:noteName(I), II:noteName(II), V:noteName(V), avoidI, avoidV, remain };
+}
+
+/* ============================================================
+   RENDER
+============================================================ */
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function chipsHtml(root, list){
+  if(!list || !list.length) return '<span class="chip empty">なし</span>';
+  return list.map(t => `<span class="chip"><span class="cn">${esc(spellName(root,t.code))}</span><span class="cl">${esc(t.label)}</span></span>`).join('');
+}
+function avoidHtml(root, avoid){
+  if(avoid === 'oos') return `<div class="avoidbar none"><span class="an">※範囲外(原著で別章扱い・本資料未収録)</span></div>`;
+  if(avoid === 'sym') return `<div class="avoidbar none"><span class="an">対称スケールにつきアボイドの概念なし</span></div>`;
+  if(!avoid || !avoid.length) return `<div class="avoidbar none"><span class="an">アボイドなし</span></div>`;
+  const items = avoid.map(a=>`<span class="an">${esc(spellName(root,a.code))}</span><span class="al">(${esc(a.label)})</span>`).join('&nbsp;&nbsp;');
+  return `<div class="avoidbar"><span class="aico">&#9888;</span>${items}</div>`;
+}
+function renderCard(entry, keyName){
+  if(entry.omitted){
+    return `<div class="xcard hl-plain" id="${entry.id}">
+      <div class="toprow"><span class="chordname" style="font-size:15px;color:var(--text-dim)">(該当モードなし)</span><span class="degbadge hl-plain">${esc(entry.deg)}</span></div>
+      <p class="note">${entry.note}</p></div>`;
+  }
+  const root = cardRoot(keyName, entry.parent, entry.idx);
+  const rootName = cardRootName(keyName, entry.parent, entry.idx);
+  const chordName = rootName + entry.suf;
+  const altText = entry.altText ? ` <span class="chordalt">${esc(entry.altText)}</span>` : '';
+  const scaleName = entry.mode ? `${rootName} ${entry.mode}` : null;
+  const glossHtml = entry.gloss ? ` <span class="gloss">— ${esc(entry.gloss)}</span>` : '';
+  let bodyHtml = '';
+  if(entry.dual){
+    const scoreA = entry.dualA.scaleMode ? `<div class="vf-staff" id="${entry.id}-scoreA"></div>` : '';
+    const scoreB = entry.dualB.scaleMode ? `<div class="vf-staff" id="${entry.id}-scoreB"></div>` : '';
+    bodyHtml += `<div class="dualwrap">
+      <div class="dualbox"><div class="dtitle">${esc(entry.dualA.title)}</div>${scoreA}${avoidHtml(root, entry.dualA.avoid)}</div>
+      <div class="dualbox"><div class="dtitle">${esc(entry.dualB.title)}</div>${scoreB}${avoidHtml(root, entry.dualB.avoid)}</div>
+    </div>`;
+  } else {
+    const tlist = entry.tensionExtra ? entry.tension.concat([entry.tensionExtra]) : entry.tension;
+    if(entry.scaleMode){
+      bodyHtml += `<div class="rowlabel">スケール譜面</div><div class="vf-staff" id="${entry.id}-score"></div>`;
+    }
+    bodyHtml += `<div class="rowlabel">Avoid</div>${avoidHtml(root, entry.avoid)}`;
+    bodyHtml += `<div class="rowlabel">使用可能テンション</div><div class="chiprow">${chipsHtml(root, tlist)}</div>`;
+  }
+  const fnBadge = entry.fn ? `<span class="fnbadge ${entry.fn==='T'?'':'fn-sub'}">${esc(entry.fn)}</span>` : '';
+  // Roman-numeral degrees (I..VII) get the chord's own suffix appended (e.g. "I△7"); the
+  // descriptive degree labels used in the diminished/whole-tone/special sections (e.g.
+  // "V7♭9", "dim7") already spell out the quality, so leave those as-is.
+  const degLabel = /^[IVX]+$/.test(entry.deg) && entry.suf ? entry.deg + entry.suf : entry.deg;
+  return `<div class="xcard hl-${entry.hl}" id="${entry.id}">
+    <div class="toprow"><span class="chordname">${esc(chordName)}</span>${altText}<span class="degbadge hl-${entry.hl}">${esc(degLabel)}</span>${fnBadge}</div>
+    ${scaleName?`<div class="scaleline">${esc(scaleName)}${glossHtml}</div>`:''}
+    ${bodyHtml}
+    <div class="funcline">${esc(entry.func||'')}</div>
+    ${entry.note?`<p class="note">${entry.note}</p>`:''}
+  </div>`;
+}
+function renderBluesCard(entry, keyName){
+  const root = KEY_SEED[keyName];
+  const rootName = nd(root);
+  const chordsHtml = entry.chords.map(c=>
+    `<span class="chip"><span class="cn">${esc(rootName + c.suf)}</span>${c.note?`<span class="cl">${esc(c.note)}</span>`:''}</span>`
+  ).join('');
+  return `<div class="xcard hl-${entry.hl}" id="${entry.id}">
+    <div class="toprow"><span class="chordname">${esc(entry.title)}</span><span class="degbadge hl-${entry.hl}">Blues</span></div>
+    <div class="scaleline">${esc(rootName)} ${esc(entry.subtitle)} <span class="gloss">— ${esc(entry.degreesLabel)}</span></div>
+    <div class="rowlabel">スケール譜面</div><div class="vf-staff" id="${entry.id}-score"></div>
+    <div class="rowlabel">推奨コード</div><div class="chiprow">${chordsHtml}</div>
+    <div class="rowlabel">テンション・マッピング</div><div class="chiprow">${chipsHtml(root, entry.tension)}</div>
+    <div class="rowlabel">Avoid</div>
+    <div class="avoidbar none"><span class="an">なし(特殊)</span></div>
+    <p class="note" style="margin-top:6px;">${esc(entry.avoidNote)}</p>
+    <div class="funcline">${esc(entry.func||'')}</div>
+    ${entry.note?`<p class="note">${entry.note}</p>`:''}
+  </div>`;
+}
+function renderQuickTable(rows){
+  if(!rows) return '';
+  const header = 'DEG    CHORD        SCALE                  AVOID     TENSION';
+  const lines = rows.map(r=>{
+    const [deg,chord,scale,avoid,tension] = r;
+    return deg.padEnd(6)+' '+chord.padEnd(12)+' '+scale.padEnd(22)+' '+avoid.padEnd(9)+' '+tension;
+  });
+  return `<div class="table-scroll"><pre><code>${esc(header)}\n${esc(lines.join('\n'))}</code></pre></div>`;
+}
+function renderSection(key, sec, keyName){
+  const cardsHtml = key === 'blues'
+    ? sec.cards.map(c => renderBluesCard(c, keyName)).join('')
+    : sec.cards.map(c => renderCard(c, keyName)).join('');
+  return `<details class="accgroup" id="acc-${key}" ${key==='major'?'open':''}>
+    <summary><span class="snum">${sec.num}</span><span>${esc(sec.title)}</span>${sec.tag?`<span class="stag">${esc(sec.tag)}</span>`:''}<span class="chev">&#9660;</span></summary>
+    <p class="acc-lead">${esc(sec.lead)}</p>
+    <div class="acc-body">${renderQuickTable(sec.quick)}<div class="cardswrap" data-section="${key}">${cardsHtml}</div></div>
+  </details>`;
+}
+function renderNavPanel(){
+  let html = '';
+  for(const [key, sec] of Object.entries(DATA)){
+    if(key === 'blues') continue;
+    html += `<div class="navGroupLabel">${sec.num} ${esc(sec.title)}</div><div class="navGrid">`;
+    sec.cards.forEach(c=>{
+      html += `<button type="button" class="navChip b-${c.hl}" data-target="${c.id}" data-acc="acc-${key}"><b>${esc(c.deg)}</b>${esc((c.suf||'').replace('△','maj'))}</button>`;
+    });
+    html += `</div>`;
+  }
+  html += `<div class="navGroupLabel">⑥ アボイド回避ペンタトニック</div><div class="navGrid">
+    <button type="button" class="navChip b-plain" data-target="pentaCard" data-acc="acc-penta"><b>II-V-I</b>ワークアウト例</button>
+  </div>`;
+  if(DATA.blues){
+    html += `<div class="navGroupLabel">${DATA.blues.num} ${esc(DATA.blues.title)}</div><div class="navGrid">`;
+    DATA.blues.cards.forEach(c=>{
+      html += `<button type="button" class="navChip b-${c.hl}" data-target="${c.id}" data-acc="acc-blues"><b>${esc(c.navLabel||c.subtitle)}</b></button>`;
+    });
+    html += `</div>`;
+  }
+  return html;
+}
+
+/* ============================================================
+   INIT
+============================================================ */
+function renderAll(keyName){
+  const root = document.getElementById('sectionsRoot');
+  let html = '';
+  for(const [key, sec] of Object.entries(DATA)){
+    if(key === 'blues') continue;
+    html += renderSection(key, sec, keyName);
+  }
+
+  const pw = pentaWorked(keyName);
+  html += `<details class="accgroup" id="acc-penta">
+    <summary><span class="snum">⑥</span><span>アボイド回避ペンタトニック</span><span class="chev">&#9660;</span></summary>
+    <p class="acc-lead">II-V-Iのアボイドノートを機械的に除くと、3コード共通で使えるペンタトニックが得られる。</p>
+    <div class="acc-body">
+      <div class="xcard hl-plain" id="pentaCard">
+        <div class="rowlabel">Key = ${esc(keyName)}</div>
+        <div class="chiprow" style="margin-bottom:8px;">
+          <span class="chip"><span class="cn">${esc(pw.II)}-7</span><span class="cl">II・アボイドなし</span></span>
+          <span class="chip"><span class="cn">${esc(pw.V)}7</span><span class="cl">V・アボイド${esc(pw.avoidV)}</span></span>
+          <span class="chip"><span class="cn">${esc(pw.I)}△7</span><span class="cl">I・アボイド${esc(pw.avoidI)}</span></span>
+        </div>
+        <div class="rowlabel">残る5音 = Vペンタトニック(II・V・Iすべてで安全に使用可)</div>
+        <div class="chiprow">${pw.remain.map(n=>`<span class="chip"><span class="cn">${esc(n)}</span></span>`).join('')}</div>
+        <p class="note">このペンタトニックはII・V・Iの3コードすべての上でアボイドと無縁に使用できるため、II-V-I全体を単一スケールでカバーできる実践的ツールとなる。</p>
+      </div>
+    </div>
+  </details>`;
+  if(DATA.blues) html += renderSection('blues', DATA.blues, keyName);
+  root.innerHTML = html;
+  drawAllScores(keyName);
+}
+
+/* ============================================================
+   NOTATION (VexFlow)
+============================================================ */
+function tensionNoteMap(root, entry){
+  const map = {};
+  if(!entry || entry.dual || !entry.tension) return map;
+  const list = entry.tensionExtra ? entry.tension.concat([entry.tensionExtra]) : entry.tension;
+  list.forEach(t=>{
+    const nm = spellName(root, t.code);
+    if(nm) map[nm] = t.code;
+  });
+  return map;
+}
+function renderScale(containerId, notes, tensionMap){
+  const el = document.getElementById(containerId);
+  if(!el || !notes || !notes.length || typeof Vex==='undefined') return;
+  el.innerHTML = '';
+  const { Renderer, Stave, StaveNote, Voice, Formatter, Accidental, Annotation } = Vex.Flow;
+  const ink = '#c9bdf0';
+  const tensionInk = '#93d1f4';
+  const width = 46*notes.length + 56;
+  const height = 158;
+  const renderer = new Renderer(el, Renderer.Backends.SVG);
+  renderer.resize(width, height);
+  const context = renderer.getContext();
+  context.setFillStyle(ink);
+  context.setStrokeStyle(ink);
+  const stave = new Stave(2, 14, width-8);
+  stave.setStyle({fillStyle:ink, strokeStyle:ink});
+  stave.addClef('treble');
+  stave.setContext(context).draw();
+  const staveNotes = notes.map(n=>{
+    const key = `${n.letter.toLowerCase()}${vfAcc(n.acc)}/${n.octave}`;
+    // stems flip down at/above the middle line (B4), matching standard notation
+    const sn = new StaveNote({ keys:[key], duration:'q', auto_stem:true });
+    sn.setStyle({fillStyle:ink, strokeStyle:ink});
+    if(n.acc!==0){
+      const accNote = new Accidental(vfAcc(n.acc));
+      accNote.setStyle({fillStyle:ink, strokeStyle:ink});
+      sn.addModifier(accNote, 0);
+    }
+    const label = tensionMap && tensionMap[noteName(n)];
+    if(label){
+      const anno = new Annotation(label);
+      anno.setFont('-apple-system, sans-serif', 11, '800');
+      anno.setVerticalJustification(Annotation.VerticalJustify.BOTTOM);
+      anno.setStyle({fillStyle:tensionInk, strokeStyle:tensionInk});
+      sn.addModifier(anno, 0);
+    }
+    return sn;
+  });
+  const voice = new Voice({num_beats:staveNotes.length, beat_value:4}).setStrict(false);
+  voice.addTickables(staveNotes);
+  new Formatter().joinVoices([voice]).format([voice], width-60);
+  voice.draw(context, stave);
+}
+function drawAllScores(keyName){
+  if(typeof Vex==='undefined') return;
+  for(const sec of Object.values(DATA)){
+    sec.cards.forEach(entry=>{
+      if(entry.omitted) return;
+      if(entry.type === 'blues'){
+        const bRoot = KEY_SEED[keyName];
+        const tMap = {};
+        entry.tension.forEach(t=>{ const nm = spellName(bRoot, t.code); if(nm) tMap[nm] = t.label; });
+        renderScale(entry.id+'-score', buildBluesScale(bRoot, entry.bluesType), tMap);
+        return;
+      }
+      const root = cardRoot(keyName, entry.parent, entry.idx);
+      if(entry.dual){
+        if(entry.dualA.scaleMode) renderScale(entry.id+'-scoreA', getEntryScaleNotes(root, entry.dualA.scaleMode));
+        if(entry.dualB.scaleMode) renderScale(entry.id+'-scoreB', getEntryScaleNotes(root, entry.dualB.scaleMode));
+      } else if(entry.scaleMode){
+        renderScale(entry.id+'-score', getEntryScaleNotes(root, entry.scaleMode), tensionNoteMap(root, entry));
+      }
+    });
+  }
+}
+
+function openPathTo(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const details = el.closest('details.accgroup');
+  if(details && !details.open) details.open = true;
+  requestAnimationFrame(()=>{
+    el.scrollIntoView({behavior:'smooth', block:'start'});
+    el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  // Key select
+  const keySelect = document.getElementById('keySelect');
+  KEYS.forEach(k=>{
+    const opt = document.createElement('option');
+    opt.value = k; opt.textContent = k;
+    keySelect.appendChild(opt);
+  });
+  keySelect.value = 'C';
+  keySelect.addEventListener('change', ()=> renderAll(keySelect.value));
+
+  // Nav panel populate
+  document.getElementById('navPanelInner').innerHTML = renderNavPanel();
+
+  // Nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navPanel = document.getElementById('navPanel');
+  navToggle.addEventListener('click', ()=>{
+    const isOpen = navPanel.classList.toggle('open');
+    navToggle.classList.toggle('open', isOpen);
+    navToggle.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  // Nav chip clicks (event delegation)
+  document.getElementById('navPanelInner').addEventListener('click', (e)=>{
+    const btn = e.target.closest('.navChip');
+    if(!btn) return;
+    openPathTo(btn.dataset.target);
+    navPanel.classList.remove('open');
+    navToggle.classList.remove('open');
+    navToggle.setAttribute('aria-expanded','false');
+  });
+
+  // Initial render
+  renderAll('C');
+});
+
+</script>
+</body>
+</html>

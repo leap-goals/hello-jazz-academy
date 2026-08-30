@@ -1,0 +1,210 @@
+@import "tailwindcss";
+
+/*
+ * デザインシステム: リソグラフ(孔版)印刷の紙面。
+ *
+ * 参照した book-and-hair.com の骨格を、ジャズピアノ教室の語彙に置き換えている。
+ *   紙のクリーム地 + 粒状のインク + 明朝体 + 版画調のフラットイラスト + スクロールで立ち上がる動き。
+ * 色はロゴ由来のマゼンタ/バイオレット/シアンとブランドイエローの4版だけを使い、
+ * リソの「刷り重ね」に見立てて面で塗る。写真的なグラデーションやぼかしは使わない。
+ */
+:root {
+  --color-paper: #f4f0e2;        /* 紙。全ページの地色 */
+  --color-paper-deep: #ebe5d1;   /* 一段沈めた紙。帯セクション */
+  --color-ink: #1d1522;          /* インクの黒(わずかに紫を含む) */
+  --color-ink-soft: #4b3f56;     /* 副次テキスト */
+  --color-rule: #d6cdb4;         /* 罫線。五線紙の線 */
+  --color-mist: #c3b6d3;         /* 暗部の上の副次テキスト */
+
+  --color-magenta: #e21bd5;      /* ロゴ由来: 主アクセント(1版目) */
+  --color-violet: #6618d5;       /* ロゴ由来: 副アクセント(2版目) */
+  --color-violet-deep: #4d0fa6;  /* バイオレットの二度刷り。フッターのような大面積用 */
+  --color-cyan: #72dafe;         /* ロゴ由来: オンラインを示す(3版目) */
+  --color-brand-yellow: #fadc46; /* 現行サイト由来(4版目) */
+
+  /* 各版の淡刷り。イラストの面を塗るときはこちらを使う */
+  --color-magenta-soft: #f3a8ea;
+  --color-violet-soft: #b9a1ea;
+  --color-cyan-soft: #b6e9ff;
+  --color-yellow-soft: #fceb95;
+
+  /* リソの粒状ノイズ。紙全面のオーバーレイと、版がかすれる境目の両方に使う */
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@theme inline {
+  --color-paper: var(--color-paper);
+  --color-paper-deep: var(--color-paper-deep);
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+  --color-rule: var(--color-rule);
+  --color-mist: var(--color-mist);
+  --color-magenta: var(--color-magenta);
+  --color-violet: var(--color-violet);
+  --color-violet-deep: var(--color-violet-deep);
+  --color-cyan: var(--color-cyan);
+  --color-brand-yellow: var(--color-brand-yellow);
+  --color-magenta-soft: var(--color-magenta-soft);
+  --color-violet-soft: var(--color-violet-soft);
+  --color-cyan-soft: var(--color-cyan-soft);
+  --color-yellow-soft: var(--color-yellow-soft);
+
+  --font-display: var(--font-mincho), "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-body: var(--font-mincho), "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-en: var(--font-en-serif), "Times New Roman", serif;
+
+  --animate-drift: drift 7s ease-in-out infinite;
+  --animate-spin-slow: spin 14s linear infinite;
+  --animate-beat-fade: beat-fade 1400ms ease-in-out infinite;
+  --animate-marquee: marquee 38s linear infinite;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}
+
+/* ---- 紙面のテクスチャ ------------------------------------------------- */
+
+/* 画面全面に一枚かぶせる粒。イラストも写真も文字も同じ紙に刷られて見える */
+.paper-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  background-image: var(--noise);
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+}
+
+/* 五線紙の罫。セクションの地として敷く */
+.paper-rule {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 41px,
+    var(--color-rule) 41px,
+    var(--color-rule) 42px
+  );
+}
+
+/*
+ * 版がかすれながら消えていく境目。単色を、粒ノイズと縦グラデーションの
+ * 二重マスクで抜くことで、ベタ塗りではなく「刷りムラ」として減衰させる。
+ */
+.speckle-fade {
+  background-color: var(--speckle-color, var(--color-violet));
+  /* 上端でも刷り切らない(0.62)。ロゴや見出しが乗っても読める濃度に留める */
+  -webkit-mask-image: var(--noise), linear-gradient(to bottom, rgb(0 0 0 / 0.62) 0%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: var(--noise), linear-gradient(to bottom, rgb(0 0 0 / 0.62) 0%, transparent 100%);
+  mask-composite: intersect;
+  mask-mode: luminance, alpha;
+}
+
+.speckle-fade--up {
+  -webkit-mask-image: var(--noise), linear-gradient(to top, rgb(0 0 0 / 0.62) 0%, transparent 100%);
+  mask-image: var(--noise), linear-gradient(to top, rgb(0 0 0 / 0.62) 0%, transparent 100%);
+}
+
+/* 日本語の縦組み。宣言文のような短い塊にだけ使う */
+.tategaki {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+/* ---- スクロールで立ち上がる ------------------------------------------ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--reveal-y, 30px));
+  transition:
+    opacity 900ms cubic-bezier(0.22, 0.7, 0.2, 1),
+    transform 900ms cubic-bezier(0.22, 0.7, 0.2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* 罫線が横に伸びていく(book-and-hairのフッターの線に相当) */
+.rule-draw {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1100ms cubic-bezier(0.22, 0.7, 0.2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.rule-draw.is-visible {
+  transform: scaleX(1);
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-16px);
+  }
+}
+
+@keyframes beat-fade {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* メトロノームの振り子 */
+@keyframes pendulum {
+  0%,
+  100% {
+    transform: rotate(-13deg);
+  }
+  50% {
+    transform: rotate(13deg);
+  }
+}
+
+/* イコライザーの各バー。高さの伸縮でビートを見せる */
+@keyframes eq-bar {
+  0%,
+  100% {
+    transform: scaleY(0.25);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal,
+  .rule-draw {
+    opacity: 1;
+    transform: none;
+  }
+}
