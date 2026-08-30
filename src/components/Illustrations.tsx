@@ -139,29 +139,6 @@ export function SheetMusic({ className = "" }: IllustProps) {
 }
 
 /** ヴィンテージのリボンマイク */
-export function Microphone({ className = "" }: IllustProps) {
-  return (
-    <svg viewBox="0 0 96 156" aria-hidden="true" className={className}>
-      <path d="M46 132v-18" stroke={INK} strokeWidth="6" />
-      <rect x="22" y="6" width="52" height="66" rx="26" fill={INK} />
-      {[20, 30, 40, 50, 60].map((y) => (
-        <line key={y} x1="28" x2="68" y1={y} y2={y} stroke={PAPER} strokeOpacity="0.3" strokeWidth="2.5" />
-      ))}
-      <rect x="18" y="68" width="60" height="12" rx="6" fill={YELLOW} stroke={INK} strokeWidth="2.5" />
-      <rect x="36" y="80" width="20" height="36" fill={MAGENTA_SOFT} stroke={INK} strokeWidth="2.5" />
-      <path d="M20 148l14-32h26l14 32z" fill={VIOLET} stroke={INK} strokeWidth="2.5" />
-      {/* ケーブル。垂れ下がりを1本の曲線で示す */}
-      <path
-        d="M78 142c14 0 14-18 2-18"
-        fill="none"
-        stroke={INK}
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 /** ヘッドホン */
 export function Headphones({ className = "" }: IllustProps) {
   return (
