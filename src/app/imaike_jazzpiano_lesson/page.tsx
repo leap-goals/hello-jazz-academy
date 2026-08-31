@@ -4,6 +4,7 @@ import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import PaymentBrands from "@/components/PaymentBrands";
 import SectionLabel from "@/components/SectionLabel";
+import { StaffLine } from "@/components/Illustrations";
 import { riseDelay } from "@/components/motion";
 import { IMAIKE_FORM_URL } from "@/components/SiteHeader";
 
@@ -288,8 +289,9 @@ export default function ImaikeLesson() {
 
       {/* ============================== PRICE ============================== */}
       {/* このページの決め手は価格。トップと違い、暗い面をここに置く */}
-      <section id="price" className="surface-ink section">
-        <div className="container-page lg:grid lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:gap-12">
+      <section id="price" className="surface-ink section relative overflow-hidden">
+        <StaffLine className="pointer-events-none absolute inset-x-0 bottom-8 h-20 w-full text-paper opacity-20" />
+        <div className="container-page relative lg:grid lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:gap-12">
           <Reveal>
             <SectionLabel tone="cyan">Price</SectionLabel>
             <h2 className="heading mt-6 text-paper">料金</h2>

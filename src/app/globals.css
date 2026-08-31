@@ -44,6 +44,9 @@
 
   /* 版面。本文は1行あたり32〜38字に収まる幅で止める */
   --measure: 34rem;
+
+  /* リソの粒状ノイズ。ヒーローの水彩ウォッシュにだけ使う */
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 @theme inline {
@@ -70,6 +73,10 @@
   --font-body: var(--font-gothic), "Hiragino Maru Gothic ProN", "M PLUS Rounded 1c",
     "Hiragino Sans", sans-serif;
   --font-en: var(--font-quicksand), "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+
+  /* レコード・メトロノーム・浮遊イラストの動き */
+  --animate-spin-slow: spin 14s linear infinite;
+  --animate-drift: drift 7s ease-in-out infinite;
 }
 
 @layer base {
@@ -361,6 +368,19 @@
     background-color: var(--color-paper-soft);
   }
 
+  /*
+   * ヒーロー上端の水彩ウォッシュ。単色を、粒ノイズと縦グラデーションの
+   * 二重マスクで抜くことで、ベタ塗りではなく「刷りにじみ」として減衰させる。
+   */
+  .speckle-fade {
+    background-color: var(--speckle-color, var(--color-violet));
+    -webkit-mask-image: var(--noise), linear-gradient(to bottom, rgb(0 0 0 / 0.5) 0%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: var(--noise), linear-gradient(to bottom, rgb(0 0 0 / 0.5) 0%, transparent 100%);
+    mask-composite: intersect;
+    mask-mode: luminance, alpha;
+  }
+
   /* ---- 動き ------------------------------------------------------------- */
 
   /*
@@ -401,6 +421,27 @@
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-16px);
+  }
+}
+
+/* メトロノームの振り子 */
+@keyframes pendulum {
+  0%,
+  100% {
+    transform: rotate(-13deg);
+  }
+  50% {
+    transform: rotate(13deg);
   }
 }
 
