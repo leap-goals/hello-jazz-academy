@@ -1,0 +1,109 @@
+{
+  "generated_at": "2026-08-31T02:14:11.620Z",
+  "source_file": "hellojazzacademy.WordPress.2026-08-31.xml",
+  "base_url": "https://www.hellojazzacademy.com",
+  "exported_with": "WordPress/6.9.7",
+  "export_created": "2026-08-31 00:46",
+  "post_type_counts": {
+    "news:publish": 17,
+    "page:publish": 20,
+    "page:private": 3,
+    "page:draft": 5,
+    "post:draft": 4,
+    "post:publish": 4,
+    "post:private": 5
+  },
+  "permalink_patterns": {
+    "page": "/{slug}/ (親ページがある場合は /{parent-slug}/{slug}/ 。本ダンプのslugはparentを含まないpost_name単体)",
+    "news": "/news/{slug}/",
+    "post": "/{slug}/ 。ただしdraft等でslugが空の場合は /?p={id}"
+  },
+  "categories": [
+    {
+      "term_id": 15,
+      "nicename": "ai",
+      "parent": null,
+      "name": "AI"
+    },
+    {
+      "term_id": 14,
+      "nicename": "bebop",
+      "parent": null,
+      "name": "Bebop"
+    },
+    {
+      "term_id": 1,
+      "nicename": "uncategorized",
+      "parent": null,
+      "name": "Uncategorized"
+    },
+    {
+      "term_id": 19,
+      "nicename": "コラム",
+      "parent": null,
+      "name": "コラム"
+    },
+    {
+      "term_id": 13,
+      "nicename": "ジャズピアノ学習",
+      "parent": null,
+      "name": "ジャズピアノ学習"
+    },
+    {
+      "term_id": 4,
+      "nicename": "セッション",
+      "parent": null,
+      "name": "セッション"
+    },
+    {
+      "term_id": 8,
+      "nicename": "ファンク-ソウル",
+      "parent": null,
+      "name": "ファンク / ソウル"
+    }
+  ],
+  "tags": [
+    {
+      "term_id": 12,
+      "nicename": null,
+      "parent": null,
+      "name": "R&amp;B"
+    },
+    {
+      "term_id": 5,
+      "nicename": null,
+      "parent": null,
+      "name": "ジャズ"
+    },
+    {
+      "term_id": 7,
+      "nicename": null,
+      "parent": null,
+      "name": "ジャムセッション"
+    },
+    {
+      "term_id": 6,
+      "nicename": null,
+      "parent": null,
+      "name": "セッション"
+    },
+    {
+      "term_id": 11,
+      "nicename": null,
+      "parent": null,
+      "name": "ソウル"
+    },
+    {
+      "term_id": 9,
+      "nicename": null,
+      "parent": null,
+      "name": "ファンク"
+    },
+    {
+      "term_id": 10,
+      "nicename": null,
+      "parent": null,
+      "name": "ファンク"
+    }
+  ]
+}
