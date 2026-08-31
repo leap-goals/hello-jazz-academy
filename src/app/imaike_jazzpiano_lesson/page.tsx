@@ -113,9 +113,9 @@ export default function ImaikeLesson() {
               <SectionLabel tone="magenta">In-person spot lesson — Imaike, Nagoya</SectionLabel>
             </div>
             <h1 className="display-compact rise mt-7 md:mt-9" style={riseDelay(70)}>
-              月に一度、
+              ＼ ポール先生による ／
               <br />
-              今池で向かい合う60分。
+              対面スポットレッスン
             </h1>
             <p
               className="rise mt-7 inline-flex items-center gap-2 rounded-full bg-magenta-tint px-3.5 py-1.5 text-xs font-medium text-magenta"
@@ -124,9 +124,19 @@ export default function ImaikeLesson() {
               <span className="h-1.5 w-1.5 rounded-full bg-magenta" />
               2026.05 — 2027.03 期間限定
             </p>
-            <p className="lead measure rise mt-6" style={riseDelay(200)}>
-              「定期的に通うのは難しいけれど、対面でしっかり学びたい」。そんな方のための、1回から受けられるスポットレッスンです。グランドピアノのあるスタジオで、コルテス・ポール先生とじっくり向かい合いましょう。
-            </p>
+            <div className="rise mt-6 space-y-4" style={riseDelay(200)}>
+              <p className="lead measure">
+                「定期的に通うのは難しいけれど、
+                <br />
+                対面でしっかり学びたい」
+              </p>
+              <p className="lead measure">
+                そんな方でもお気軽にお越しください。
+                <br />
+                単発受講可能なレッスンです◎
+              </p>
+              <p className="lead measure">音楽の可能性を広げていきましょう。</p>
+            </div>
             <div
               className="rise mt-9 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-7"
               style={riseDelay(260)}
@@ -158,47 +168,6 @@ export default function ImaikeLesson() {
               />
             </div>
             <p className="caption mt-4">ポール先生による対面スポットレッスン</p>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================== ABOUT ============================== */}
-      {/* トップのABOUTは中央揃えの一段組み。こちらは見出しと本文を左右に振る */}
-      <section className="section bg-paper-soft">
-        <div className="container-page lg:grid lg:grid-cols-[1fr_1.3fr] lg:gap-12">
-          <Reveal>
-            <SectionLabel tone="magenta">About</SectionLabel>
-            <p className="heading mt-6">
-              同じ部屋で、
-              <br />
-              同じピアノに向かう。
-            </p>
-          </Reveal>
-
-          <div className="mt-10 space-y-9 lg:mt-0">
-            {[
-              [
-                "画面越しには、渡しきれないものがあります。",
-                "鍵盤の底までの深さ、ペダルの重み、",
-                "隣で鳴った音への、返事のはやさ。",
-              ],
-              [
-                "月に一度で、かまいません。",
-                "向かい合って弾く60分が、",
-                "そのあとのひと月の練習を変えます。",
-              ],
-              ["毎週通わなくても大丈夫。", "気になった月だけ、ふらりとお越しください。"],
-            ].map((block, bi) => (
-              <Reveal key={bi} delay={bi * 70}>
-                <p className="prose-quiet">
-                  {block.map((line) => (
-                    <span key={line} className="block">
-                      {line}
-                    </span>
-                  ))}
-                </p>
-              </Reveal>
-            ))}
           </div>
         </div>
       </section>

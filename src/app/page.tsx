@@ -36,14 +36,6 @@ const FEATURES = [
     title: "オーダーメイドの内容",
     body: "耳コピ、作曲、ハーモナイズした手書き楽譜の添削まで。目標とペースに合わせて組み立てます。",
   },
-  {
-    title: "レッスン外もLINEで",
-    body: "自宅での練習中に出てきた疑問は、いつでも質問できます。次のレッスンまで一人にしません。",
-  },
-  {
-    title: "月2回・振替あり",
-    body: "曜日と時間は固定制。ご都合がつかない場合は、前日までのご相談で月1回まで無料で振替できます。",
-  },
 ];
 
 // 教室案内資料より。数字は「初心者でも大丈夫」を裏づける根拠として置いている
@@ -97,10 +89,9 @@ const FAQ_GROUPS = [
     label: "教材",
     items: [
       {
-        title: "教室の楽譜データライブラリー",
+        title: "教材について",
         paragraphs: [
-          "入会後、教室で楽譜共有しているGoogle Driveのリンクをお送りします。様々な楽譜を豊富に用意してますので、ご自由にご利用ください。",
-          "また、レッスン時にこちらのフォルダから楽譜を用意してもらうように指示することもございます。レッスン前に、印刷したり、タブレットで見れるように準備しておきましょう。",
+          "レッスン時に講師から楽譜をpdfで共有させていただき、用意してもらうように指示することもございます。レッスン前に、印刷したり、タブレットで見れるように準備しておきましょう。",
           "その他の教材につきましては、講師から指定のものを生徒様に購入して頂く場合もございます。",
         ],
       },
@@ -139,7 +130,7 @@ const FAQ_GROUPS = [
       {
         title: "レッスンスケジュール",
         paragraphs: [
-          "レッスンは固定の曜日・時間帯で隔週月2回のペースで行います。一度決定したスケジュールを基本としますが、やむを得ない事情でご都合がつかない場合、月に1回まで無料で振替が可能です。振替をご希望の場合は、前日までにご相談いただければ対応が可能ですが、振替対応が難しい場合もございますので、振替がご希望の場合にはお早めにお知らせください。",
+          "レッスンは固定の曜日・時間帯もしくは、毎月予約制で隔週月2回のペースで行います。一度決定したスケジュールを基本としますが、やむを得ない事情でご都合がつかない場合、月に1回まで無料で振替が可能です。振替をご希望の場合は、前日までにご相談いただければ対応が可能ですが、振替がご希望の場合にはお早めにお知らせください。",
           "なお、当日のキャンセルについては振替ができず、キャンセル料が発生しますのでご注意ください。スムーズなレッスン運営のため、ご理解いただけますと幸いです。",
         ],
       },
@@ -226,7 +217,7 @@ export default function Home() {
               オンラインジャズピアノ。
             </h1>
             <p className="lead measure rise mt-7 md:mt-9" style={riseDelay(140)}>
-              譜面のとおりに弾けたその先に、ジャズがあります。コードの上を歩き、その日の気分でメロディを変える。名古屋発のオンラインレッスンで、初心者もゼロから始められます。
+              キッズから大人ビギナーまで、ジャズ専門ならではの知識と経験でサポートします！音楽で人とつながり、バンドセッションが何倍も楽しくなるジャズピアノの魅力を体験してみませんか？
             </p>
             <div
               className="rise mt-9 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-7 md:mt-11"
@@ -266,33 +257,13 @@ export default function Home() {
           <Reveal className="mx-auto max-w-2xl text-center">
             <SectionLabel>About</SectionLabel>
           </Reveal>
-          <div className="mx-auto mt-12 max-w-2xl space-y-14 text-center md:mt-16">
-            {[
-              [
-                "楽譜のとおりに弾くのは、少しだけ得意になった。",
-                "でも、その先にある“自由”は、どこにあるんだろう。",
-              ],
-              [
-                "ジャズは、譜面の外側にある音楽です。",
-                "コードの上を歩き、その日の気分でメロディを変えて、",
-                "隣で鳴っている音に、返事をする。",
-              ],
-              ["難しそうに聞こえますか。", "大丈夫、はじまりはたった二つの和音からです。"],
-              [
-                "Hello Jazz Academy は、",
-                "その最初の一音を、いっしょに鳴らす場所です。",
-              ],
-            ].map((block, bi) => (
-              <Reveal key={bi} delay={bi * 70}>
-                <p className="prose-quiet">
-                  {block.map((line) => (
-                    <span key={line} className="block">
-                      {line}
-                    </span>
-                  ))}
-                </p>
-              </Reveal>
-            ))}
+          <div className="mx-auto mt-12 max-w-2xl space-y-8 text-center md:mt-16">
+            <Reveal>
+              <p className="heading">音楽で人々とコミュニケイトする</p>
+            </Reveal>
+            <Reveal delay={80}>
+              <p className="heading">正解のない音楽だからこそ楽しい</p>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -302,11 +273,7 @@ export default function Home() {
         <div className="container-page lg:grid lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:gap-12">
           <Reveal>
             <SectionLabel>For you</SectionLabel>
-            <h2 className="heading mt-6">
-              こんな方に
-              <br />
-              おすすめです
-            </h2>
+            <h2 className="heading mt-6">こんな方におすすめ</h2>
           </Reveal>
 
           <Reveal as="ul" delay={100} className="mt-10 border-t border-rule lg:mt-2">
@@ -580,7 +547,6 @@ export default function Home() {
           <Reveal>
             <SectionLabel>Guide</SectionLabel>
             <h2 className="heading mt-6">受講のご案内</h2>
-            <p className="lead mt-6">月に一回振替無料 / 年4回までキャンセルOK</p>
           </Reveal>
 
           <div className="mt-10 lg:mt-2">
@@ -658,7 +624,6 @@ export default function Home() {
                 </div>
               ))}
             </dl>
-            <p className="caption mt-6">現在はオンラインレッスンを中心に活動しています。</p>
           </Reveal>
         </div>
       </section>
