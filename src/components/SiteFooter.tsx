@@ -10,6 +10,7 @@ import {
   CHORD_TOOL_PATH,
   IMAIKE_FORM_URL,
   IMAIKE_PATH,
+  NEWS_PATH,
   TRIAL_FORM_URL,
 } from "@/components/SiteHeader";
 
@@ -29,6 +30,7 @@ const FOOTER_LINKS = [
   { href: "/#faq", label: "受講のご案内" },
   { href: IMAIKE_PATH, label: "今池での対面レッスン" },
   { href: "/#access", label: "アクセス" },
+  { href: NEWS_PATH, label: "お知らせ" },
   { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", external: true },
   { href: "/privacypolicy/", label: "プライバシーポリシー" },
 ];
