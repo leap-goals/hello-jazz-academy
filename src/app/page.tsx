@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import FloatingIllust from "@/components/FloatingIllust";
+import { Metronome, Record, StaffLine } from "@/components/Illustrations";
 import PaymentBrands from "@/components/PaymentBrands";
 import SectionLabel from "@/components/SectionLabel";
 import { riseDelay } from "@/components/motion";
@@ -62,13 +64,13 @@ const RATIOS = [
 
 // 体験 → 入会 → 月謝 の順。受講を検討する人が払う順番でそのまま並べる
 const PRICES = [
-  { label: "体験レッスン（30分）", price: "¥1,500", unit: null, tag: null },
+  { label: "体験レッスン（45分）", price: "¥3,000", unit: null, tag: null },
   { label: "入会金（事務手数料）", price: "¥5,000", unit: null, tag: null },
   { label: "オンラインレッスン（月2回・大人）", price: "¥12,000", unit: "/ 月", tag: "人気" },
   { label: "オンラインレッスン（月2回・学生）", price: "¥10,000", unit: "/ 月", tag: null },
 ];
 
-// 旧サイト(online.md)の文言をそのまま採用。体験レッスンの料金だけ現行の¥1,500に更新している
+// 旧サイト(online.md)の文言をそのまま採用。体験レッスンの料金だけ現行の45分¥3,000に更新している
 const FLOW_STEPS = [
   {
     title: "フォームよりお申し込み",
@@ -76,7 +78,7 @@ const FLOW_STEPS = [
   },
   {
     title: "メールを確認",
-    body: "ご登録いただいたメールアドレス宛に、体験レッスンの料金を簡単に決済できるウェブ決済(体験レッスン費用¥1,500)の案内をお送りします。お支払いが確認され次第、予約が確定しますので、メールを必ずご確認ください。",
+    body: "ご登録いただいたメールアドレス宛に、体験レッスンの料金を簡単に決済できるウェブ決済(体験レッスン費用¥3,000)の案内をお送りします。お支払いが確認され次第、予約が確定しますので、メールを必ずご確認ください。",
   },
   {
     title: "体験レッスン当日",
@@ -195,12 +197,25 @@ export default function Home() {
     <main id="top" className="flex-1">
       {/* ============================== HERO ============================== */}
       {/*
-        写真もイラストも置かない。このページで最初に見せるべきものは
-        「自宅でジャズピアノが始められる」という一文そのものなので、
-        文字の大きさと余白だけで見出しを立てる。
+        主役は文字の大きさと余白。写真やイラストで埋めることはしないが、
+        天からインクが降りて紙に沈む水彩のウォッシュと、レコードだけは
+        このサイトの「顔」として残している。
       */}
-      <section className="flex min-h-[88svh] flex-col pb-16 pt-28 md:pb-24 md:pt-36">
-        <div className="container-page flex flex-1 flex-col">
+      <section className="relative flex min-h-[88svh] flex-col overflow-hidden pb-16 pt-28 md:pb-24 md:pt-36">
+        <div
+          aria-hidden="true"
+          className="speckle-fade pointer-events-none absolute inset-x-0 top-0 h-[34vh]"
+          style={{ "--speckle-color": "var(--color-violet)" } as React.CSSProperties}
+        />
+        <FloatingIllust
+          className="right-[-1.5rem] top-[9vh] w-28 md:right-[6%] md:top-[11vh] md:w-48"
+          speed={0.3}
+          driftMs={9000}
+        >
+          <Record className="w-full motion-safe:animate-spin-slow" />
+        </FloatingIllust>
+
+        <div className="container-page relative flex flex-1 flex-col">
           <div className="my-auto w-full">
             <div className="rise">
               <SectionLabel>Online jazz piano lesson</SectionLabel>
@@ -224,7 +239,7 @@ export default function Home() {
                 className="btn btn-primary"
               >
                 体験レッスンに申し込む
-                <span className="btn-note">30min ¥1,500</span>
+                <span className="btn-note">45min ¥3,000</span>
               </a>
               <a href="#lesson" className="link-quiet">
                 レッスンの内容を見る
@@ -236,8 +251,18 @@ export default function Home() {
 
       {/* ============================= ABOUT ============================= */}
       {/* 唯一の「読ませる」ブロック。字間と行間を広げて、読む速度を落とす */}
-      <section className="section bg-paper-soft">
-        <div className="container-page">
+      <section className="relative overflow-hidden section bg-paper-soft">
+        <FloatingIllust
+          className="right-[-2rem] top-14 w-28 md:right-[8%] md:w-36"
+          speed={0.3}
+          rotate={9}
+          driftMs={8000}
+          driftDelayMs={500}
+        >
+          <Metronome className="w-full" />
+        </FloatingIllust>
+
+        <div className="container-page relative">
           <Reveal className="mx-auto max-w-2xl text-center">
             <SectionLabel>About</SectionLabel>
           </Reveal>
@@ -299,8 +324,9 @@ export default function Home() {
 
       {/* ========================= ONLINE LESSON ========================= */}
       {/* ページの中で唯一の暗い面。ここがオンラインレッスンの本題 */}
-      <section className="surface-ink section">
-        <div className="container-page">
+      <section className="surface-ink section relative overflow-hidden">
+        <StaffLine className="pointer-events-none absolute inset-x-0 bottom-8 h-20 w-full text-paper opacity-20" />
+        <div className="container-page relative">
           <Reveal className="max-w-3xl">
             <SectionLabel tone="cyan">Online lesson</SectionLabel>
             <h2 className="heading mt-6 text-paper">
@@ -531,7 +557,7 @@ export default function Home() {
           <Reveal>
             <SectionLabel>Flow</SectionLabel>
             <h2 className="heading mt-6">入会までの流れ</h2>
-            <p className="lead measure mt-6">体験レッスン　受講料¥1,500</p>
+            <p className="lead measure mt-6">体験レッスン　受講料¥3,000</p>
           </Reveal>
 
           <ol className="mt-12 grid gap-x-10 gap-y-9 md:mt-16 md:grid-cols-4 md:gap-x-8">

@@ -62,16 +62,14 @@ export default function SiteHeader() {
   // ページごとに売っているものが違うので、申し込み先も文言も持ち替える
   const cta = isImaike
     ? {
-        short: "申し込む",
         label: "レッスンを申し込む",
         price: "60min ¥10,000",
         href: IMAIKE_FORM_URL,
         className: "btn-magenta",
       }
     : {
-        short: "体験レッスン",
         label: "体験レッスンに申し込む",
-        price: "30min ¥1,500",
+        price: "45min ¥3,000",
         href: TRIAL_FORM_URL,
         className: "btn-primary",
       };
@@ -129,50 +127,43 @@ export default function SiteHeader() {
               width={1532}
               height={629}
               priority
-              className="h-8 w-auto md:h-10"
+              className="h-9 w-auto md:h-12"
             />
           </Link>
 
-          <div className="flex items-center gap-2 md:gap-5">
-            <a
-              href={cta.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              /* 360px未満だとロゴ・申し込み・メニューが1行に収まらないので、そこだけ隠す */
-              className={`btn btn-sm max-[359px]:hidden ${cta.className}`}
-            >
-              <span className="lg:hidden">{cta.short}</span>
-              <span className="hidden lg:inline">{cta.label}</span>
-            </a>
-
-            {/*
-              面も枠も持たせない。細い2本の線と文字だけで、開閉の状態を示す。
-              閉じているときは横2本、開いているときは交差してばつ印になる。
-            */}
-            <button
-              type="button"
-              aria-expanded={open}
-              aria-label={open ? "メニューを閉じる" : "メニューを開く"}
-              onClick={() => setOpen((v) => !v)}
-              className="-mr-1 flex items-center gap-2.5 px-1 py-2 text-ink transition-opacity duration-200 hover:opacity-60"
-            >
-              <span className="relative block h-2.5 w-[1.125rem]" aria-hidden="true">
-                <span
-                  className={`absolute left-0 h-px w-full bg-current transition-transform duration-300 ease-out ${
-                    open ? "top-1/2 rotate-45" : "top-0"
-                  }`}
-                />
-                <span
-                  className={`absolute left-0 h-px w-full bg-current transition-transform duration-300 ease-out ${
-                    open ? "top-1/2 -rotate-45" : "top-full"
-                  }`}
-                />
-              </span>
-              <span className="text-[0.8125rem] font-medium tracking-[0.06em]">
-                {open ? "とじる" : "メニュー"}
-              </span>
-            </button>
-          </div>
+          {/*
+            申し込みボタンはヒーロー・フッター・全画面メニューの3か所に既にあるため、
+            常設のヘッダーはロゴとメニューの2つだけに絞る。
+          */}
+          <button
+            type="button"
+            aria-expanded={open}
+            aria-label={open ? "メニューを閉じる" : "メニューを開く"}
+            onClick={() => setOpen((v) => !v)}
+            className="-mr-1 flex items-center gap-2.5 px-1 py-2 text-ink transition-opacity duration-200 hover:opacity-60"
+          >
+            {/* 3本線。開くと上下の2本が交差してばつ印になり、中央の1本は消える */}
+            <span className="relative block h-3 w-[1.375rem]" aria-hidden="true">
+              <span
+                className={`absolute left-0 h-px w-full bg-current transition-all duration-300 ease-out ${
+                  open ? "top-1/2 rotate-45" : "top-0"
+                }`}
+              />
+              <span
+                className={`absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-current transition-opacity duration-200 ease-out ${
+                  open ? "opacity-0" : "opacity-100"
+                }`}
+              />
+              <span
+                className={`absolute left-0 h-px w-full bg-current transition-all duration-300 ease-out ${
+                  open ? "top-1/2 -rotate-45" : "top-full"
+                }`}
+              />
+            </span>
+            <span className="text-[0.8125rem] font-medium tracking-[0.06em]">
+              {open ? "とじる" : "メニュー"}
+            </span>
+          </button>
         </div>
       </header>
 
