@@ -7,6 +7,7 @@ import Reveal from "@/components/Reveal";
 import SectionLabel from "@/components/SectionLabel";
 import SocialLinks from "@/components/SocialIcons";
 import {
+  ABOUT_PATH,
   CHORD_TOOL_PATH,
   IMAIKE_FORM_URL,
   IMAIKE_PATH,
@@ -23,6 +24,7 @@ import {
 
 // サイトマップは全ページ共通。トップ内のアンカーは下層からも辿れるよう絶対パスで書く
 const FOOTER_LINKS = [
+  { href: ABOUT_PATH, label: "教室について" },
   { href: "/#lesson", label: "レッスンについて" },
   { href: "/#teacher", label: "講師紹介" },
   { href: "/#price", label: "料金" },
@@ -116,7 +118,7 @@ export default function SiteFooter() {
             <nav aria-label="サイトマップ" className="md:min-w-[20rem]">
               <p className="eyebrow eyebrow-faint">Sitemap</p>
               {/* 縦に読ませたいので、行送りではなく列送りで流す(左の段を上から下、次に右の段) */}
-              <ul className="mt-4 grid gap-x-10 sm:grid-flow-col sm:grid-rows-5">
+              <ul className="mt-4 grid gap-x-10 sm:grid-flow-col sm:grid-rows-6">
                 {FOOTER_LINKS.map((link) => (
                   <li key={link.href}>
                     {link.external ? (

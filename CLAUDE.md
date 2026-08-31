@@ -26,6 +26,12 @@ WordPress + AWSで運用中のジャズピアノ教室サイトを、Next.js（�
 - フォーム送信: Formspree または Resend 経由（静的サイトのためサーバーレス/外部サービス必須）
 - スタイリング: Tailwind CSS
 
+## デプロイ方法
+- Cloudflare PagesはGitHub連携（Cloudflare純正のGitHub App）でリポジトリ(`leap-goals/hello-jazz-academy`)に接続済み。`main`へのマージ/pushが本番ビルド・デプロイのトリガーになる。ローカルでの`wrangler deploy`は使わない（`wrangler.toml`もリポジトリに置いていない）
+- PRを作成するとCloudflare Pages側でプレビュービルドが走り、GitHub上に「Cloudflare Pages」チェックとしてビルド結果・ダッシュボードへのリンクが表示される
+- リリース手順: 作業ブランチ(`redesign/minimal-editorial`)でPRを作成 → `gh pr merge <PR番号> --merge`でマージコミット方式でマージ（squash/rebaseは使わない。ブランチは削除せず次のPRでも使い回す運用）→ マージ後のmain HEADコミットに対しても同じ「Cloudflare Pages」チェックが走るので、`gh api repos/leap-goals/hello-jazz-academy/commits/<sha>/check-runs`等で本番デプロイの成功(`completed`/`success`)を確認する
+- ローカルのNode.jsはv20系のためwrangler CLI(要Node 22+)はそのままでは動かない。ビルドはCloudflare側の環境で完結するため通常は影響しない
+
 ## 設計判断とその理由（変更する場合は要議論）
 - **完全静的生成を選ぶ理由**: 本サイトにログイン・予約機能等の動的要素はない。Cloudflareの現行の推奨はSSR/APIルートを伴うNext.jsにはWorkers上のvinext(beta)かOpenNextアダプタだが、静的生成に限定すればアダプタ不要でシンプルに保てる。将来動的機能が必須になった場合はVercelへの移行を検討する。
 - **MicroCMSを選ぶ理由**: 記事更新者は講師・運営（非エンジニア）。SaaS完結で管理画面が分かりやすいため、Gitコミットベースの編集が必要なDecap CMSより運用が安定する。
