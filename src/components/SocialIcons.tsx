@@ -3,9 +3,8 @@ import Image from "next/image";
 /*
  * SNSの公式アイコン画像。
  *
- * サイト本体は「ロゴ由来の4版だけで刷る」というルールで作っているが、
- * SNSアイコンは各社の公式画像をそのまま置く。見慣れた見た目のほうが速く見つかるため、
- * ここだけは意図的にリソの版から外している。
+ * サイト本体は色数を絞って組んでいるが、SNSアイコンだけは各社の公式画像を
+ * そのまま置く。見慣れた見た目のほうが速く見つかるため、ここだけ意図的に外している。
  *
  * 元画像は public/images/social/ 配下に円形(透過)へ加工済みのPNGとして置いてある
  * (生成スクリプトはコミットしていない。差し替える場合は中心から見て最も内側まで
@@ -22,25 +21,18 @@ export const SOCIAL_LINKS = [
   { name: "LINE", href: "https://lin.ee/XbPZKgA", src: "/images/social/line.png" },
 ] as const;
 
-/**
- * SNSへの導線。アイコンだけを並べる置き方が基本で、
- * `withLabels` を立てるとサービス名を添えた縦並びになる(フッター用)。
- */
+/** SNSへの導線。アイコンだけを並べる */
 export default function SocialLinks({
-  size = "w-5",
+  size = "w-6",
   gap = "gap-4",
-  withLabels = false,
-  labelClassName = "",
   className = "",
 }: {
   size?: string;
   gap?: string;
-  withLabels?: boolean;
-  labelClassName?: string;
   className?: string;
 }) {
   return (
-    <ul className={`flex items-center ${withLabels ? "flex-col items-start" : ""} ${gap} ${className}`}>
+    <ul className={`flex items-center ${gap} ${className}`}>
       {SOCIAL_LINKS.map(({ name, href, src }) => (
         <li key={name}>
           <a
@@ -48,7 +40,7 @@ export default function SocialLinks({
             target="_blank"
             rel="noopener noreferrer"
             aria-label={name}
-            className="flex items-center gap-3 transition-opacity duration-200 hover:opacity-70"
+            className="block transition-opacity duration-200 hover:opacity-65"
           >
             <Image
               src={src}
@@ -57,9 +49,6 @@ export default function SocialLinks({
               height={160}
               className={`${size} shrink-0 rounded-full`}
             />
-            {withLabels ? (
-              <span className={`font-en text-sm tracking-[0.18em] ${labelClassName}`}>{name}</span>
-            ) : null}
           </a>
         </li>
       ))}

@@ -1,23 +1,33 @@
 import type { Metadata } from "next";
-import { Shippori_Mincho_B1, EB_Garamond } from "next/font/google";
+import { Quicksand, Zen_Maru_Gothic } from "next/font/google";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import "./globals.css";
 
-// 本文も見出しも同じオールド明朝で通す。リソグラフ調の紙面と、
-// ジャズという「印刷物としての文化」に軸足を置いた版面をつくる。
-const mincho = Shippori_Mincho_B1({
-  variable: "--font-mincho",
-  weight: ["400", "500", "700", "800"],
+/*
+ * 書体は2本だけ。ロゴのワードマークが「線幅が一定で、端が丸い幾何学サンセリフ」
+ * なので、和文・欧文ともそこへ寄せる。
+ *
+ * Zen丸ゴシック … 和文のすべて(見出し・本文・注記)。丸ゴシックのなかでは
+ *                 字面が締まっていて、大きく組んでも子どもっぽくならない。
+ * Quicksand   … 欧文ラベル、数字(料金・割合)、和音記号。
+ *                 ロゴの欧文とほぼ同じ骨格の幾何学ラウンド体。
+ *
+ * 書体を1系統に絞ったぶん、階層は「大きさ・太さ・濃度・余白」だけでつける。
+ * 和文はファイルが大きいため preload は切り、使う字だけを取りにいかせる。
+ */
+const gothic = Zen_Maru_Gothic({
+  variable: "--font-gothic",
+  weight: ["400", "500", "700"],
   subsets: ["latin"],
+  display: "swap",
   preload: false,
 });
 
-// 欧文のラベル(ABOUT / LESSON など)。古典的なセリフでレコードジャケットの活字に寄せる
-const enSerif = EB_Garamond({
-  variable: "--font-en-serif",
-  weight: ["500", "600"],
+const quicksand = Quicksand({
+  variable: "--font-quicksand",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -30,7 +40,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="ja"
-      className={`${mincho.variable} ${enSerif.variable} h-full antialiased`}
+      className={`${gothic.variable} ${quicksand.variable} h-full antialiased`}
     >
       <head>
         {/*
@@ -38,14 +48,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           JSが動かない環境では最初から表示済みの状態に倒す。
         */}
         <noscript>
-          <style>{`.reveal{opacity:1!important;transform:none!important}.rule-draw{transform:none!important}`}</style>
+          <style>{`.reveal{opacity:1!important;transform:none!important}`}</style>
         </noscript>
       </head>
       <body className="flex min-h-full flex-col bg-paper font-body text-ink">
         <SiteHeader />
         {children}
         <SiteFooter />
-        <div className="paper-grain" aria-hidden="true" />
       </body>
     </html>
   );

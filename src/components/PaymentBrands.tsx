@@ -14,16 +14,16 @@ export default function PaymentBrands({
 }) {
   return (
     <div className={className}>
-      <p className="font-en text-[0.7rem] tracking-[0.24em] text-ink-soft">PAYMENT</p>
+      <p className="eyebrow eyebrow-faint">Payment</p>
       <Image
         src="/images/payment-brands.png"
         alt="Square / Visa / Mastercard / American Express / UnionPay"
         width={1400}
         height={137}
-        sizes="(min-width: 768px) 420px, 80vw"
-        className="mt-4 h-auto w-full max-w-[420px]"
+        sizes="(min-width: 768px) 380px, 80vw"
+        className="mt-5 h-auto w-full max-w-[380px]"
       />
-      <p className="mt-4 font-body text-xs leading-7 text-ink-soft">{label}</p>
+      <p className="caption mt-4">{label}</p>
     </div>
   );
 }
