@@ -1,68 +1,47 @@
 import Image from "next/image";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
-import FloatingIllust from "@/components/FloatingIllust";
 import PaymentBrands from "@/components/PaymentBrands";
 import SectionLabel from "@/components/SectionLabel";
+import { riseDelay } from "@/components/motion";
 import { IMAIKE_PATH, TRIAL_FORM_URL } from "@/components/SiteHeader";
-import {
-  BeamedNotes,
-  Curve,
-  Equalizer,
-  Headphones,
-  Keyboard,
-  Laptop,
-  Metronome,
-  Mixer,
-  Record,
-  SheetMusic,
-  SingleNote,
-  StaffLine,
-} from "@/components/Illustrations";
+
+/*
+ * トップ(オンラインレッスン)。
+ *
+ * 組み方の原則は3つだけ。
+ *   1. 面を分けるのは地色と1本の罫線。枠で囲わない、影を落とさない
+ *   2. 見出し・本文・注記の3段階だけで階層をつくる。中間の大きさを増やさない
+ *   3. 左に欧文ラベル、右に中身。この位置関係を全セクションで崩さない
+ * ページの主色はバイオレット。暗い面は「オンラインレッスン」の1章だけに置き、
+ * そこがこのページの山だと分かるようにしている。
+ */
 
 const AUDIENCE = [
-  { text: "教室に通う時間がない", en: "NO TIME" },
-  { text: "ジャムセッションに挑戦したい", en: "SESSION" },
-  { text: "新しい趣味を見つけたい", en: "NEW HOBBY" },
-  { text: "独学での練習に伸び悩んでいる", en: "PLATEAU" },
-  { text: "アレンジや即興ができるようになりたい", en: "IMPROVISE" },
+  "教室に通う時間がない",
+  "ジャムセッションに挑戦したい",
+  "新しい趣味を見つけたい",
+  "独学での練習に伸び悩んでいる",
+  "アレンジや即興ができるようになりたい",
 ];
 
 const FEATURES = [
   {
-    en: "ANYWHERE",
     title: "世界中どこからでも",
     body: "ZoomまたはFaceTimeを使用。仕事後の夜も、出かける前の朝も、移動時間ゼロで受けられます。",
-    illust: <Laptop className="w-full" />,
   },
   {
-    en: "TAILORED",
     title: "オーダーメイドの内容",
     body: "耳コピ、作曲、ハーモナイズした手書き楽譜の添削まで。目標とペースに合わせて組み立てます。",
-    illust: <SheetMusic className="w-full" />,
   },
   {
-    en: "SUPPORT",
     title: "レッスン外もLINEで",
     body: "自宅での練習中に出てきた疑問は、いつでも質問できます。次のレッスンまで一人にしません。",
-    illust: <Headphones className="w-full" />,
   },
   {
-    en: "FLEXIBLE",
     title: "月2回・振替あり",
     body: "曜日と時間は固定制。ご都合がつかない場合は、前日までのご相談で月1回まで無料で振替できます。",
-    illust: <Metronome className="w-full" />,
   },
-];
-
-const MARQUEE_WORDS = [
-  "ONLINE JAZZ PIANO",
-  "アドリブ",
-  "コードワーク",
-  "スイング",
-  "セッション",
-  "耳コピ",
-  "作曲・アレンジ",
 ];
 
 // 教室案内資料より。数字は「初心者でも大丈夫」を裏づける根拠として置いている
@@ -81,25 +60,29 @@ const RATIOS = [
   },
 ];
 
+// 体験 → 入会 → 月謝 の順。受講を検討する人が払う順番でそのまま並べる
+const PRICES = [
+  { label: "体験レッスン（30分）", price: "¥1,500", unit: null, tag: null },
+  { label: "入会金（事務手数料）", price: "¥5,000", unit: null, tag: null },
+  { label: "オンラインレッスン（月2回・大人）", price: "¥12,000", unit: "/ 月", tag: "人気" },
+  { label: "オンラインレッスン（月2回・学生）", price: "¥10,000", unit: "/ 月", tag: null },
+];
+
 // 旧サイト(online.md)の文言をそのまま採用。体験レッスンの料金だけ現行の¥1,500に更新している
 const FLOW_STEPS = [
   {
-    en: "APPLY",
     title: "フォームよりお申し込み",
     body: "体験レッスンをご希望の方は、問い合わせフォームからお申し込みください。お申し込み確認後、希望の連絡方法に基づいて、アンケートと日程調整のご連絡を差し上げます。",
   },
   {
-    en: "MAIL",
     title: "メールを確認",
     body: "ご登録いただいたメールアドレス宛に、体験レッスンの料金を簡単に決済できるウェブ決済(体験レッスン費用¥1,500)の案内をお送りします。お支払いが確認され次第、予約が確定しますので、メールを必ずご確認ください。",
   },
   {
-    en: "LESSON",
     title: "体験レッスン当日",
     body: "レッスン開始時間になりましたら、事前にお伝えしたZOOMリンクにアクセスし、マイクとカメラをオンにしてください。Facetimeをご利用の場合は、講師からの通話をお待ちください。初めての方でも安心してご参加いただけます。",
   },
   {
-    en: "JOIN",
     title: "入会申し込み",
     body: "体験レッスン終了後、入会申し込みフォームをお送りいたします。入会手続きが完了次第、初回レッスンの日程や詳細をご案内いたします。",
   },
@@ -109,7 +92,6 @@ const FLOW_STEPS = [
 // 見出しだけを並べて畳んでおき、必要な項目だけ開ける形にする
 const FAQ_GROUPS = [
   {
-    en: "MATERIALS",
     label: "教材",
     items: [
       {
@@ -123,7 +105,6 @@ const FAQ_GROUPS = [
     ],
   },
   {
-    en: "SETUP",
     label: "オンラインレッスンの注意点",
     items: [
       {
@@ -151,7 +132,6 @@ const FAQ_GROUPS = [
     ],
   },
   {
-    en: "GUIDE",
     label: "受講のご案内",
     items: [
       {
@@ -188,174 +168,80 @@ const FAQ_GROUPS = [
   },
 ];
 
-/** 割合のドーナツ。数字が主役なので、環は輪郭だけを担わせる */
-function Donut({ percent }: { percent: number }) {
-  const radius = 52;
-  const circumference = 2 * Math.PI * radius;
-
+/** 開閉できる質問1件。marker は縦棒を畳んで + を − に変えるだけに留める */
+function Question({ title, paragraphs }: { title: string; paragraphs: string[] }) {
   return (
-    <svg viewBox="0 0 140 140" className="w-full" role="presentation">
-      <circle
-        cx="70"
-        cy="70"
-        r={radius}
-        fill="none"
-        stroke="var(--color-violet)"
-        strokeWidth="20"
-      />
-      <circle
-        cx="70"
-        cy="70"
-        r={radius}
-        fill="none"
-        stroke="var(--color-magenta)"
-        strokeWidth="20"
-        strokeDasharray={`${(percent / 100) * circumference} ${circumference}`}
-        transform="rotate(-90 70 70)"
-      />
-    </svg>
-  );
-}
-
-function Badge({ tone, children }: { tone: "open" | "paused"; children: React.ReactNode }) {
-  if (tone === "open") {
-    return (
-      <span className="inline-flex items-center gap-2 rounded-full bg-brand-yellow px-4 py-1.5 font-body text-xs font-bold text-ink">
-        <Equalizer className="text-ink" />
-        {children}
-      </span>
-    );
-  }
-  return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-ink px-4 py-1.5 font-body text-xs font-bold text-ink">
-      <span className="h-1.5 w-1.5 rounded-full bg-ink" />
-      {children}
-    </span>
+    <details className="group border-b border-rule [&_summary::-webkit-details-marker]:hidden">
+      <summary className="flex cursor-pointer list-none items-start gap-5 py-5 transition-colors duration-200 hover:text-violet">
+        <span className="flex-1 text-[0.9375rem] font-medium leading-7 md:text-base">{title}</span>
+        <span aria-hidden="true" className="relative mt-2.5 h-3 w-3 shrink-0">
+          <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-current" />
+          <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-current transition-transform duration-300 ease-out group-open:scale-y-0" />
+        </span>
+      </summary>
+      <div className="measure flex flex-col gap-4 pb-7">
+        {paragraphs.map((text) => (
+          <p key={text} className="body-text">
+            {text}
+          </p>
+        ))}
+      </div>
+    </details>
   );
 }
 
 export default function Home() {
   return (
     <main id="top" className="flex-1">
-      {/* ============================ HERO ============================ */}
-      {/* ヘッダーが2段の帯になったぶん、上の余白は帯の高さより広く取る */}
-      <section className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden px-4 pb-20 pt-32 md:px-8 md:pb-24 md:pt-36">
-        {/* 天からインクが降ってきて紙に吸われる、リソの刷り始め */}
-        <div
-          aria-hidden="true"
-          className="speckle-fade pointer-events-none absolute inset-x-0 top-0 h-[34vh]"
-          style={{ "--speckle-color": "var(--color-violet)" } as React.CSSProperties}
-        />
-
-        {/* 見出しの版面を避け、イラストは右側と外周に寄せて散らす */}
-        <FloatingIllust className="right-[-2rem] top-[12vh] w-32 md:right-[5%] md:w-52" speed={0.3} driftMs={9000}>
-          <Record className="w-full motion-safe:animate-spin-slow" />
-        </FloatingIllust>
-        <FloatingIllust
-          className="right-[42%] top-[9vh] w-14 md:right-[27%] md:w-24"
-          speed={0.45}
-          rotate={-14}
-          driftMs={6400}
-          driftDelayMs={400}
-        >
-          <BeamedNotes className="w-full" />
-        </FloatingIllust>
-        <FloatingIllust
-          className="bottom-[30vh] right-[8%] w-10 md:bottom-[34vh] md:right-[15%] md:w-16"
-          speed={0.36}
-          rotate={16}
-          driftMs={7200}
-          driftDelayMs={900}
-        >
-          <SingleNote className="w-full" />
-        </FloatingIllust>
-        <FloatingIllust
-          className="bottom-[-3rem] right-[-4rem] w-64 md:bottom-[-4rem] md:right-[-2rem] md:w-[22rem]"
-          speed={0.16}
-          rotate={-8}
-          driftMs={11000}
-        >
-          <Keyboard className="w-full" />
-        </FloatingIllust>
-
-        <div className="relative mx-auto w-full max-w-6xl">
-          <Reveal>
-            <p className="font-en text-xs tracking-[0.34em] text-violet md:text-sm">
-              ONLINE JAZZ PIANO LESSON
-            </p>
-          </Reveal>
-          <Reveal delay={120} y={40}>
-            <h1 className="mt-8 font-display text-[2.15rem] font-bold leading-[1.62] tracking-wide text-ink md:mt-10 md:text-[4.1rem] md:leading-[1.5]">
+      {/* ============================== HERO ============================== */}
+      {/*
+        写真もイラストも置かない。このページで最初に見せるべきものは
+        「自宅でジャズピアノが始められる」という一文そのものなので、
+        文字の大きさと余白だけで見出しを立てる。
+      */}
+      <section className="flex min-h-[88svh] flex-col pb-16 pt-28 md:pb-24 md:pt-36">
+        <div className="container-page flex flex-1 flex-col">
+          <div className="my-auto w-full">
+            <div className="rise">
+              <SectionLabel>Online jazz piano lesson</SectionLabel>
+            </div>
+            <h1 className="display rise mt-7 md:mt-9" style={riseDelay(70)}>
               自宅ではじめる、
               <br />
               オンラインジャズピアノ。
             </h1>
-          </Reveal>
-          <Reveal delay={240}>
-            <p className="mt-8 max-w-lg font-body text-sm leading-9 text-ink-soft md:text-base md:leading-10">
-              譜面のとおりに弾けたその先に、ジャズがあります。
-              コードの上を歩き、その日の気分でメロディを変える。
-              名古屋発のオンラインレッスンで、初心者もゼロから始められます。
+            <p className="lead measure rise mt-7 md:mt-9" style={riseDelay(140)}>
+              譜面のとおりに弾けたその先に、ジャズがあります。コードの上を歩き、その日の気分でメロディを変える。名古屋発のオンラインレッスンで、初心者もゼロから始められます。
             </p>
-          </Reveal>
-          <Reveal delay={340} className="mt-10 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-8">
-            <a href={TRIAL_FORM_URL} target="_blank" rel="noopener noreferrer" className="btn btn-primary text-base">
-              体験レッスンに申し込む
-              <span className="font-en text-sm font-medium text-paper/75">30min ¥1,500</span>
-            </a>
-            <a
-              href="#lesson"
-              className="font-en text-sm tracking-[0.16em] text-ink underline decoration-violet/50 underline-offset-[6px] transition-opacity duration-200 hover:opacity-55"
+            <div
+              className="rise mt-9 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-7 md:mt-11"
+              style={riseDelay(210)}
             >
-              VIEW LESSON
-            </a>
-          </Reveal>
-        </div>
-
-        {/* スクロールの合図 */}
-        <div
-          aria-hidden="true"
-          className="absolute bottom-6 left-4 flex flex-col items-center gap-3 md:left-8"
-        >
-          <span className="tategaki font-en text-[0.65rem] tracking-[0.3em] text-ink-soft">SCROLL</span>
-          <span className="block h-12 w-px bg-ink-soft/50" />
+              <a
+                href={TRIAL_FORM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary"
+              >
+                体験レッスンに申し込む
+                <span className="btn-note">30min ¥1,500</span>
+              </a>
+              <a href="#lesson" className="link-quiet">
+                レッスンの内容を見る
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ========================= MANIFESTO ========================= */}
-      <section className="relative overflow-hidden bg-paper-deep px-4 py-24 md:px-8 md:py-36">
-        <FloatingIllust
-          className="left-[-3rem] top-16 w-32 md:left-[6%] md:w-44"
-          speed={0.22}
-          rotate={-12}
-          driftMs={9600}
-        >
-          <SheetMusic className="w-full" />
-        </FloatingIllust>
-        <FloatingIllust
-          className="right-[-2rem] top-40 w-28 md:right-[8%] md:w-36"
-          speed={0.3}
-          rotate={9}
-          driftMs={8000}
-          driftDelayMs={500}
-        >
-          <Metronome className="w-full" />
-        </FloatingIllust>
-        <FloatingIllust
-          className="bottom-16 left-[8%] hidden w-32 md:block md:w-40"
-          speed={0.26}
-          rotate={14}
-          driftMs={10400}
-          driftDelayMs={1100}
-        >
-          <Mixer className="w-full" />
-        </FloatingIllust>
-
-        <div className="relative mx-auto max-w-2xl text-center">
-          <Reveal>
-            <SectionLabel>ABOUT</SectionLabel>
+      {/* ============================= ABOUT ============================= */}
+      {/* 唯一の「読ませる」ブロック。字間と行間を広げて、読む速度を落とす */}
+      <section className="section bg-paper-soft">
+        <div className="container-page">
+          <Reveal className="mx-auto max-w-2xl text-center">
+            <SectionLabel>About</SectionLabel>
           </Reveal>
-          <div className="mt-12 space-y-12 md:mt-16">
+          <div className="mx-auto mt-12 max-w-2xl space-y-14 text-center md:mt-16">
             {[
               [
                 "楽譜のとおりに弾くのは、少しだけ得意になった。",
@@ -366,17 +252,14 @@ export default function Home() {
                 "コードの上を歩き、その日の気分でメロディを変えて、",
                 "隣で鳴っている音に、返事をする。",
               ],
-              [
-                "難しそうに聞こえますか。",
-                "大丈夫、はじまりはたった二つの和音からです。",
-              ],
+              ["難しそうに聞こえますか。", "大丈夫、はじまりはたった二つの和音からです。"],
               [
                 "Hello Jazz Academy は、",
                 "その最初の一音を、いっしょに鳴らす場所です。",
               ],
             ].map((block, bi) => (
-              <Reveal key={bi} delay={bi * 90}>
-                <p className="font-body text-[0.95rem] leading-[2.6] tracking-wide text-ink md:text-lg md:leading-[2.6]">
+              <Reveal key={bi} delay={bi * 70}>
+                <p className="prose-quiet">
                   {block.map((line) => (
                     <span key={line} className="block">
                       {line}
@@ -389,208 +272,144 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===================== 流れる音符の帯 ===================== */}
-      <div className="relative overflow-hidden border-y border-rule bg-paper py-5">
-        <div className="flex w-max motion-safe:animate-marquee" aria-hidden="true">
-          {[0, 1].map((copy) => (
-            <div key={copy} className="flex items-center">
-              {MARQUEE_WORDS.map((word, i) => (
-                <span key={`${copy}-${word}`} className="flex items-center">
-                  <span className="whitespace-nowrap px-6 font-en text-sm tracking-[0.24em] text-ink md:px-10 md:text-base">
-                    {word}
-                  </span>
-                  <SingleNote
-                    className="w-3.5 shrink-0 md:w-4"
-                    color={["#e21bd5", "#6618d5", "#72dafe", "#fadc46"][i % 4]}
-                  />
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ========================= AUDIENCE ========================= */}
-      <section id="lesson" className="relative overflow-hidden bg-paper px-4 py-24 md:px-8 md:py-32">
-        {/* 見出し下の余白を埋める。右側のリストには重ねない */}
-        <FloatingIllust
-          className="bottom-10 left-[4%] hidden w-44 md:block"
-          speed={0.2}
-          rotate={-12}
-          driftMs={9200}
-        >
-          <Headphones className="w-full" />
-        </FloatingIllust>
-
-        <div className="relative mx-auto max-w-6xl md:grid md:grid-cols-12 md:gap-x-12">
-          <div className="md:col-span-5">
-            <Reveal>
-              <SectionLabel>FOR YOU</SectionLabel>
-              <h2 className="mt-6 font-display text-2xl font-bold leading-[1.7] text-ink md:text-4xl md:leading-[1.6]">
-                こんな方に
-                <br />
-                おすすめです
-              </h2>
-            </Reveal>
-          </div>
-
-          <ul className="mt-12 md:col-span-7 md:mt-2">
-            {AUDIENCE.map((item, i) => (
-              <Reveal as="li" key={item.text} delay={i * 80} className="border-t border-rule last:border-b">
-                <div className="flex items-baseline gap-5 py-6 md:gap-8">
-                  <span className="font-en text-sm text-violet md:text-base">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="font-body text-base leading-8 text-ink md:text-xl">{item.text}</span>
-                  <span className="ml-auto hidden font-en text-xs tracking-[0.2em] text-ink-soft md:block">
-                    {item.en}
-                  </span>
-                </div>
-              </Reveal>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* ========================= FEATURES ========================= */}
-      <section className="relative">
-        <Curve className="block h-12 w-full text-ink md:h-20" />
-        <div className="relative overflow-hidden bg-ink px-4 pb-24 pt-8 text-paper md:px-8 md:pb-32">
-          {/* 五線は本文にかからないよう、セクション下端の余白に流す */}
-          <StaffLine className="pointer-events-none absolute inset-x-0 bottom-8 h-20 w-full text-paper opacity-20" />
-
-          <div className="relative mx-auto max-w-6xl">
-            <Reveal>
-              <SectionLabel tone="cyan">ONLINE LESSON</SectionLabel>
-              <h2 className="mt-6 max-w-2xl font-display text-2xl font-bold leading-[1.7] text-paper md:text-4xl md:leading-[1.6]">
-                スマホ1台で、
-                <br />
-                自宅が音楽教室になる。
-              </h2>
-              <p className="mt-8 max-w-xl font-body text-sm leading-9 text-paper/70 md:text-base">
-                レッスンはZoomまたはFaceTime。画面越しでも、手元・音・リズムはきちんと見えます。
-                現在の生徒さんは初心者が約7割。ゼロから安心して始められる環境です。
-              </p>
-            </Reveal>
-
-            <div className="mt-16 grid gap-x-10 gap-y-14 sm:grid-cols-2">
-              {FEATURES.map((f, i) => (
-                <Reveal key={f.en} delay={i * 110} className="flex gap-6">
-                  <div className="w-20 shrink-0 md:w-28">{f.illust}</div>
-                  <div className="flex-1 border-t border-paper/20 pt-4">
-                    <p className="font-en text-xs tracking-[0.24em] text-cyan">{f.en}</p>
-                    <h3 className="mt-3 font-display text-lg font-bold text-paper md:text-xl">
-                      {f.title}
-                    </h3>
-                    <p className="mt-3 font-body text-sm leading-8 text-paper/70">{f.body}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </div>
-        <Curve className="block h-12 w-full rotate-180 text-ink md:h-20" />
-      </section>
-
-      {/* ========================= STUDENTS ========================= */}
-      <section id="students" className="relative overflow-hidden bg-paper px-4 py-20 md:px-8 md:py-28">
-        <div className="relative mx-auto max-w-5xl">
+      {/* ============================ FOR YOU ============================ */}
+      <section id="lesson" className="section">
+        <div className="container-page lg:grid lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:gap-12">
           <Reveal>
-            <SectionLabel>STUDENTS</SectionLabel>
-            <h2 className="mt-6 font-display text-2xl font-bold leading-[1.7] text-ink md:text-4xl">
-              生徒さんの割合
+            <SectionLabel>For you</SectionLabel>
+            <h2 className="heading mt-6">
+              こんな方に
+              <br />
+              おすすめです
             </h2>
           </Reveal>
 
-          <div className="mt-12 grid gap-12 md:mt-16 md:grid-cols-2 md:gap-16">
-            {RATIOS.map((r, i) => (
-              <Reveal key={r.title} delay={i * 120}>
-                <h3 className="border-b border-rule pb-4 text-center font-body text-sm text-ink md:text-base">
-                  {r.title}
-                </h3>
-                <div className="mt-8 flex items-center justify-center gap-5 md:gap-7">
-                  <div className="shrink-0 text-right">
-                    <p className="font-display text-base font-bold text-ink md:text-lg">
-                      {r.minor.label}
-                    </p>
-                    <p className="font-en text-xl text-ink-soft md:text-2xl">{r.minor.percent}%</p>
-                  </div>
-                  <div className="w-28 shrink-0 md:w-36">
-                    <Donut percent={r.major.percent} />
-                  </div>
-                  <div className="shrink-0">
-                    <p className="font-display text-base font-bold text-ink md:text-lg">
-                      {r.major.label}
-                    </p>
-                    <p className="font-en text-xl text-ink-soft md:text-2xl">{r.major.percent}%</p>
-                  </div>
-                </div>
-                {r.note ? (
-                  <p className="mt-6 text-center font-body text-xs leading-7 text-ink-soft">
-                    {r.note}
-                  </p>
-                ) : null}
+          <Reveal as="ul" delay={100} className="mt-10 border-t border-rule lg:mt-2">
+            {AUDIENCE.map((text) => (
+              <li
+                key={text}
+                className="border-b border-rule py-5 text-[0.9375rem] leading-8 md:py-6 md:text-lg"
+              >
+                {text}
+              </li>
+            ))}
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ========================= ONLINE LESSON ========================= */}
+      {/* ページの中で唯一の暗い面。ここがオンラインレッスンの本題 */}
+      <section className="surface-ink section">
+        <div className="container-page">
+          <Reveal className="max-w-3xl">
+            <SectionLabel tone="cyan">Online lesson</SectionLabel>
+            <h2 className="heading mt-6 text-paper">
+              スマホ1台で、
+              <br />
+              自宅が音楽教室になる。
+            </h2>
+            <p className="lead measure mt-7">
+              レッスンはZoomまたはFaceTime。画面越しでも、手元・音・リズムはきちんと見えます。現在の生徒さんは初心者が約7割。ゼロから安心して始められる環境です。
+            </p>
+          </Reveal>
+
+          <div className="mt-14 grid gap-x-12 gap-y-10 sm:grid-cols-2 md:mt-20 md:gap-y-14">
+            {FEATURES.map((f, i) => (
+              <Reveal key={f.title} delay={i * 70} className="border-t border-paper/20 pt-6">
+                <h3 className="subheading text-paper">{f.title}</h3>
+                <p className="body-text mt-3.5">{f.body}</p>
               </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ======================== INSTRUCTORS ======================== */}
-      <section id="teacher" className="relative overflow-hidden bg-paper px-4 py-20 md:px-8 md:py-28">
-        <FloatingIllust
-          className="left-[-3rem] top-1/3 hidden w-36 md:block"
-          speed={0.24}
-          rotate={-10}
-          driftMs={9800}
-        >
-          <BeamedNotes className="w-full" />
-        </FloatingIllust>
-
-        <div className="relative mx-auto max-w-6xl">
+      {/* =========================== STUDENTS =========================== */}
+      <section id="students" className="section">
+        <div className="container-page">
           <Reveal>
-            <SectionLabel>INSTRUCTOR</SectionLabel>
-            <h2 className="mt-6 font-display text-2xl font-bold leading-[1.7] text-ink md:text-4xl">
-              講師紹介
-            </h2>
+            <SectionLabel>Students</SectionLabel>
+            <h2 className="heading mt-6">生徒さんの割合</h2>
+          </Reveal>
+
+          <div className="mt-12 grid gap-14 md:mt-16 md:grid-cols-2 md:gap-20">
+            {RATIOS.map((r, i) => (
+              <Reveal key={r.title} delay={i * 100}>
+                <h3 className="subheading">{r.title}</h3>
+
+                <p className="mt-6 flex items-baseline gap-3">
+                  <span className="figure text-[3.25rem] leading-none text-violet md:text-[4rem]">
+                    {r.major.percent}
+                    <span className="text-[0.4em] align-baseline">%</span>
+                  </span>
+                  <span className="text-sm font-medium">{r.major.label}</span>
+                </p>
+
+                {/* 数字が主役。棒は「どちらが多いか」を一目で分かるようにするだけ */}
+                <div
+                  className="mt-6 h-1.5 w-full overflow-hidden rounded-full bg-rule"
+                  role="img"
+                  aria-label={`${r.major.label} ${r.major.percent}パーセント、${r.minor.label} ${r.minor.percent}パーセント`}
+                >
+                  <div
+                    className="h-full rounded-full bg-violet"
+                    style={{ width: `${r.major.percent}%` }}
+                  />
+                </div>
+
+                <div className="mt-3.5 flex items-baseline justify-between">
+                  <span className="caption">
+                    {r.major.label} {r.major.percent}%
+                  </span>
+                  <span className="caption">
+                    {r.minor.label} {r.minor.percent}%
+                  </span>
+                </div>
+
+                {r.note ? <p className="caption mt-5">{r.note}</p> : null}
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ========================== INSTRUCTOR ========================== */}
+      <section id="teacher" className="section bg-paper-soft">
+        <div className="container-page">
+          <Reveal>
+            <SectionLabel>Instructor</SectionLabel>
+            <h2 className="heading mt-6">講師紹介</h2>
           </Reveal>
 
           {/* コルテス・ポール */}
-          <article className="mt-16 md:mt-24 md:grid md:grid-cols-12 md:items-start md:gap-12">
-            <Reveal className="md:col-span-5" y={44}>
-              <div className="relative rotate-[-2deg]">
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-0 translate-x-3 translate-y-3 bg-cyan-soft"
+          <article className="mt-14 md:grid md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-start md:gap-12 md:mt-20">
+            <Reveal>
+              <div className="media relative aspect-4/5 w-full">
+                <Image
+                  src="/images/teacher-paul-portrait.jpeg"
+                  alt="コルテス・ポール先生"
+                  fill
+                  sizes="(min-width: 768px) 40vw, 100vw"
+                  className="object-cover object-top"
                 />
-                <div className="relative aspect-[4/5] w-full overflow-hidden border-2 border-ink">
-                  <Image
-                    src="/images/teacher-paul-portrait.jpeg"
-                    alt="コルテス・ポール先生"
-                    fill
-                    sizes="(min-width: 768px) 40vw, 100vw"
-                    className="object-cover object-top"
-                  />
-                </div>
               </div>
             </Reveal>
 
-            <div className="mt-10 md:col-span-7 md:mt-0">
-              <Reveal delay={120}>
-                <Badge tone="open">オンラインレッスン受付中</Badge>
-                <h3 className="mt-6 font-display text-2xl font-bold text-ink md:text-3xl">
-                  コルテス・ポール
-                </h3>
-                <p className="mt-2 font-en text-sm tracking-[0.2em] text-ink-soft">
-                  PAUL CORTEZ — BILINGUAL (JP / EN)
-                </p>
+            <div className="mt-9 md:mt-0">
+              <Reveal delay={80}>
+                <span className="inline-flex items-center gap-2 rounded-full bg-violet-tint px-3.5 py-1.5 text-xs font-medium text-violet">
+                  <span className="h-1.5 w-1.5 rounded-full bg-violet" />
+                  オンラインレッスン受付中
+                </span>
+                <h3 className="heading mt-5">コルテス・ポール</h3>
+                <p className="eyebrow eyebrow-faint mt-3.5">PAUL CORTEZ — BILINGUAL (JP / EN)</p>
               </Reveal>
-              <Reveal delay={200}>
-                <p className="mt-8 font-body text-sm leading-9 text-ink-soft md:text-base md:leading-10">
+              <Reveal delay={140}>
+                <p className="body-text measure mt-7">
                   幼少期から音楽に親しみ、11歳からギターを始め、ポップスやブルースを中心に演奏。高校卒業後にジャズピアノと出会い、後藤浩二氏に師事。さらに、Peter
                   Martin氏から学び、音楽の幅を広げる。現在はジャズを中心に、名古屋のライブハウスや四日市ジャズフェスティバルなどのイベントに出演するほか、オリジナル曲の作曲にも積極的に取り組んでいる。
                 </p>
-                <p className="mt-6 font-body text-sm leading-9 text-ink-soft md:text-base">
+                <p className="body-text measure mt-5">
                   英語でのレッスンも可能です。英語を学びながらジャズも学びたい方にも。
                 </p>
 
@@ -600,21 +419,21 @@ export default function Home() {
                 */}
                 <Link
                   href={IMAIKE_PATH}
-                  className="group mt-8 flex flex-wrap items-center justify-between gap-5 border-2 border-ink bg-yellow-soft px-6 py-5 transition-colors duration-200 hover:bg-brand-yellow"
+                  className="group mt-8 flex items-center justify-between gap-6 rounded-2xl border border-rule bg-paper p-6 transition-colors duration-200 hover:border-violet md:p-7"
                 >
                   <span className="block">
-                    <span className="flex items-center gap-2 font-en text-xs tracking-[0.24em] text-violet">
-                      <Equalizer className="text-violet" />
-                      IN PERSON — IMAIKE
-                    </span>
-                    <span className="mt-3 block font-display text-base font-bold leading-[1.7] text-ink md:text-lg">
+                    <span className="eyebrow block">In person — Imaike</span>
+                    <span className="subheading mt-3 block">
                       今池（千種区）での対面レッスンも担当しています
                     </span>
-                    <span className="mt-2 block font-body text-xs leading-6 text-ink-soft">
+                    <span className="caption mt-2 block">
                       月1回・60分マンツーマン／単発受講OK・2027年3月までの期間限定
                     </span>
                   </span>
-                  <span className="ml-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink text-paper transition-transform duration-300 ease-out group-hover:translate-x-1">
+                  <span
+                    aria-hidden="true"
+                    className="figure shrink-0 text-xl text-violet transition-transform duration-300 ease-out group-hover:translate-x-1"
+                  >
                     →
                   </span>
                 </Link>
@@ -623,41 +442,34 @@ export default function Home() {
           </article>
 
           {/* 河地里咲 */}
-          <article className="mt-24 md:mt-32 md:grid md:grid-cols-12 md:items-start md:gap-12">
-            <Reveal className="md:col-span-5 md:order-2" y={44}>
-              <div className="relative rotate-[2deg]">
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-0 -translate-x-3 translate-y-3 bg-magenta-soft"
+          <article className="mt-16 md:grid md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-start md:gap-12 md:mt-24">
+            <Reveal className="md:order-2">
+              <div className="media relative aspect-4/5 w-full">
+                <Image
+                  src="/images/teacher-risaki.jpeg"
+                  alt="河地里咲先生"
+                  fill
+                  sizes="(min-width: 768px) 40vw, 100vw"
+                  className="object-cover object-top"
                 />
-                <div className="relative aspect-[4/5] w-full overflow-hidden border-2 border-ink">
-                  <Image
-                    src="/images/teacher-risaki.jpeg"
-                    alt="河地里咲先生"
-                    fill
-                    sizes="(min-width: 768px) 40vw, 100vw"
-                    className="object-cover object-top"
-                  />
-                </div>
               </div>
             </Reveal>
 
-            <div className="mt-10 md:col-span-7 md:order-1 md:mt-0">
-              <Reveal delay={120}>
-                <Badge tone="paused">受付休止中</Badge>
-                <h3 className="mt-6 font-display text-2xl font-bold text-ink md:text-3xl">
-                  河地里咲
-                </h3>
-                <p className="mt-2 font-en text-sm tracking-[0.2em] text-ink-soft">
-                  RISAKI KAWACHI
-                </p>
+            <div className="mt-9 md:order-1 md:mt-0">
+              <Reveal delay={80}>
+                <span className="inline-flex items-center gap-2 rounded-full border border-rule-strong px-3.5 py-1.5 text-xs font-medium text-ink-soft">
+                  <span className="h-1.5 w-1.5 rounded-full bg-ink-faint" />
+                  受付休止中
+                </span>
+                <h3 className="heading mt-5">河地里咲</h3>
+                <p className="eyebrow eyebrow-faint mt-3.5">Risaki Kawachi</p>
               </Reveal>
               {/* 旧サイト本文からの書き起こし(WebFetchで現行公開ページを確認済み) */}
-              <Reveal delay={200}>
-                <p className="mt-8 font-body text-sm leading-9 text-ink-soft md:text-base md:leading-10">
+              <Reveal delay={140}>
+                <p className="body-text measure mt-7">
                   4歳からエレクトーンを始め、その後ピアノへと進む。名古屋音楽大学の音楽療法学科に初めは進学するも、本格的にジャズを学ぶために2年目でジャズポピュラーコース、ジャズピアノ専攻へと転科。在学中、ジャズ、即興、作曲アレンジの分野で著名な水野修平氏に師事。さらに、馬淵明彦氏からダルクローズリトミックを学び、幼児教育への理解を一層深める。現在は、ハロージャズアカデミーの主宰兼講師。
                 </p>
-                <p className="mt-6 border-l-2 border-magenta pl-5 font-body text-sm leading-9 text-ink">
+                <p className="body-text measure mt-6 border-l border-rule-strong pl-5">
                   現在は休業中のため、対面・オンラインともに新規レッスンの受付を休止しています。再開の際は「お知らせ」でご案内します。
                 </p>
               </Reveal>
@@ -666,281 +478,161 @@ export default function Home() {
         </div>
       </section>
 
-      {/* =========================== PRICE =========================== */}
-      <section id="price" className="relative overflow-hidden bg-paper-deep px-4 py-24 md:px-8 md:py-32">
-        <FloatingIllust
-          className="bottom-6 left-[-5rem] hidden w-72 md:block"
-          speed={0.18}
-          rotate={8}
-          driftMs={10800}
-        >
-          <Keyboard className="w-full" />
-        </FloatingIllust>
-
-        <div className="relative mx-auto max-w-4xl">
+      {/* ============================= PRICE ============================= */}
+      <section id="price" className="section">
+        <div className="container-page lg:grid lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:gap-12">
           <Reveal>
-            <SectionLabel>PRICE</SectionLabel>
-            <h2 className="mt-6 font-display text-2xl font-bold leading-[1.7] text-ink md:text-4xl">
-              料金
-            </h2>
+            <SectionLabel>Price</SectionLabel>
+            <h2 className="heading mt-6">料金</h2>
           </Reveal>
 
-          <div className="mt-12 md:mt-16">
-            {[
-              { label: "体験レッスン（30分）", price: "¥1,500", unit: null, tag: null },
-              {
-                label: "オンラインレッスン（月2回・大人）",
-                price: "¥12,000",
-                unit: "/ 月",
-                tag: "人気",
-              },
-              {
-                label: "オンラインレッスン（月2回・学生）",
-                price: "¥10,000",
-                unit: "/ 月",
-                tag: null,
-              },
-            ].map((row, i) => (
-              <Reveal key={row.label} delay={i * 90} className="border-t border-ink/25 last:border-b">
-                <div className="flex flex-wrap items-baseline justify-between gap-3 py-7">
-                  <div className="flex items-center gap-3">
-                    <p className="font-body text-sm text-ink md:text-base">{row.label}</p>
+          <div className="mt-10 lg:mt-2">
+            <Reveal as="dl" className="border-t border-rule">
+              {PRICES.map((row) => (
+                <div
+                  key={row.label}
+                  className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-rule py-6"
+                >
+                  <dt className="flex items-center gap-3 text-[0.9375rem] md:text-base">
+                    {row.label}
                     {row.tag ? (
-                      <span className="rounded-full bg-brand-yellow px-3 py-0.5 font-body text-xs font-bold text-ink">
+                      <span className="rounded-full bg-violet-tint px-2.5 py-1 text-[0.6875rem] font-medium text-violet">
                         {row.tag}
                       </span>
                     ) : null}
-                  </div>
-                  <p className="font-en text-3xl font-semibold text-ink md:text-4xl">
+                  </dt>
+                  <dd className="figure text-3xl text-ink md:text-[2.25rem]">
                     {row.price}
                     {row.unit ? (
-                      <span className="ml-2 font-body text-sm font-normal text-ink-soft">
-                        {row.unit}
-                      </span>
+                      <span className="ml-2 font-body text-sm text-ink-faint">{row.unit}</span>
                     ) : null}
-                  </p>
+                  </dd>
                 </div>
-              </Reveal>
-            ))}
+              ))}
+            </Reveal>
+
+            <Reveal delay={120}>
+              <p className="caption measure mt-6">
+                レッスンは固定の曜日・時間で隔週（月2回）。月1回まで無料で振替が可能です（前日までにご相談ください）。
+              </p>
+              <PaymentBrands
+                className="mt-10 border-t border-rule pt-8"
+                label="メールでお送りするSquareの請求書から、各カードでお支払いいただけます。"
+              />
+            </Reveal>
           </div>
-          <Reveal delay={280}>
-            <p className="mt-8 font-body text-xs leading-7 text-ink-soft">
-              レッスンは固定の曜日・時間で隔週（月2回）。
-              月1回まで無料で振替が可能です（前日までにご相談ください）。
-            </p>
-            <PaymentBrands
-              className="mt-10 border-t border-ink/20 pt-8"
-              label="メールでお送りするSquareの請求書から、各カードでお支払いいただけます。"
-            />
-          </Reveal>
         </div>
       </section>
 
-      {/* =========================== FLOW =========================== */}
-      <section id="flow" className="relative overflow-hidden bg-paper px-4 py-24 md:px-8 md:py-32">
-        <FloatingIllust
-          className="right-[-3rem] top-16 hidden w-32 md:block"
-          speed={0.16}
-          rotate={10}
-          driftMs={9200}
-        >
-          <SingleNote className="w-full" />
-        </FloatingIllust>
-
-        <div className="relative mx-auto max-w-6xl">
+      {/* ============================== FLOW ============================== */}
+      {/* ここだけは順序そのものが情報なので、番号を打つ */}
+      <section id="flow" className="section bg-paper-soft">
+        <div className="container-page">
           <Reveal>
-            <SectionLabel>FLOW</SectionLabel>
-            <h2 className="mt-6 font-display text-2xl font-bold leading-[1.7] text-ink md:text-4xl">
-              入会までの流れ
-            </h2>
-            <p className="mt-6 font-display text-lg font-bold text-ink md:text-xl">
-              体験レッスン　受講料¥1,500
-            </p>
+            <SectionLabel>Flow</SectionLabel>
+            <h2 className="heading mt-6">入会までの流れ</h2>
+            <p className="lead measure mt-6">体験レッスン　受講料¥1,500</p>
           </Reveal>
 
-          {/* 4ステップは順序そのものが情報なので、番号を打って一列に並べる */}
-          <ol className="mt-12 grid gap-8 md:mt-16 md:grid-cols-4 md:gap-6">
+          <ol className="mt-12 grid gap-x-10 gap-y-9 md:mt-16 md:grid-cols-4 md:gap-x-8">
             {FLOW_STEPS.map((s, i) => (
-              <Reveal key={s.en} as="li" delay={i * 100} className="border-t-2 border-ink pt-5">
-                <div className="flex items-baseline gap-3">
-                  <span className="font-en text-2xl font-semibold text-violet md:text-3xl">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="font-en text-[0.7rem] tracking-[0.24em] text-ink-soft">
-                    {s.en}
-                  </span>
-                </div>
-                <h3 className="mt-4 font-display text-base font-bold text-ink md:text-lg">
-                  {s.title}
-                </h3>
-                <p className="mt-3 font-body text-sm leading-8 text-ink-soft">{s.body}</p>
+              <Reveal key={s.title} as="li" delay={i * 80} className="border-t border-ink pt-5">
+                <span className="figure block text-2xl leading-none text-violet">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="subheading mt-4">{s.title}</h3>
+                <p className="body-text mt-3">{s.body}</p>
               </Reveal>
             ))}
           </ol>
         </div>
       </section>
 
-      {/* ============================ FAQ ============================ */}
-      <section
-        id="faq"
-        className="relative overflow-hidden bg-paper-deep px-4 py-24 md:px-8 md:py-32"
-      >
-        <FloatingIllust
-          className="left-[-4rem] bottom-10 hidden w-40 md:block"
-          speed={0.2}
-          rotate={-12}
-          driftMs={10200}
-        >
-          <Metronome className="w-full" />
-        </FloatingIllust>
-
-        <div className="relative mx-auto max-w-4xl">
+      {/* =============================== FAQ =============================== */}
+      <section id="faq" className="section">
+        <div className="container-page lg:grid lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:gap-12">
           <Reveal>
-            <SectionLabel>FAQ</SectionLabel>
-            <h2 className="mt-6 font-display text-2xl font-bold leading-[1.7] text-ink md:text-4xl">
-              受講のご案内
-            </h2>
+            <SectionLabel>Guide</SectionLabel>
+            <h2 className="heading mt-6">受講のご案内</h2>
+            <p className="lead mt-6">月に一回振替無料 / 年4回までキャンセルOK</p>
           </Reveal>
 
-          <Reveal delay={120} className="mt-10 md:mt-14">
-            <div className="flex flex-col gap-4 border-2 border-ink bg-brand-yellow px-6 py-7 md:flex-row md:items-center md:gap-8 md:px-10 md:py-8">
-              <Record className="w-12 shrink-0 motion-safe:animate-spin-slow md:w-14" />
-              <p className="font-display text-base font-bold leading-[1.8] text-ink md:text-xl">
-                月に一回振替無料 / 年4回までキャンセルOK
-              </p>
-            </div>
-          </Reveal>
-
-          {FAQ_GROUPS.map((group, gi) => (
-            <Reveal key={group.en} delay={gi * 80} className="mt-12 md:mt-16">
-              <div className="flex items-baseline gap-4">
-                <p className="font-en text-[0.7rem] tracking-[0.24em] text-violet">{group.en}</p>
-                <h3 className="font-display text-lg font-bold text-ink md:text-xl">
+          <div className="mt-10 lg:mt-2">
+            {FAQ_GROUPS.map((group, gi) => (
+              <Reveal key={group.label} delay={gi * 60} className="mt-12 first:mt-0">
+                {/* 和文の小見出しは字送りを詰める。欧文ラベルと同じ組みにすると読めなくなる */}
+                <h3 className="text-[0.8125rem] font-medium tracking-[0.06em] text-ink-faint">
                   {group.label}
                 </h3>
-              </div>
-
-              <div className="mt-5 border-t border-ink/25">
-                {group.items.map((item) => (
-                  <details
-                    key={item.title}
-                    className="group border-b border-ink/25 [&_summary::-webkit-details-marker]:hidden"
-                  >
-                    <summary className="flex cursor-pointer list-none items-start gap-4 py-5 transition-opacity duration-200 hover:opacity-60 md:gap-6">
-                      <span
-                        aria-hidden="true"
-                        className="w-5 shrink-0 font-en text-xl leading-7 text-violet md:w-6 md:text-2xl"
-                      >
-                        Q
-                      </span>
-                      <span className="flex-1 font-display text-sm font-bold leading-7 text-ink md:text-base">
-                        {item.title}
-                      </span>
-                      {/* 縦棒だけを畳んで + を − に変える。開いている状態が形で分かる */}
-                      <span
-                        aria-hidden="true"
-                        className="relative mt-2 h-3.5 w-3.5 shrink-0"
-                      >
-                        <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-ink" />
-                        <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-ink transition-transform duration-300 ease-out group-open:scale-y-0" />
-                      </span>
-                    </summary>
-
-                    {/* 回答は質問文と同じ位置から始める。Qの真下にAが落ちる */}
-                    <div className="flex items-start gap-4 pb-7 md:gap-6">
-                      <span
-                        aria-hidden="true"
-                        className="w-5 shrink-0 font-en text-xl leading-8 text-magenta md:w-6 md:text-2xl"
-                      >
-                        A
-                      </span>
-                      <div className="flex flex-1 flex-col gap-4 pr-8">
-                        {item.paragraphs.map((text) => (
-                          <p key={text} className="font-body text-sm leading-8 text-ink-soft">
-                            {text}
-                          </p>
-                        ))}
-                      </div>
-                    </div>
-                  </details>
-                ))}
-              </div>
-            </Reveal>
-          ))}
+                <div className="mt-4 border-t border-rule">
+                  {group.items.map((item) => (
+                    <Question key={item.title} title={item.title} paragraphs={item.paragraphs} />
+                  ))}
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ========================== IMAIKE ========================== */}
-      <section id="imaike" className="relative overflow-hidden bg-paper px-4 py-20 md:px-8 md:py-24">
-        <div className="mx-auto max-w-6xl">
-          <Reveal className="flex flex-col gap-6 border-y-2 border-ink py-10 md:flex-row md:items-center md:justify-between md:py-12">
-            <div className="flex items-start gap-6">
-              <Metronome className="w-14 shrink-0 md:w-16" />
-              <div>
-                <SectionLabel>IN PERSON</SectionLabel>
-                <p className="mt-4 font-display text-lg font-bold leading-[1.8] text-ink md:text-2xl">
+      {/* ============================ IN PERSON ============================ */}
+      <section id="imaike" className="section-tight">
+        <div className="container-page">
+          <Reveal>
+            <Link
+              href={IMAIKE_PATH}
+              className="group flex flex-col gap-6 border-y border-rule py-10 transition-colors duration-200 hover:border-violet md:flex-row md:items-center md:justify-between md:py-12"
+            >
+              <span className="block">
+                <span className="eyebrow block">In person</span>
+                <span className="heading mt-4 block">
                   月に一度、今池（千種区）での
                   <br className="hidden md:block" />
                   対面レッスンも実施中。
-                </p>
-                <p className="mt-3 font-body text-sm leading-8 text-ink-soft">
-                  2027年3月までの期間限定です。
-                </p>
-              </div>
-            </div>
-            <Link
-              href={IMAIKE_PATH}
-              className="group inline-flex shrink-0 items-center gap-3 font-en text-sm tracking-[0.2em] text-ink"
-            >
-              VIEW MORE
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-paper transition-transform duration-300 ease-out group-hover:translate-x-1">
-                →
+                </span>
+                <span className="caption mt-3 block">2027年3月までの期間限定です。</span>
+              </span>
+              <span className="link-quiet shrink-0">
+                今池のレッスンを見る
+                <span
+                  aria-hidden="true"
+                  className="figure text-violet transition-transform duration-300 ease-out group-hover:translate-x-1"
+                >
+                  →
+                </span>
               </span>
             </Link>
           </Reveal>
         </div>
       </section>
 
-      {/* ========================== ACCESS ========================== */}
-      <section id="access" className="relative overflow-hidden bg-paper px-4 pb-24 md:px-8 md:pb-32">
-        <FloatingIllust
-          className="left-[-2rem] bottom-0 hidden w-32 md:block"
-          speed={0.2}
-          rotate={-14}
-          driftMs={9400}
-        >
-          <Mixer className="w-full" />
-        </FloatingIllust>
-
-        <div className="relative mx-auto max-w-6xl md:grid md:grid-cols-12 md:gap-12">
-          <Reveal className="md:col-span-5">
-            <SectionLabel>ACCESS</SectionLabel>
-            <h2 className="mt-6 font-display text-2xl font-bold leading-[1.7] text-ink md:text-3xl">
-              アクセス
-            </h2>
+      {/* ============================= ACCESS ============================= */}
+      <section id="access" className="section pt-0 md:pt-0">
+        <div className="container-page lg:grid lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:gap-12">
+          <Reveal>
+            <SectionLabel>Access</SectionLabel>
+            <h2 className="heading mt-6">アクセス</h2>
           </Reveal>
-          <Reveal delay={120} className="mt-8 md:col-span-7 md:mt-2">
+          <Reveal delay={100} className="mt-10 lg:mt-2">
             <dl className="border-t border-rule">
-              <div className="flex gap-6 border-b border-rule py-5">
-                <dt className="w-24 shrink-0 font-en text-xs tracking-[0.2em] text-ink-soft">BASE</dt>
-                <dd className="font-body text-sm leading-8 text-ink">天白教室（名古屋市天白区）</dd>
-              </div>
-              <div className="flex gap-6 border-b border-rule py-5">
-                <dt className="w-24 shrink-0 font-en text-xs tracking-[0.2em] text-ink-soft">ONLINE</dt>
-                <dd className="font-body text-sm leading-8 text-ink">
-                  Zoom / FaceTime（全国・海外から受講可能）
-                </dd>
-              </div>
-              <div className="flex gap-6 border-b border-rule py-5">
-                <dt className="w-24 shrink-0 font-en text-xs tracking-[0.2em] text-ink-soft">IN PERSON</dt>
-                <dd className="font-body text-sm leading-8 text-ink">
-                  今池教室（名古屋市千種区）／月1回・2027年3月までの期間限定
-                </dd>
-              </div>
+              {[
+                { en: "Base", body: "天白教室（名古屋市天白区）" },
+                { en: "Online", body: "Zoom / FaceTime（全国・海外から受講可能）" },
+                {
+                  en: "In person",
+                  body: "今池教室（名古屋市千種区）／月1回・2027年3月までの期間限定",
+                },
+              ].map((row) => (
+                <div
+                  key={row.en}
+                  className="flex flex-col gap-1.5 border-b border-rule py-5 sm:flex-row sm:gap-8"
+                >
+                  <dt className="eyebrow eyebrow-faint shrink-0 pt-1.5 sm:w-28">{row.en}</dt>
+                  <dd className="text-[0.9375rem] leading-8">{row.body}</dd>
+                </div>
+              ))}
             </dl>
-            <p className="mt-6 font-body text-xs leading-7 text-ink-soft">
-              現在はオンラインレッスンを中心に活動しています。
-            </p>
+            <p className="caption mt-6">現在はオンラインレッスンを中心に活動しています。</p>
           </Reveal>
         </div>
       </section>

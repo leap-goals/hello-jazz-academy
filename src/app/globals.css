@@ -1,252 +1,414 @@
 @import "tailwindcss";
 
 /*
- * デザインシステム: リソグラフ(孔版)印刷の紙面。
+ * デザインシステム
  *
- * 参照した book-and-hair.com の骨格を、ジャズピアノ教室の語彙に置き換えている。
- *   紙のクリーム地 + 粒状のインク + 明朝体 + 版画調のフラットイラスト + スクロールで立ち上がる動き。
- * 色はロゴ由来のマゼンタ/バイオレット/シアンとブランドイエローの4版だけを使い、
- * リソの「刷り重ね」に見立てて面で塗る。写真的なグラデーションやぼかしは使わない。
+ * 骨格は2つの参照からできている。
+ *   Apple HIG … 白い地、余白、階層は「大きさ・太さ・濃度」だけでつける。
+ *               面を分けるのは影や枠ではなく、地色と1pxの罫線。
+ *   現代の雑誌 … 見出しは大きく詰めて組み、本文は狭い版面で行間を広く取る。
+ *               欧文の小さなラベルが段組の位置を示す。
+ *
+ * 書体はロゴから引いている。ロゴのワードマークは線幅が一定で端が丸い幾何学
+ * サンセリフなので、和文はZen丸ゴシック、欧文はQuicksandで揃えた。
+ * 書体を1系統に絞ったぶん、階層は大きさ・太さ・濃度・余白だけでつける。
+ *
+ * 色はロゴの3版(マゼンタ/バイオレット/シアン)だけ。
+ *   バイオレット … 押せるもの・現在地・欧文ラベル(サイト全体の主色)
+ *   マゼンタ    … 今池ページの主色。トップでは使わない
+ *   シアン      … 暗い面の上のラベルにだけ使う(白地では薄すぎて読めない)
+ * 旧デザインのイエローは、面積に対して主張が強く階層を壊すため廃止した。
  */
+
 :root {
-  --color-paper: #f4f0e2;        /* 紙。全ページの地色 */
-  --color-paper-deep: #ebe5d1;   /* 一段沈めた紙。帯セクション */
-  --color-ink: #1d1522;          /* インクの黒(わずかに紫を含む) */
-  --color-ink-soft: #4b3f56;     /* 副次テキスト */
-  --color-rule: #d6cdb4;         /* 罫線。五線紙の線 */
-  --color-mist: #c3b6d3;         /* 暗部の上の副次テキスト */
+  /* ---- 面 ---- */
+  --color-paper: #ffffff;       /* 主面 */
+  --color-paper-soft: #f5f4f7;  /* 交互に敷く面。紫を含んだ無彩色 */
+  --color-rule: #e6e4ea;        /* 罫線 */
+  --color-rule-strong: #cfcbd6; /* 見出し直下など、少し強い罫線 */
 
-  --color-magenta: #e21bd5;      /* ロゴ由来: 主アクセント(1版目) */
-  --color-violet: #6618d5;       /* ロゴ由来: 副アクセント(2版目) */
-  --color-violet-deep: #4d0fa6;  /* バイオレットの二度刷り。フッターのような大面積用 */
-  --color-cyan: #72dafe;         /* ロゴ由来: オンラインを示す(3版目) */
-  --color-brand-yellow: #fadc46; /* 現行サイト由来(4版目) */
+  /* ---- 文字 ---- */
+  --color-ink: #16121c;         /* 見出し・本文 */
+  --color-ink-soft: #6b6577;    /* 副次テキスト */
+  --color-ink-faint: #9a94a5;   /* キャプション・欧文ラベル */
 
-  /* 各版の淡刷り。イラストの面を塗るときはこちらを使う */
-  --color-magenta-soft: #f3a8ea;
-  --color-violet-soft: #b9a1ea;
-  --color-cyan-soft: #b6e9ff;
-  --color-yellow-soft: #fceb95;
+  /* ---- ロゴ由来の3版 ---- */
+  --color-violet: #6618d5;
+  --color-violet-deep: #4a0fa0; /* hoverと、フッターのような大面積 */
+  --color-violet-tint: #f2ecfd; /* ごく薄い面。タグや強調ブロック */
+  --color-magenta: #e21bd5;
+  --color-magenta-tint: #fdeafb;
+  --color-cyan: #72dafe;        /* 暗い面の上のラベル専用 */
 
-  /* リソの粒状ノイズ。紙全面のオーバーレイと、版がかすれる境目の両方に使う */
-  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  --radius-media: 14px;
+
+  /* 版面。本文は1行あたり32〜38字に収まる幅で止める */
+  --measure: 34rem;
 }
 
 @theme inline {
   --color-paper: var(--color-paper);
-  --color-paper-deep: var(--color-paper-deep);
+  --color-paper-soft: var(--color-paper-soft);
+  --color-rule: var(--color-rule);
+  --color-rule-strong: var(--color-rule-strong);
   --color-ink: var(--color-ink);
   --color-ink-soft: var(--color-ink-soft);
-  --color-rule: var(--color-rule);
-  --color-mist: var(--color-mist);
-  --color-magenta: var(--color-magenta);
+  --color-ink-faint: var(--color-ink-faint);
   --color-violet: var(--color-violet);
   --color-violet-deep: var(--color-violet-deep);
+  --color-violet-tint: var(--color-violet-tint);
+  --color-magenta: var(--color-magenta);
+  --color-magenta-tint: var(--color-magenta-tint);
   --color-cyan: var(--color-cyan);
-  --color-brand-yellow: var(--color-brand-yellow);
-  --color-magenta-soft: var(--color-magenta-soft);
-  --color-violet-soft: var(--color-violet-soft);
-  --color-cyan-soft: var(--color-cyan-soft);
-  --color-yellow-soft: var(--color-yellow-soft);
 
-  --font-display: var(--font-mincho), "Hiragino Mincho ProN", "Yu Mincho", serif;
-  --font-body: var(--font-mincho), "Hiragino Mincho ProN", "Yu Mincho", serif;
-  --font-en: var(--font-en-serif), "Times New Roman", serif;
-
-  --animate-drift: drift 7s ease-in-out infinite;
-  --animate-spin-slow: spin 14s linear infinite;
-  --animate-beat-fade: beat-fade 1400ms ease-in-out infinite;
-  --animate-marquee: marquee 38s linear infinite;
+  /*
+   * 欧文はQuicksandを先に置き、和文グリフはZen丸ゴシックへ落ちる。
+   * 端末側のフォールバックも丸ゴシック(ヒラギノ丸ゴ / M PLUS Rounded)で揃える。
+   */
+  --font-display: var(--font-quicksand), var(--font-gothic), "Hiragino Maru Gothic ProN",
+    "M PLUS Rounded 1c", "Hiragino Sans", sans-serif;
+  --font-body: var(--font-gothic), "Hiragino Maru Gothic ProN", "M PLUS Rounded 1c",
+    "Hiragino Sans", sans-serif;
+  --font-en: var(--font-quicksand), "Avenir Next", "Helvetica Neue", Arial, sans-serif;
 }
 
-body {
-  font-family: var(--font-body);
-  background-color: var(--color-paper);
-  color: var(--color-ink);
-}
-
-/* ---- 紙面のテクスチャ ------------------------------------------------- */
-
-/* 画面全面に一枚かぶせる粒。イラストも写真も文字も同じ紙に刷られて見える */
-.paper-grain {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  pointer-events: none;
-  background-image: var(--noise);
-  opacity: 0.22;
-  mix-blend-mode: multiply;
-}
-
-/* ---- ボタン ----------------------------------------------------------- */
-
-/*
- * IKEAのボタンに倣い、形と役割をここで一度だけ決めてしまう。
- *   - 角丸は全周(ピル)、面はベタ塗り。影もグラデーションも縁取りの飾りも付けない
- *   - ホバーで浮かせない。位置は動かさず、色を一段沈めるだけ
- *   - 主ボタンはバイオレット1色。ページごとのアクセント色(マゼンタ等)は使わない
- *     ので、トップでも今池でも「押せるもの」の見え方が変わらない
- */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  border-radius: 999px;
-  padding: 0.9rem 1.75rem;
-  font-family: var(--font-display);
-  font-weight: 700;
-  line-height: 1.5;
-  text-align: center;
-  transition:
-    background-color 200ms ease,
-    color 200ms ease,
-    box-shadow 200ms ease;
-}
-
-.btn:focus-visible {
-  outline: 2px solid var(--color-violet);
-  outline-offset: 3px;
-}
-
-/* 紙の上の主ボタン */
-.btn-primary {
-  background-color: var(--color-violet);
-  color: var(--color-paper);
-}
-.btn-primary:hover {
-  background-color: var(--color-violet-deep);
-}
-
-/* 紙の上の副ボタン。面を持たず、線だけで枠を示す */
-.btn-secondary {
-  background-color: transparent;
-  box-shadow: inset 0 0 0 1.5px var(--color-ink);
-  color: var(--color-ink);
-}
-.btn-secondary:hover {
-  background-color: rgb(29 21 34 / 0.06);
-}
-
-/* インクの面(フッター等)の上に置く主ボタン */
-.btn-inverse {
-  background-color: var(--color-paper);
-  color: var(--color-ink);
-}
-.btn-inverse:hover {
-  background-color: var(--color-paper-deep);
-}
-
-.btn-sm {
-  gap: 0.5rem;
-  padding: 0.5rem 1.1rem;
-}
-
-/*
- * 版がかすれながら消えていく境目。単色を、粒ノイズと縦グラデーションの
- * 二重マスクで抜くことで、ベタ塗りではなく「刷りムラ」として減衰させる。
- */
-.speckle-fade {
-  background-color: var(--speckle-color, var(--color-violet));
-  /* 上端でも刷り切らない(0.62)。ロゴや見出しが乗っても読める濃度に留める */
-  -webkit-mask-image: var(--noise), linear-gradient(to bottom, rgb(0 0 0 / 0.62) 0%, transparent 100%);
-  -webkit-mask-composite: source-in;
-  mask-image: var(--noise), linear-gradient(to bottom, rgb(0 0 0 / 0.62) 0%, transparent 100%);
-  mask-composite: intersect;
-  mask-mode: luminance, alpha;
-}
-
-.speckle-fade--up {
-  -webkit-mask-image: var(--noise), linear-gradient(to top, rgb(0 0 0 / 0.62) 0%, transparent 100%);
-  mask-image: var(--noise), linear-gradient(to top, rgb(0 0 0 / 0.62) 0%, transparent 100%);
-}
-
-/* 日本語の縦組み。宣言文のような短い塊にだけ使う */
-.tategaki {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-}
-
-/* ---- スクロールで立ち上がる ------------------------------------------ */
-
-.reveal {
-  opacity: 0;
-  transform: translateY(var(--reveal-y, 30px));
-  transition:
-    opacity 900ms cubic-bezier(0.22, 0.7, 0.2, 1),
-    transform 900ms cubic-bezier(0.22, 0.7, 0.2, 1);
-  transition-delay: var(--reveal-delay, 0ms);
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
-}
-
-/* 罫線が横に伸びていく(book-and-hairのフッターの線に相当) */
-.rule-draw {
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 1100ms cubic-bezier(0.22, 0.7, 0.2, 1);
-  transition-delay: var(--reveal-delay, 0ms);
-}
-
-.rule-draw.is-visible {
-  transform: scaleX(1);
-}
-
-@keyframes drift {
-  0%,
-  100% {
-    transform: translateY(0);
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
-  50% {
-    transform: translateY(-16px);
+
+  body {
+    font-family: var(--font-body);
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    /* 和文は字面が詰まって見えるので、本文だけわずかに開ける */
+    letter-spacing: 0.02em;
+    font-feature-settings: "palt";
+  }
+
+  /* 固定ヘッダーの下にアンカー先が潜らないようにする */
+  :target,
+  [id] {
+    scroll-margin-top: 5.5rem;
+  }
+
+  ::selection {
+    background-color: var(--color-violet);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-violet);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* 数字は必ず等幅で。料金表と割合が桁で揃う */
+  .num,
+  th,
+  td {
+    font-variant-numeric: tabular-nums;
   }
 }
 
-@keyframes beat-fade {
-  0%,
-  100% {
-    opacity: 0.25;
+@layer components {
+  /* ---- 版面 ------------------------------------------------------------ */
+
+  .container-page {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 5vw, 4rem);
   }
-  50% {
-    opacity: 0.9;
+
+  .section {
+    padding-block: clamp(4.5rem, 11vw, 9rem);
+  }
+
+  .section-tight {
+    padding-block: clamp(3rem, 7vw, 5.5rem);
+  }
+
+  .measure {
+    max-width: var(--measure);
+  }
+
+  /* ---- 文字組み --------------------------------------------------------- */
+
+  /*
+   * 欧文の小ラベル。段組みの中で「ここから新しい話が始まる」ことだけを示す。
+   * 大きくしない・太くしない・色を変えない、の3つを守る。
+   */
+  .eyebrow {
+    font-family: var(--font-en);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-violet);
+  }
+
+  .eyebrow-faint {
+    color: var(--color-ink-faint);
+  }
+
+  .eyebrow-cyan {
+    color: var(--color-cyan);
+  }
+
+  .eyebrow-magenta {
+    color: var(--color-magenta);
+  }
+
+  /*
+   * 和文の大見出しは、既定の字送りのまま大きくすると途端に間延びする。
+   * 丸ゴシックは端が丸いぶん字面が小さく見えるので、詰めすぎない負の値で止める。
+   */
+  /*
+   * 上限と下限は「和文12文字が1行に収まること」から決めている。
+   * 見出しはどの幅でも2行で止めたいので、版面の幅に合わせて素直に縮める。
+   */
+  .display {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 0.85rem + 3.6vw, 4.25rem);
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: -0.012em;
+  }
+
+  /*
+   * 段組みの中に入る見出し。列幅に収まりきらないと1文字だけが次行に落ちて
+   * 一気に素人くさくなるため、上限は段の幅から逆算して低めに止めている。
+   */
+  .display-compact {
+    font-family: var(--font-display);
+    font-size: clamp(1.625rem, 0.8rem + 2.6vw, 3rem);
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: -0.012em;
+  }
+
+  .heading {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 1.05rem + 1.6vw, 2.25rem);
+    font-weight: 500;
+    line-height: 1.55;
+    letter-spacing: -0.008em;
+  }
+
+  .subheading {
+    font-family: var(--font-display);
+    font-size: clamp(1.125rem, 1.02rem + 0.45vw, 1.3125rem);
+    font-weight: 700;
+    line-height: 1.65;
+    letter-spacing: 0;
+  }
+
+  /* 見出し直下の導入文。本文より一段大きく、色は落とす */
+  .lead {
+    font-size: clamp(0.9375rem, 0.89rem + 0.3vw, 1.0625rem);
+    line-height: 2;
+    color: var(--color-ink-soft);
+  }
+
+  .body-text {
+    font-size: clamp(0.9375rem, 0.91rem + 0.15vw, 1rem);
+    line-height: 1.95;
+    color: var(--color-ink-soft);
+  }
+
+  .caption {
+    font-size: 0.8125rem;
+    line-height: 1.85;
+    color: var(--color-ink-faint);
+  }
+
+  /* 欧文の数字・記号。料金、割合、和音記号に使う */
+  .figure {
+    font-family: var(--font-en);
+    font-variant-numeric: tabular-nums;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  /*
+   * ABOUTの詩文。書体は本文と同じなので、
+   * 「大きさ・行間・字間・色」だけで読む速度を落とし、別の声に聞かせる。
+   */
+  .prose-quiet {
+    font-size: clamp(1rem, 0.94rem + 0.35vw, 1.25rem);
+    font-weight: 400;
+    line-height: 2.4;
+    letter-spacing: 0.08em;
+    color: var(--color-ink);
+    font-feature-settings: normal;
+  }
+
+  /* ---- ボタン ----------------------------------------------------------- */
+
+  /*
+   * 形は1種類(ピル)。役割の違いは色だけで示し、影・グラデーション・枠飾りは付けない。
+   * hoverで位置を動かさないのは、押す前と押した後で的が動かないようにするため。
+   */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    border-radius: 999px;
+    padding: 0.8125rem 1.5rem;
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    transition:
+      background-color 200ms ease,
+      color 200ms ease,
+      opacity 200ms ease;
+  }
+
+  .btn-primary {
+    background-color: var(--color-violet);
+    color: var(--color-paper);
+  }
+  .btn-primary:hover {
+    background-color: var(--color-violet-deep);
+  }
+
+  /* 今池ページのボタン。ページの主色がマゼンタなので、押せるものもそちらに寄せる */
+  .btn-magenta {
+    background-color: var(--color-magenta);
+    color: var(--color-paper);
+  }
+  .btn-magenta:hover {
+    background-color: #b813ae;
+  }
+
+  /* 暗い面の上に置く主ボタン */
+  .btn-inverse {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+  .btn-inverse:hover {
+    background-color: #ece9f2;
+  }
+
+  .btn-sm {
+    padding: 0.5rem 1.0625rem;
+    font-size: 0.875rem;
+  }
+
+  /* ボタンに添える補足(所要時間と料金)。ボタンの外に出さず、中で色を落とす */
+  .btn-note {
+    font-family: var(--font-en);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    opacity: 0.72;
+  }
+
+  /* 押せるが主役ではないもの。下線だけを持つテキストリンク */
+  .link-quiet {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--color-rule-strong);
+    text-underline-offset: 0.4em;
+    text-decoration-thickness: 1px;
+    transition: text-decoration-color 200ms ease;
+  }
+  .link-quiet:hover {
+    text-decoration-color: var(--color-violet);
+  }
+
+  /* ---- 面 --------------------------------------------------------------- */
+
+  /* 暗い面。ページの中で1章だけ使い、そこが山だと分かるようにする */
+  .surface-ink {
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+  }
+  .surface-ink .body-text,
+  .surface-ink .lead {
+    color: rgb(255 255 255 / 0.68);
+  }
+  .surface-ink .caption {
+    color: rgb(255 255 255 / 0.5);
+  }
+
+  .surface-violet {
+    background-color: var(--color-violet-deep);
+    color: var(--color-paper);
+  }
+  .surface-violet .body-text,
+  .surface-violet .lead {
+    color: rgb(255 255 255 / 0.72);
+  }
+  .surface-violet .caption {
+    color: rgb(255 255 255 / 0.55);
+  }
+
+  .media {
+    border-radius: var(--radius-media);
+    overflow: hidden;
+    background-color: var(--color-paper-soft);
+  }
+
+  /* ---- 動き ------------------------------------------------------------- */
+
+  /*
+   * ヒーローだけは読み込み直後のCSSアニメーションで出す。
+   * JSの実行を待たないので、回線やハイドレーションが遅くても見出しが消えたままにならない。
+   * 上から順にごく短い間隔で出し、1秒かからずに読み終えられる状態にする。
+   */
+  .rise {
+    animation: rise 600ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    animation-delay: var(--rise-delay, 0ms);
+  }
+
+  /*
+   * 折り返し地点より下は、スクロールで立ち上げる。
+   * 動きは1種類だけ。少し下から、少しだけ。
+   * 派手なイージングや大きな移動量は、それ自体が装飾になるので使わない。
+   */
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 700ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
   }
 }
 
-@keyframes marquee {
+@keyframes rise {
   from {
-    transform: translateX(0);
+    opacity: 0;
+    transform: translateY(12px);
   }
   to {
-    transform: translateX(-50%);
-  }
-}
-
-/* メトロノームの振り子 */
-@keyframes pendulum {
-  0%,
-  100% {
-    transform: rotate(-13deg);
-  }
-  50% {
-    transform: rotate(13deg);
-  }
-}
-
-/* イコライザーの各バー。高さの伸縮でビートを見せる */
-@keyframes eq-bar {
-  0%,
-  100% {
-    transform: scaleY(0.25);
-  }
-  50% {
-    transform: scaleY(1);
+    opacity: 1;
+    transform: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {
@@ -255,8 +417,7 @@ body {
     transition-duration: 0.01ms !important;
   }
 
-  .reveal,
-  .rule-draw {
+  .reveal {
     opacity: 1;
     transform: none;
   }

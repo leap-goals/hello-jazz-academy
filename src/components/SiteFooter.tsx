@@ -1,24 +1,36 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Reveal from "@/components/Reveal";
-import FloatingIllust from "@/components/FloatingIllust";
+import SectionLabel from "@/components/SectionLabel";
 import SocialLinks from "@/components/SocialIcons";
-import { CHORD_TOOL_PATH, IMAIKE_FORM_URL, IMAIKE_PATH, TRIAL_FORM_URL } from "@/components/SiteHeader";
-import { Curve, Equalizer, Headphones, SingleNote } from "@/components/Illustrations";
+import {
+  CHORD_TOOL_PATH,
+  IMAIKE_FORM_URL,
+  IMAIKE_PATH,
+  TRIAL_FORM_URL,
+} from "@/components/SiteHeader";
+
+/*
+ * 締めは2段に分ける。
+ *   上 … 申し込みの一言だけを、色の面いっぱいに置く。ページで最後に見る色がこれになる
+ *   下 … サイトマップ・SNS・著作権表示。小さな文字と罫線だけの、探すための面
+ * 濃い面を続けて2つ置かないことで、上段のCTAだけが立つ。
+ */
 
 // サイトマップは全ページ共通。トップ内のアンカーは下層からも辿れるよう絶対パスで書く
 const FOOTER_LINKS = [
-  { href: "/#lesson", label: "レッスンについて", en: "LESSON" },
-  { href: "/#teacher", label: "講師紹介", en: "INSTRUCTOR" },
-  { href: "/#price", label: "料金", en: "PRICE" },
-  { href: "/#flow", label: "入会までの流れ", en: "FLOW" },
-  { href: "/#faq", label: "受講のご案内", en: "FAQ" },
-  { href: IMAIKE_PATH, label: "今池での対面レッスン", en: "IN PERSON" },
-  { href: "/#access", label: "アクセス", en: "ACCESS" },
-  { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", en: "CHORD TOOL", external: true },
-  { href: "/privacypolicy/", label: "プライバシーポリシー", en: "PRIVACY" },
+  { href: "/#lesson", label: "レッスンについて" },
+  { href: "/#teacher", label: "講師紹介" },
+  { href: "/#price", label: "料金" },
+  { href: "/#flow", label: "入会までの流れ" },
+  { href: "/#faq", label: "受講のご案内" },
+  { href: IMAIKE_PATH, label: "今池での対面レッスン" },
+  { href: "/#access", label: "アクセス" },
+  { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", external: true },
+  { href: "/privacypolicy/", label: "プライバシーポリシー" },
 ];
 
 // 締めのCTAだけは、いま見ているページで売っているものに合わせて差し替える
@@ -28,19 +40,17 @@ const ONLINE_CTA = {
   button: "体験レッスンに申し込む",
   price: "30min ¥1,500",
   href: TRIAL_FORM_URL,
-  external: true,
-  note: ["レッスンはZoomまたはFaceTime。", "お支払いはSquare請求書にて承ります。"],
+  note: "レッスンはZoomまたはFaceTime。お支払いはSquare請求書にて承ります。",
 };
 
-// 今池だけは申し込みを外部フォームで受けるため、ボタンの行き先がメールではない
+// 今池だけは申し込みを外部フォームで受けるため、ボタンの行き先が違う
 const IMAIKE_CTA = {
   heading: ["月に一度の60分を、", "いっしょに使いませんか。"],
   lead: "お申し込みフォームに、ご希望の月と時間帯、いま弾ける曲や学びたいことを添えてお送りください。開催日と会場の詳しい場所をご案内します。受講経験のある方は、LINEからでも承ります。",
   button: "申し込みフォームへ",
   price: "60min ¥10,000",
   href: IMAIKE_FORM_URL,
-  external: true,
-  note: ["今池駅より徒歩3分、グランドピアノ完備のスタジオ。", "お支払いはクレジットカード決済のみとなります。"],
+  note: "今池駅より徒歩3分、グランドピアノ完備のスタジオ。お支払いはクレジットカード決済のみとなります。",
 };
 
 export default function SiteFooter() {
@@ -48,119 +58,85 @@ export default function SiteFooter() {
   const cta = isImaike ? IMAIKE_CTA : ONLINE_CTA;
 
   return (
-    <footer id="contact" className="relative">
-      {/* 紙からインクの面へ切り替わる境目 */}
-      <Curve className="block h-14 w-full text-violet-deep md:h-20" />
+    <footer>
+      {/* ---- 申し込み ---- */}
+      <section id="contact" className="surface-violet section">
+        <div className="container-page">
+          <Reveal className="max-w-3xl">
+            <SectionLabel tone="cyan">Contact</SectionLabel>
+            <h2 className="heading mt-6 text-paper">
+              {cta.heading[0]}
+              <br />
+              {cta.heading[1]}
+            </h2>
+            <p className="lead measure mt-7">{cta.lead}</p>
+          </Reveal>
 
-      <div className="relative overflow-hidden bg-violet-deep px-4 pb-14 pt-4 text-paper md:px-8 md:pb-16">
-        <FloatingIllust
-          className="-left-8 bottom-24 hidden w-40 opacity-90 md:block"
-          speed={0.1}
-          rotate={12}
-          driftMs={9000}
-          driftDelayMs={700}
-        >
-          <Headphones className="w-full" />
-        </FloatingIllust>
+          <Reveal delay={100} className="mt-9 flex flex-wrap items-center gap-x-8 gap-y-5">
+            <a
+              href={cta.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-inverse"
+            >
+              {cta.button}
+              <span className="btn-note text-violet">{cta.price}</span>
+            </a>
+            <p className="caption measure">{cta.note}</p>
+          </Reveal>
+        </div>
+      </section>
 
-        <div className="relative mx-auto max-w-6xl">
-          {/* CTA */}
-          <div className="border-b border-paper/25 pb-12 md:pb-16">
-            <Reveal>
-              <p className="font-en text-xs tracking-[0.28em] text-cyan md:text-sm">CONTACT</p>
-              <h2 className="mt-5 font-display text-[1.7rem] font-bold leading-[1.7] text-paper md:text-4xl md:leading-[1.7]">
-                {cta.heading[0]}
-                <br />
-                {cta.heading[1]}
-              </h2>
-              <p className="mt-6 max-w-xl font-body text-sm leading-8 text-paper/75 md:text-base">
-                {cta.lead}
-              </p>
-            </Reveal>
+      {/* ---- 探すための面 ---- */}
+      <div className="border-t border-rule bg-paper py-14 md:py-16">
+        <div className="container-page">
+          <div className="flex flex-col gap-12 md:flex-row md:justify-between md:gap-16">
+            <div>
+              <Link href="/" aria-label="Hello Jazz Academy ホーム" className="inline-block">
+                <Image
+                  src="/images/logo.png"
+                  alt="Hello Jazz Academy"
+                  width={1532}
+                  height={629}
+                  className="h-10 w-auto"
+                />
+              </Link>
+              <div className="mt-8">
+                <p className="eyebrow eyebrow-faint">Follow</p>
+                <SocialLinks size="w-7" gap="gap-4" className="mt-4" />
+              </div>
+            </div>
 
-            <Reveal delay={140} className="mt-9">
-              <a
-                href={cta.href}
-                {...(cta.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                className="btn btn-inverse text-base"
-              >
-                {cta.button}
-                <span className="font-en text-sm font-medium text-violet">{cta.price}</span>
-              </a>
-            </Reveal>
-          </div>
-
-          {/* サイトマップ */}
-          <div className="mt-12 grid gap-10 md:grid-cols-[1.4fr_1fr] md:gap-16">
-            <ul>
-              {FOOTER_LINKS.map((link, i) => {
-                const linkClassName =
-                  "group flex items-baseline gap-4 py-3 transition-opacity duration-200 hover:opacity-60";
-                const linkContent = (
-                  <>
-                    <span className="font-en text-sm tracking-[0.2em] text-paper">{link.en}</span>
-                    <span className="font-body text-xs text-paper/65">{link.label}</span>
-                    <Reveal
-                      as="span"
-                      variant="rule"
-                      delay={i * 70}
-                      className="ml-auto hidden h-px flex-1 bg-paper/30 sm:block"
-                    >
-                      {null}
-                    </Reveal>
-                    <span className="hidden h-1.5 w-1.5 rounded-full bg-cyan sm:block" />
-                  </>
-                );
-
-                return (
+            <nav aria-label="サイトマップ" className="md:min-w-[20rem]">
+              <p className="eyebrow eyebrow-faint">Sitemap</p>
+              {/* 縦に読ませたいので、行送りではなく列送りで流す(左の段を上から下、次に右の段) */}
+              <ul className="mt-4 grid gap-x-10 sm:grid-flow-col sm:grid-rows-5">
+                {FOOTER_LINKS.map((link) => (
                   <li key={link.href}>
-                    {"external" in link && link.external ? (
-                      <a href={link.href} target="_blank" rel="noopener noreferrer" className={linkClassName}>
-                        {linkContent}
+                    {link.external ? (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block py-2 text-[0.8125rem] text-ink-soft transition-colors duration-200 hover:text-violet"
+                      >
+                        {link.label}
                       </a>
                     ) : (
-                      <Link href={link.href} className={linkClassName}>
-                        {linkContent}
+                      <Link
+                        href={link.href}
+                        className="block py-2 text-[0.8125rem] text-ink-soft transition-colors duration-200 hover:text-violet"
+                      >
+                        {link.label}
                       </Link>
                     )}
                   </li>
-                );
-              })}
-            </ul>
-
-            <div className="flex flex-col justify-between gap-8">
-              <div className="flex items-center gap-3">
-                <SingleNote className="w-8 shrink-0" />
-                <p className="font-body text-xs leading-7 text-paper/70">
-                  {cta.note[0]}
-                  <br />
-                  {cta.note[1]}
-                </p>
-              </div>
-
-              {/* 演奏やレッスンの様子はSNSで。ロゴは各社のブランド色のまま置く */}
-              <div className="border-t border-paper/25 pt-7">
-                <p className="font-en text-xs tracking-[0.24em] text-cyan">FOLLOW</p>
-                <SocialLinks
-                  size="w-6"
-                  gap="gap-4"
-                  withLabels
-                  labelClassName="text-paper"
-                  className="mt-5"
-                />
-              </div>
-
-              <div>
-                <p className="flex items-center gap-2 font-en text-sm tracking-[0.24em] text-paper">
-                  <Equalizer className="text-cyan" />
-                  HELLO JAZZ ACADEMY
-                </p>
-                <p className="mt-3 font-body text-xs text-paper/55">
-                  © 2026 Hello Jazz Academy
-                </p>
-              </div>
-            </div>
+                ))}
+              </ul>
+            </nav>
           </div>
+
+          <p className="caption mt-14 border-t border-rule pt-7">© 2026 Hello Jazz Academy</p>
         </div>
       </div>
     </footer>

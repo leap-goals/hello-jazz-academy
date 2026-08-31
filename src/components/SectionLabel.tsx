@@ -1,28 +1,29 @@
 /**
- * セクション見出しの欧文ラベル。全ページで同じ組みを使う。
+ * セクションの頭に置く欧文ラベル。
  *
- * tone はページの主版に合わせて使い分ける:
- *   violet/cyan … トップ(オンラインレッスン)
- *   magenta      … 今池の対面レッスン
+ * 段組みのどこから新しい話が始まるかを示すためだけのもので、読ませる文字ではない。
+ * 大きさ・太さ・字送りは globals.css の .eyebrow に固定してあり、
+ * ここで変えられるのは色(=いまどのページにいるか)だけにしている。
+ *   violet  … トップ(オンラインレッスン)
+ *   magenta … 今池の対面レッスン
+ *   cyan    … 暗い面の上。白地では薄すぎて読めないため、そこ以外では使わない
+ *   faint   … 主張させたくない補助的な見出し
  */
 export default function SectionLabel({
   children,
   tone = "violet",
+  className = "",
 }: {
   children: string;
-  tone?: "violet" | "cyan" | "magenta" | "yellow";
+  tone?: "violet" | "magenta" | "cyan" | "faint";
+  className?: string;
 }) {
-  const color = {
-    violet: "text-violet",
-    cyan: "text-cyan",
-    magenta: "text-magenta",
-    yellow: "text-brand-yellow",
+  const toneClass = {
+    violet: "",
+    magenta: "eyebrow-magenta",
+    cyan: "eyebrow-cyan",
+    faint: "eyebrow-faint",
   }[tone];
 
-  return (
-    <p className={`flex items-center gap-3 font-en text-xs tracking-[0.28em] md:text-sm ${color}`}>
-      <span className="h-px w-8 bg-current" />
-      {children}
-    </p>
-  );
+  return <p className={`eyebrow ${toneClass} ${className}`}>{children}</p>;
 }
