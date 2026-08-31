@@ -31,6 +31,9 @@ const quicksand = Quicksand({
 });
 
 export const metadata: Metadata = {
+  // 相対パスで指定したOGP画像(/images/xxx.jpeg)を絶対URLへ解決するための基点。
+  // 未設定だとNext.jsがhttp://localhost:3000を基点にしてしまい、静的書き出し後もog:imageがlocalhost参照のまま残る
+  metadataBase: new URL("https://www.hellojazzacademy.com"),
   title: "Hello Jazz Academy | オンラインジャズピアノレッスン",
   description:
     "自宅から受けられるオンラインジャズピアノレッスン。Zoom / FaceTimeで世界中どこからでも、初心者もゼロから。月2回・オーダーメイドのカリキュラムで、コードもアドリブも身につきます。",
