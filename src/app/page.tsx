@@ -2,11 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import FloatingIllust from "@/components/FloatingIllust";
+import NewsTicker from "@/components/NewsTicker";
 import { Metronome, Record, StaffLine } from "@/components/Illustrations";
 import PaymentBrands from "@/components/PaymentBrands";
 import SectionLabel from "@/components/SectionLabel";
 import { riseDelay } from "@/components/motion";
 import { IMAIKE_PATH, TRIAL_FORM_URL } from "@/components/SiteHeader";
+import { getAllNewsPosts } from "@/lib/news";
 
 /*
  * トップ(オンラインレッスン)。
@@ -19,6 +21,11 @@ import { IMAIKE_PATH, TRIAL_FORM_URL } from "@/components/SiteHeader";
  * そこがこのページの山だと分かるようにしている。
  */
 
+// 新着順の先頭6件だけを送る。ティッカーは「最新のお知らせ」の索引で、全件表示は/news/の役目
+const TICKER_POSTS = getAllNewsPosts()
+  .slice(0, 6)
+  .map(({ slug, title, date }) => ({ slug, title, date }));
+
 const AUDIENCE = [
   "教室に通う時間がない",
   "ジャムセッションに挑戦したい",
@@ -30,11 +37,17 @@ const AUDIENCE = [
 const FEATURES = [
   {
     title: "世界中どこからでも",
-    body: "ZoomまたはFaceTimeを使用。仕事後の夜も、出かける前の朝も、移動時間ゼロで受けられます。",
+    body: [
+      "ZOOM または FaceTime を使用したオンラインレッスンで、世界中どこからでも受講可能！",
+      "仕事後の夜や朝の出掛ける前など、お好きな時間に待ち時間なくレッスンを受けられるのがオンラインレッスンの魅力です。",
+    ],
   },
   {
-    title: "オーダーメイドの内容",
-    body: "耳コピ、作曲、ハーモナイズした手書き楽譜の添削まで。目標とペースに合わせて組み立てます。",
+    title: "一人ひとりの成長に合ったカリキュラム",
+    body: [
+      "作曲や耳コピ、ハーモナイズした手書き楽譜の添削をはじめ、ご自宅での練習もサポートいたします！",
+      "初心者の方もゼロから丁寧に指導。それぞれの目標やペースを大切にし、オーダーメイドのカリキュラムで学べます。",
+    ],
   },
 ];
 
@@ -55,11 +68,24 @@ const RATIOS = [
 ];
 
 // 体験 → 入会 → 月謝 の順。受講を検討する人が払う順番でそのまま並べる
+// 体験レッスンは補助的な項目として小さく、入会金はバッジのように軽く見せる
 const PRICES = [
-  { label: "体験レッスン（45分）", price: "¥3,000", unit: null, tag: null },
-  { label: "入会金（事務手数料）", price: "¥5,000", unit: null, tag: null },
-  { label: "オンラインレッスン（月2回・大人）", price: "¥12,000", unit: "/ 月", tag: "人気" },
-  { label: "オンラインレッスン（月2回・学生）", price: "¥10,000", unit: "/ 月", tag: null },
+  { label: "体験レッスン（45分）", price: "¥3,000", unit: null, tag: null, variant: "compact" as const },
+  { label: "入会金（事務手数料）", price: "¥5,000", unit: null, tag: null, variant: "badge" as const },
+  {
+    label: "オンラインレッスン（月2回・大人）",
+    price: "¥12,000",
+    unit: "/ 月　45分",
+    tag: "人気",
+    variant: "main" as const,
+  },
+  {
+    label: "オンラインレッスン（月2回・学生）",
+    price: "¥10,000",
+    unit: "/ 月　45分",
+    tag: null,
+    variant: "main" as const,
+  },
 ];
 
 // 旧サイト(online.md)の文言をそのまま採用。体験レッスンの料金だけ現行の45分¥3,000に更新している
@@ -236,6 +262,10 @@ export default function Home() {
                 レッスンの内容を見る
               </a>
             </div>
+
+            <div className="rise mt-12 md:mt-16" style={riseDelay(270)}>
+              <NewsTicker posts={TICKER_POSTS} />
+            </div>
           </div>
         </div>
       </section>
@@ -301,16 +331,17 @@ export default function Home() {
               <br />
               自宅が音楽教室になる。
             </h2>
-            <p className="lead measure mt-7">
-              レッスンはZoomまたはFaceTime。画面越しでも、手元・音・リズムはきちんと見えます。現在の生徒さんは初心者が約7割。ゼロから安心して始められる環境です。
-            </p>
           </Reveal>
 
           <div className="mt-14 grid gap-x-12 gap-y-10 sm:grid-cols-2 md:mt-20 md:gap-y-14">
             {FEATURES.map((f, i) => (
               <Reveal key={f.title} delay={i * 70} className="border-t border-paper/20 pt-6">
                 <h3 className="subheading text-paper">{f.title}</h3>
-                <p className="body-text mt-3.5">{f.body}</p>
+                {f.body.map((paragraph) => (
+                  <p key={paragraph} className="body-text mt-3.5">
+                    {paragraph}
+                  </p>
+                ))}
               </Reveal>
             ))}
           </div>
@@ -481,33 +512,56 @@ export default function Home() {
 
           <div className="mt-10 lg:mt-2">
             <Reveal as="dl" className="border-t border-rule">
-              {PRICES.map((row) => (
-                <div
-                  key={row.label}
-                  className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-rule py-6"
-                >
-                  <dt className="flex items-center gap-3 text-[0.9375rem] md:text-base">
-                    {row.label}
-                    {row.tag ? (
-                      <span className="rounded-full bg-violet-tint px-2.5 py-1 text-[0.6875rem] font-medium text-violet">
-                        {row.tag}
+              {PRICES.map((row) =>
+                row.variant === "badge" ? (
+                  <div
+                    key={row.label}
+                    className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b border-rule py-5"
+                  >
+                    <dt className="text-[0.9375rem] text-ink-soft md:text-base">{row.label}</dt>
+                    <dd>
+                      <span className="figure inline-flex items-center rounded-full border border-rule-strong px-4 py-1.5 text-base text-ink">
+                        {row.price}
                       </span>
-                    ) : null}
-                  </dt>
-                  <dd className="figure text-3xl text-ink md:text-[2.25rem]">
-                    {row.price}
-                    {row.unit ? (
-                      <span className="ml-2 font-body text-sm text-ink-faint">{row.unit}</span>
-                    ) : null}
-                  </dd>
-                </div>
-              ))}
+                    </dd>
+                  </div>
+                ) : (
+                  <div
+                    key={row.label}
+                    className={`flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-rule ${
+                      row.variant === "compact" ? "py-5" : "py-6"
+                    }`}
+                  >
+                    <dt
+                      className={`flex items-center gap-3 ${
+                        row.variant === "compact"
+                          ? "text-sm text-ink-soft md:text-[0.9375rem]"
+                          : "text-[0.9375rem] md:text-base"
+                      }`}
+                    >
+                      {row.label}
+                      {row.tag ? (
+                        <span className="rounded-full bg-violet-tint px-2.5 py-1 text-[0.6875rem] font-medium text-violet">
+                          {row.tag}
+                        </span>
+                      ) : null}
+                    </dt>
+                    <dd
+                      className={`figure text-ink ${
+                        row.variant === "compact" ? "text-xl md:text-2xl" : "text-3xl md:text-[2.25rem]"
+                      }`}
+                    >
+                      {row.price}
+                      {row.unit ? (
+                        <span className="ml-2 font-body text-sm text-ink-faint">{row.unit}</span>
+                      ) : null}
+                    </dd>
+                  </div>
+                ),
+              )}
             </Reveal>
 
             <Reveal delay={120}>
-              <p className="caption measure mt-6">
-                レッスンは固定の曜日・時間で隔週（月2回）。月1回まで無料で振替が可能です（前日までにご相談ください）。
-              </p>
               <PaymentBrands
                 className="mt-10 border-t border-rule pt-8"
                 label="メールでお送りするSquareの請求書から、各カードでお支払いいただけます。"

@@ -10,7 +10,7 @@
 - `/imaike_jazzpiano_lesson/` (page)
 - `/document_download/` (page)
 - `/classification-test/` (page)
-- `/ir/` (page)
+- `/about/` (page) — 非公開設定のためWP REST APIからの自動抽出では検出できなかった「教室について」ページ。ブラウザで直接確認して追加
 - `/one-lesson-for-working-adults/` (page)
 - `/lessonroom/` (page)
 - `/contact/` (page)
@@ -41,8 +41,9 @@
 - `/news/10%e6%9c%88%e3%81%ae%e3%82%b9%e3%82%b1%e3%82%b8%e3%83%a5%e3%83%bc%e3%83%ab/` (news)
 - `/news/2022%e5%b9%b49%e6%9c%88%e3%81%ae%e3%82%b9%e3%82%b1%e3%82%b8%e3%83%a5%e3%83%bc%e3%83%ab/` (news)
 
-## 301リダイレクトするURL (8件)
+## 301リダイレクトするURL (9件)
 
+- `/ir/` → `/about/` — 「教室について」ページに会社概要として統合。電子公告・決算公告は法人成りするタイミングまで新サイトに反映しない
 - `/otona_classes/` → `/courses/jazzpianoforbeginners/` — 本文が空の重複ページ。内容の近い /courses/jazzpianoforbeginners/ へ統合
 - `/pw_reset/` → `/` — 生徒専用パスワードリセット(Ultimate Member)。新サイトでは未実装
 - `/register/` → `/` — 生徒専用登録(Ultimate Member)。新サイトでは未実装(実装時期未定)

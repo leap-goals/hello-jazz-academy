@@ -48,7 +48,15 @@
   {
     "source_type": "page",
     "old_path": "/ir/",
-    "new_path": "/ir/",
+    "new_path": "/about/",
+    "reason": "「教室について」ページに会社概要として統合。電子公告・決算公告は法人成りするタイミングまで新サイトに反映しない",
+    "category": "redirect"
+  },
+  {
+    "source_type": "page",
+    "old_path": "/about/",
+    "new_path": "/about/",
+    "reason": "非公開設定のためWP REST APIからの自動抽出では検出できなかった「教室について」ページ。ブラウザで直接確認して移行",
     "category": "keep"
   },
   {
