@@ -35,8 +35,8 @@ const FOOTER_LINKS = [
 
 // 締めのCTAだけは、いま見ているページで売っているものに合わせて差し替える
 const ONLINE_CTA = {
-  heading: ["はじめの一音を、", "いっしょに鳴らしませんか。"],
-  lead: "45分の体験レッスンでは、レッスンの雰囲気の確認はもちろん、いま弾けること・弾きたい曲・お悩みをお聞かせください。楽器がなくても構いません。",
+  heading: ["オンライン体験レッスン受付中！"],
+  lead: "レッスンの雰囲気の確認、質問・お悩みなどをお聞かせください。",
   button: "体験レッスンに申し込む",
   price: "45min ¥3,000",
   href: TRIAL_FORM_URL,
@@ -66,8 +66,12 @@ export default function SiteFooter() {
             <SectionLabel tone="cyan">Contact</SectionLabel>
             <h2 className="heading mt-6 text-paper">
               {cta.heading[0]}
-              <br />
-              {cta.heading[1]}
+              {cta.heading[1] ? (
+                <>
+                  <br />
+                  {cta.heading[1]}
+                </>
+              ) : null}
             </h2>
             <p className="lead measure mt-7">{cta.lead}</p>
           </Reveal>
