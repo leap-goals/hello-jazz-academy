@@ -4,12 +4,19 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import SectionLabel from "@/components/SectionLabel";
 
-export type TickerPost = { slug: string; title: string; date: string };
+export type TickerPost = { slug: string; title: string; publishedAt: string };
 
-// src/lib/news.tsのformatNewsDateと同じ整形だが、node:fsを使うserver専用モジュールを
-// クライアントコンポーネントからimportするとTurbopackがバンドルに失敗するためここに複製する
-function formatNewsDate(isoLike: string): string {
-  return isoLike.slice(0, 10).replaceAll("-", ".");
+// src/lib/news.tsのformatNewsDateと同じ整形だが、microCMSへのfetch(APIキー)を含む
+// server専用モジュールをクライアントコンポーネントからimportするとバンドルに漏れるためここに複製する
+function formatNewsDate(isoDate: string): string {
+  const parts = new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date(isoDate));
+  const get = (type: string) => parts.find((p) => p.type === type)?.value;
+  return `${get("year")}.${get("month")}.${get("day")}`;
 }
 
 /*
@@ -57,7 +64,7 @@ export default function NewsTicker({ posts }: { posts: TickerPost[] }) {
                 className="flex min-w-0 items-baseline gap-3 text-[0.8125rem] text-ink-soft transition-colors duration-200 hover:text-violet md:gap-4 md:text-sm"
               >
                 <span className="figure shrink-0 text-ink-faint">
-                  {formatNewsDate(post.date)}
+                  {formatNewsDate(post.publishedAt)}
                 </span>
                 <span className="truncate">{post.title}</span>
               </Link>

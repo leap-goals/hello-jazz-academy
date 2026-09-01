@@ -1,87 +1,100 @@
-import { readFileSync, readdirSync } from "node:fs";
-import path from "node:path";
-
 /*
- * データ源は data/wp-export/markdown/news/*.md 。
- * WP REST APIから抽出したスラッグは(和文タイトルの場合)パーセントエンコードされた
- * 文字列として格納されているが、抽出スクリプトはそれをデコードしてファイル名にしている。
- * そのためファイル名(拡張子抜き)がそのまま実際のWP投稿スラッグ(和文含む)と一致し、
- * 旧URL(/news/<スラッグ>/)をそのまま新サイトのルートに引き継げる。
+ * データ源はmicroCMSの newsAPI。
+ * 完全静的エクスポートのため実行時には問い合わせず、ビルド時に一度だけ全件取得して
+ * モジュール内にキャッシュする(同一ビルド中に複数ページから呼ばれても1回のfetchで済む)。
  */
-const NEWS_DIR = path.join(process.cwd(), "data/wp-export/markdown/news");
 
 export type NewsPost = {
+  id: string;
+  /** URLスラッグ。microCMS側のslugフィールドが空の記事はidをそのまま使う */
   slug: string;
   title: string;
-  /** WP側のオリジナルURL。OGPのcanonical用途にそのまま使う */
-  link: string;
-  date: string;
-  modified: string;
-  /** ダウンロード済みの/public/images/legacy/配下を指すローカルパス。未設定ならnull */
-  featuredImage: string | null;
+  /** ISO8601 (UTC)。表示はformatNewsDateでJSTに変換してから使う */
+  publishedAt: string;
+  revisedAt: string;
+  /** microCMSのリッチエディタが出力するHTML。そのまま描画する */
+  contentHtml: string;
   metaDescription: string;
-  paragraphs: string[];
+  /** OGP画像用。本文中の最初の画像URL。無ければnull */
+  featuredImage: string | null;
 };
 
-function unquote(value: string): string {
-  const trimmed = value.trim();
-  if (trimmed.startsWith('"') && trimmed.endsWith('"') && trimmed.length >= 2) {
-    return trimmed.slice(1, -1).replace(/\\"/g, '"');
+type MicroCmsNewsContent = {
+  id: string;
+  title: string;
+  content: string;
+  slug?: string;
+  publishedAt: string;
+  revisedAt: string;
+};
+
+type MicroCmsListResponse = {
+  contents: MicroCmsNewsContent[];
+  totalCount: number;
+};
+
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(
+      `${name} が未設定です。.env.local (ローカル) / Cloudflare Pagesのビルド環境変数を確認してください。`,
+    );
   }
-  return trimmed;
+  return value;
 }
 
-// WPのuploads URLを、download-legacy-images.mjsが取得済みのローカルパスへ変換する
-function toLocalImagePath(url: string): string | null {
-  const marker = "/wp-content/uploads/";
-  const idx = url.indexOf(marker);
-  if (idx === -1) return null;
-  const relPath = url.slice(idx + marker.length);
-  return encodeURI(`/images/legacy/${relPath}`);
+function stripTags(html: string): string {
+  return html
+    .replace(/<[^>]+>/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
-function parseNewsMarkdown(raw: string, filename: string): NewsPost {
-  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
-  if (!match) {
-    throw new Error(`front matterが見つかりません: ${filename}`);
-  }
-  const [, frontMatterBlock, body] = match;
+function extractFirstImageSrc(html: string): string | null {
+  const match = html.match(/<img[^>]+src="([^"]+)"/);
+  return match ? match[1] : null;
+}
 
-  const fields: Record<string, string> = {};
-  for (const line of frontMatterBlock.split("\n")) {
-    const sep = line.indexOf(":");
-    if (sep === -1) continue;
-    fields[line.slice(0, sep).trim()] = unquote(line.slice(sep + 1));
-  }
-
-  const paragraphs = body
-    .split(/\n\s*\n/)
-    .map((p) => p.trim())
-    .filter(Boolean);
-
+function toNewsPost(content: MicroCmsNewsContent): NewsPost {
   return {
-    slug: path.basename(filename, ".md"),
-    title: fields.title ?? "",
-    link: fields.link ?? "",
-    date: fields.date ?? "",
-    modified: fields.modified || fields.date || "",
-    featuredImage: fields.featured_image ? toLocalImagePath(fields.featured_image) : null,
-    metaDescription: fields.meta_description ?? "",
-    paragraphs,
+    id: content.id,
+    slug: content.slug?.trim() || content.id,
+    title: content.title,
+    publishedAt: content.publishedAt,
+    revisedAt: content.revisedAt,
+    contentHtml: content.content,
+    metaDescription: stripTags(content.content).slice(0, 110),
+    featuredImage: extractFirstImageSrc(content.content),
   };
 }
 
-let cachedPosts: NewsPost[] | null = null;
+async function fetchAllFromMicroCms(): Promise<NewsPost[]> {
+  const domain = requireEnv("MICROCMS_SERVICE_DOMAIN");
+  const apiKey = requireEnv("MICROCMS_API_KEY");
+  const base = `https://${domain}.microcms.io/api/v1/news`;
 
-export function getAllNewsPosts(): NewsPost[] {
-  if (cachedPosts) return cachedPosts;
-  const files = readdirSync(NEWS_DIR).filter((f) => f.endsWith(".md"));
-  const posts = files.map((f) =>
-    parseNewsMarkdown(readFileSync(path.join(NEWS_DIR, f), "utf-8"), f),
-  );
-  posts.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
-  cachedPosts = posts;
-  return posts;
+  const contents: MicroCmsNewsContent[] = [];
+  const limit = 100;
+  for (let offset = 0; ; offset += limit) {
+    const res = await fetch(`${base}?limit=${limit}&offset=${offset}&orders=-publishedAt`, {
+      headers: { "X-MICROCMS-API-KEY": apiKey },
+    });
+    if (!res.ok) {
+      throw new Error(`microCMSからのお知らせ取得に失敗しました: HTTP ${res.status} ${await res.text()}`);
+    }
+    const body = (await res.json()) as MicroCmsListResponse;
+    contents.push(...body.contents);
+    if (offset + limit >= body.totalCount) break;
+  }
+
+  return contents.map(toNewsPost);
+}
+
+let cachedPosts: Promise<NewsPost[]> | null = null;
+
+export function getAllNewsPosts(): Promise<NewsPost[]> {
+  if (!cachedPosts) cachedPosts = fetchAllFromMicroCms();
+  return cachedPosts;
 }
 
 /*
@@ -91,17 +104,25 @@ export function getAllNewsPosts(): NewsPost[] {
  * デコード済み文字列に対するdecodeURIComponentは素通りするだけなので、
  * どちらの形で来ても同じ結果になるようここで一度吸収しておく。
  */
-export function getNewsPostBySlug(rawSlug: string): NewsPost | undefined {
+export async function getNewsPostBySlug(rawSlug: string): Promise<NewsPost | undefined> {
   let slug = rawSlug;
   try {
     slug = decodeURIComponent(rawSlug);
   } catch {
     // 不正な%エスケープを含む場合はそのまま扱う
   }
-  return getAllNewsPosts().find((post) => post.slug === slug);
+  const posts = await getAllNewsPosts();
+  return posts.find((post) => post.slug === slug);
 }
 
-/** 表示用の日付。WPのローカル時刻をそのまま使うため、Dateへは変換しない */
-export function formatNewsDate(isoLike: string): string {
-  return isoLike.slice(0, 10).replaceAll("-", ".");
+/** 表示用の日付。microCMSのpublishedAtはUTCのため、JSTの日付に変換してから切り出す */
+export function formatNewsDate(isoDate: string): string {
+  const parts = new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date(isoDate));
+  const get = (type: string) => parts.find((p) => p.type === type)?.value;
+  return `${get("year")}.${get("month")}.${get("day")}`;
 }
