@@ -29,8 +29,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function NewsIndex() {
-  const posts = getAllNewsPosts();
+export default async function NewsIndex() {
+  const posts = await getAllNewsPosts();
 
   return (
     <main id="top" className="flex-1">
@@ -57,7 +57,7 @@ export default function NewsIndex() {
                 >
                   <span className="flex items-baseline gap-6 sm:gap-8">
                     <span className="figure shrink-0 text-[0.8125rem] text-ink-faint sm:w-24">
-                      {formatNewsDate(post.date)}
+                      {formatNewsDate(post.publishedAt)}
                     </span>
                     <span className="text-[0.9375rem] leading-8 md:text-base">{post.title}</span>
                   </span>

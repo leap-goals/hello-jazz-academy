@@ -21,11 +21,6 @@ import { getAllNewsPosts } from "@/lib/news";
  * そこがこのページの山だと分かるようにしている。
  */
 
-// 新着順の先頭6件だけを送る。ティッカーは「最新のお知らせ」の索引で、全件表示は/news/の役目
-const TICKER_POSTS = getAllNewsPosts()
-  .slice(0, 6)
-  .map(({ slug, title, date }) => ({ slug, title, date }));
-
 const AUDIENCE = [
   "教室に通う時間がない",
   "ジャムセッションに挑戦したい",
@@ -209,7 +204,13 @@ function Question({ title, paragraphs }: { title: string; paragraphs: string[] }
   );
 }
 
-export default function Home() {
+export default async function Home() {
+  // 新着順の先頭6件だけを送る。ティッカーは「最新のお知らせ」の索引で、全件表示は/news/の役目
+  const posts = await getAllNewsPosts();
+  const tickerPosts = posts
+    .slice(0, 6)
+    .map(({ slug, title, publishedAt }) => ({ slug, title, publishedAt }));
+
   return (
     <main id="top" className="flex-1">
       {/* ============================== HERO ============================== */}
@@ -264,7 +265,7 @@ export default function Home() {
             </div>
 
             <div className="rise mt-12 md:mt-16" style={riseDelay(270)}>
-              <NewsTicker posts={TICKER_POSTS} />
+              <NewsTicker posts={tickerPosts} />
             </div>
           </div>
         </div>
