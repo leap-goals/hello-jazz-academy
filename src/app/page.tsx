@@ -106,7 +106,7 @@ const SOCIAL_CTA = [
   {
     en: "Tool",
     src: null,
-    title: "コード・スケールアナライザーツール",
+    title: "コード・スケールアナライザー",
     body: "このコードで使える音は何？がわかるツール「コード・スケールアナライザー」をご用意してます。練習にどうぞご活用ください！",
     button: "ツールを開く",
     href: CHORD_TOOL_PATH,
