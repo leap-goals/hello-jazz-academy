@@ -8,6 +8,7 @@ import PaymentBrands from "@/components/PaymentBrands";
 import SectionLabel from "@/components/SectionLabel";
 import { riseDelay } from "@/components/motion";
 import { IMAIKE_PATH, TRIAL_FORM_URL } from "@/components/SiteHeader";
+import { INSTAGRAM_ICON, LINE_ICON } from "@/components/snsIconData";
 import { getAllNewsPosts } from "@/lib/news";
 
 /*
@@ -87,7 +88,7 @@ const PRICES = [
 const SOCIAL_CTA = [
   {
     en: "LINE",
-    src: "/images/sns/line.png",
+    src: LINE_ICON,
     title: "公式LINEでお問い合わせ受付中！",
     body: "レッスンや空き状況のご確認など、公式LINEよりお気軽にお問い合わせください。",
     button: "公式LINEを開く",
@@ -95,7 +96,7 @@ const SOCIAL_CTA = [
   },
   {
     en: "Instagram",
-    src: "/images/sns/instagram-v2.png",
+    src: INSTAGRAM_ICON,
     title: "Instagramでも発信中！",
     body: "レッスンの様子や最新のお知らせ、演奏動画などをInstagramで更新しています。ぜひフォローしてチェックしてみてください！",
     button: "Instagramを見る",
@@ -708,11 +709,12 @@ export default async function Home() {
             {SOCIAL_CTA.map((s, i) => (
               <Reveal as="li" key={s.en} delay={i * 80} className="border-t border-rule pt-6">
                 <div className="flex items-center gap-3">
-                  <Image
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={s.src}
                     alt=""
-                    width={160}
-                    height={160}
+                    width={96}
+                    height={96}
                     className="w-7 shrink-0 rounded-full"
                   />
                   <p className="eyebrow">{s.en}</p>
