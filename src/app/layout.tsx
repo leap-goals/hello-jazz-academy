@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Quicksand, Zen_Maru_Gothic } from "next/font/google";
+import Script from "next/script";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import "./globals.css";
@@ -30,6 +31,8 @@ const quicksand = Quicksand({
   display: "swap",
 });
 
+const GA_MEASUREMENT_ID = "G-QJHHV9XX4P";
+
 export const metadata: Metadata = {
   // 相対パスで指定したOGP画像(/images/xxx.jpeg)を絶対URLへ解決するための基点。
   // 未設定だとNext.jsがhttp://localhost:3000を基点にしてしまい、静的書き出し後もog:imageがlocalhost参照のまま残る
@@ -58,6 +61,23 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteHeader />
         {children}
         <SiteFooter />
+
+        {/*
+          GA4。完全静的エクスポートのためサーバー側で差し込む余地がなく、
+          next/scriptのafterInteractiveでハイドレート後に読み込ませる。
+          (@next/third-partiesのGoogleAnalyticsも同じ2本を出すだけなので、
+           依存を増やさずビルトインのScriptで足りる)
+        */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga4" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_MEASUREMENT_ID}');`}
+        </Script>
       </body>
     </html>
   );
