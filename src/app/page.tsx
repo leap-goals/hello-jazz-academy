@@ -7,7 +7,8 @@ import { Metronome, Record, StaffLine } from "@/components/Illustrations";
 import PaymentBrands from "@/components/PaymentBrands";
 import SectionLabel from "@/components/SectionLabel";
 import { riseDelay } from "@/components/motion";
-import { IMAIKE_PATH, TRIAL_FORM_URL } from "@/components/SiteHeader";
+import { CHORD_TOOL_PATH, IMAIKE_PATH, TRIAL_FORM_URL } from "@/components/SiteHeader";
+import { INSTAGRAM_ICON, LINE_ICON } from "@/components/snsIconData";
 import { getAllNewsPosts } from "@/lib/news";
 
 /*
@@ -84,10 +85,11 @@ const PRICES = [
 
 // 申し込みフォーム以外の接点。文言はユーザー指定のものをそのまま置く
 // LINEのURLは問い合わせ用の導線として指定されたもので、フッターのアイコン列とは別に持つ
+// srcを持たない項目(ツール)は、SNSの丸アイコンと同じ寸法の印を代わりに置いて行頭を揃える
 const SOCIAL_CTA = [
   {
     en: "LINE",
-    src: "/images/sns/line.png",
+    src: LINE_ICON,
     title: "公式LINEでお問い合わせ受付中！",
     body: "レッスンや空き状況のご確認など、公式LINEよりお気軽にお問い合わせください。",
     button: "公式LINEを開く",
@@ -95,13 +97,35 @@ const SOCIAL_CTA = [
   },
   {
     en: "Instagram",
-    src: "/images/sns/instagram-v2.png",
+    src: INSTAGRAM_ICON,
     title: "Instagramでも発信中！",
     body: "レッスンの様子や最新のお知らせ、演奏動画などをInstagramで更新しています。ぜひフォローしてチェックしてみてください！",
     button: "Instagramを見る",
     href: "https://www.instagram.com/hellojazzacademy",
   },
+  {
+    en: "Tool",
+    src: null,
+    title: "コード・スケールアナライザーツール",
+    body: "このコードで使える音は何？がわかるツール「コード・スケールアナライザー」をご用意してます。練習にどうぞご活用ください！",
+    button: "ツールを開く",
+    href: CHORD_TOOL_PATH,
+  },
 ];
+
+/** ツールの印。鍵盤を3本の白い帯で表すだけに留め、SNSの丸アイコンと寸法を合わせる */
+function ToolMark() {
+  return (
+    <svg viewBox="0 0 96 96" aria-hidden="true" className="w-7 shrink-0 text-violet">
+      <circle cx="48" cy="48" r="48" fill="currentColor" />
+      <g fill="#fff">
+        <rect x="26" y="30" width="11" height="36" rx="2" />
+        <rect x="42" y="30" width="11" height="36" rx="2" />
+        <rect x="58" y="30" width="11" height="36" rx="2" />
+      </g>
+    </svg>
+  );
+}
 
 // 旧サイト(online.md)の文言をそのまま採用。体験レッスンの料金だけ現行の45分¥3,000に更新している
 const FLOW_STEPS = [
@@ -704,17 +728,22 @@ export default async function Home() {
             <SectionLabel>Follow</SectionLabel>
           </Reveal>
 
-          <ul className="mt-10 grid gap-x-12 gap-y-10 md:mt-12 md:grid-cols-2">
+          <ul className="mt-10 grid gap-x-12 gap-y-10 md:mt-12 md:grid-cols-3">
             {SOCIAL_CTA.map((s, i) => (
               <Reveal as="li" key={s.en} delay={i * 80} className="border-t border-rule pt-6">
                 <div className="flex items-center gap-3">
-                  <Image
-                    src={s.src}
-                    alt=""
-                    width={160}
-                    height={160}
-                    className="w-7 shrink-0 rounded-full"
-                  />
+                  {s.src ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={s.src}
+                      alt=""
+                      width={96}
+                      height={96}
+                      className="w-7 shrink-0 rounded-full"
+                    />
+                  ) : (
+                    <ToolMark />
+                  )}
                   <p className="eyebrow">{s.en}</p>
                 </div>
                 <h3 className="subheading mt-4">{s.title}</h3>

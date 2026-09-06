@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { INSTAGRAM_ICON, LINE_ICON, TIKTOK_ICON, YOUTUBE_ICON } from "@/components/snsIconData";
 
 /*
  * SNSの公式アイコン画像。
@@ -6,19 +6,17 @@ import Image from "next/image";
  * サイト本体は色数を絞って組んでいるが、SNSアイコンだけは各社の公式画像を
  * そのまま置く。見慣れた見た目のほうが速く見つかるため、ここだけ意図的に外している。
  *
- * 元画像は public/images/sns/ 配下に円形(透過)へ加工済みのPNGとして置いてある
- * (生成スクリプトはコミットしていない。差し替える場合は中心から見て最も内側まで
- * 不透明な半径を測ってから円形マスクをかけること。特にInstagramは角丸四角の
- * squircleで、辺の中点で外周に接しているため、そのまま半径w/2でマスクしないと
- * 角が削れずに残る)。
+ * 画像はファイルではなくdata URIで持つ(理由と作り方は snsIconData.ts を参照)。
+ * next/imageはURLを前提にした最適化・遅延読み込みのための部品なので、
+ * 埋め込み済みのこれらには使わず素の<img>で置く。
  */
 
 // 共有時に付く計測パラメータ(?si= / ?igsi= / ?_t= など)は落とし、素のURLで置く
 export const SOCIAL_LINKS = [
-  { name: "YouTube", href: "https://youtube.com/@hellojazzacademy", src: "/images/sns/youtube.png" },
-  { name: "Instagram", href: "https://www.instagram.com/hellojazzacademy", src: "/images/sns/instagram-v2.png" },
-  { name: "TikTok", href: "https://www.tiktok.com/@hellojazzacademy", src: "/images/sns/tiktok.png" },
-  { name: "LINE", href: "https://lin.ee/XbPZKgA", src: "/images/sns/line.png" },
+  { name: "YouTube", href: "https://youtube.com/@hellojazzacademy", src: YOUTUBE_ICON },
+  { name: "Instagram", href: "https://www.instagram.com/hellojazzacademy", src: INSTAGRAM_ICON },
+  { name: "TikTok", href: "https://www.tiktok.com/@hellojazzacademy", src: TIKTOK_ICON },
+  { name: "LINE", href: "https://lin.ee/XbPZKgA", src: LINE_ICON },
 ] as const;
 
 /** SNSへの導線。アイコンだけを並べる */
@@ -42,11 +40,12 @@ export default function SocialLinks({
             aria-label={name}
             className="block transition-opacity duration-200 hover:opacity-65"
           >
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={src}
               alt=""
-              width={160}
-              height={160}
+              width={96}
+              height={96}
               className={`${size} shrink-0 rounded-full`}
             />
           </a>
