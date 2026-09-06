@@ -95,7 +95,7 @@ const SOCIAL_CTA = [
   },
   {
     en: "Instagram",
-    src: "/images/social/instagram.png",
+    src: "/images/social/instagram-v2.png",
     title: "Instagramでも発信中！",
     body: "レッスンの様子や最新のお知らせ、演奏動画などをInstagramで更新しています。ぜひフォローしてチェックしてみてください！",
     button: "Instagramを見る",

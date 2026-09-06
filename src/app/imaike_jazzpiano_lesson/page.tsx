@@ -14,8 +14,8 @@ import { IMAIKE_FORM_URL } from "@/components/SiteHeader";
  * 色・書体・罫線・余白のとり方はトップと同じシステムを使う。
  * 違えるのは「組み方」と「主色」の2つだけ。
  *   主色  … トップはバイオレット、こちらはマゼンタ。押せるものの色も入れ替える
- *   ヒーロー … トップは文字だけの全画面。こちらは写真と並べた横組みで、高さも抑える
- *   暗い面 … トップはレッスン紹介に置く。こちらは料金に置く(このページの決め手が価格のため)
+ *   ヒーロー … トップは紙の上に文字だけ。こちらは講師の写真を全面に敷き、暗いレイヤー越しに白文字で置く
+ *   暗い面 … トップはレッスン紹介に置く。こちらはヒーローと料金に置く(このページの決め手が価格のため)
  *   本文の並び … トップは「ラベル左・中身右」。こちらは見出しを段の頭に置いて2列で流す
  * URLは旧WPの /imaike_jazzpiano_lesson/ をそのまま引き継ぐ。
  */
@@ -82,69 +82,62 @@ export default function ImaikeLesson() {
   return (
     <main id="top" className="flex-1">
       {/* ============================== HERO ============================== */}
-      {/* トップと違い、ここは全画面にしない。写真と文字を並べた横組みで始める */}
-      <section className="pb-16 pt-28 md:pb-24 md:pt-40">
-        <div className="container-page md:grid md:grid-cols-[1.35fr_1fr] md:items-center md:gap-12">
-          <div>
-            <div className="rise">
-              <SectionLabel tone="magenta">In-person spot lesson — Imaike, Nagoya</SectionLabel>
-            </div>
-            <h1 className="display-compact rise mt-7 md:mt-9" style={riseDelay(70)}>
-              ＼ ポール先生による ／
-              <br />
-              対面スポットレッスン
-            </h1>
-            <p
-              className="rise mt-7 inline-flex items-center gap-2 rounded-full bg-magenta-tint px-3.5 py-1.5 text-xs font-medium text-magenta"
-              style={riseDelay(140)}
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-magenta" />
-              2026.05 — 2027.03 期間限定
-            </p>
-            <div className="rise mt-6 space-y-4" style={riseDelay(200)}>
-              <p className="lead measure">
-                「定期的に通うのは難しいけれど、
-                <br />
-                対面でしっかり学びたい」
-              </p>
-              <p className="lead measure">
-                そんな方でもお気軽にお越しください。
-                <br />
-                単発受講可能なレッスンです◎
-              </p>
-              <p className="lead measure">音楽の可能性を広げていきましょう。</p>
-            </div>
-            <div
-              className="rise mt-9 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-7"
-              style={riseDelay(260)}
-            >
-              <a
-                href={IMAIKE_FORM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-magenta"
-              >
-                レッスンを申し込む
-                <span className="btn-note">60min ¥10,000</span>
-              </a>
-              <a href="#price" className="link-quiet">
-                料金を見る
-              </a>
-            </div>
+      {/* ポール先生の写真を全面に敷き、暗いレイヤーを重ねて文字は白で置く */}
+      <section className="surface-ink relative overflow-hidden pb-16 pt-28 md:pb-24 md:pt-40">
+        <Image
+          src="/images/teacher-paul-live.jpeg"
+          alt=""
+          fill
+          sizes="100vw"
+          priority
+          className="object-cover object-[50%_22%]"
+        />
+        <div className="absolute inset-0 bg-ink/55" />
+        <div className="container-page relative">
+          <div className="rise">
+            <SectionLabel tone="magenta">In-person spot lesson — Imaike, Nagoya</SectionLabel>
           </div>
-
-          <div className="rise mt-12 md:mt-0" style={riseDelay(140)}>
-            <div className="media relative aspect-4/3 w-full">
-              <Image
-                src="/images/teacher-paul.jpeg"
-                alt="グランドピアノを演奏するコルテス・ポール先生"
-                fill
-                sizes="(min-width: 768px) 40vw, 100vw"
-                priority
-                className="object-cover"
-              />
-            </div>
-            <p className="caption mt-4">ポール先生による対面スポットレッスン</p>
+          <h1 className="display-compact rise mt-7 text-paper md:mt-9" style={riseDelay(70)}>
+            ＼ ポール先生による ／
+            <br />
+            対面スポットレッスン
+          </h1>
+          <p
+            className="rise mt-7 inline-flex items-center gap-2 rounded-full bg-magenta-tint px-3.5 py-1.5 text-xs font-medium text-magenta"
+            style={riseDelay(140)}
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-magenta" />
+            2026.05 — 2027.03 期間限定
+          </p>
+          <div className="rise mt-6 space-y-4" style={riseDelay(200)}>
+            <p className="lead measure">
+              「定期的に通うのは難しいけれど、
+              <br />
+              対面でしっかり学びたい」
+            </p>
+            <p className="lead measure">
+              そんな方でもお気軽にお越しください。
+              <br />
+              単発受講可能なレッスンです◎
+            </p>
+            <p className="lead measure">音楽の可能性を広げていきましょう。</p>
+          </div>
+          <div
+            className="rise mt-9 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-7"
+            style={riseDelay(260)}
+          >
+            <a
+              href={IMAIKE_FORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-magenta"
+            >
+              レッスンを申し込む
+              <span className="btn-note">60min ¥10,000</span>
+            </a>
+            <a href="#price" className="link-quiet text-paper">
+              料金を見る
+            </a>
           </div>
         </div>
       </section>
@@ -255,6 +248,9 @@ export default function ImaikeLesson() {
                     </div>
                   ))}
                 </dl>
+                <p className="mt-6 rounded-xl bg-magenta-tint px-4 py-3.5 text-[0.9375rem] leading-7 text-magenta">
+                  ポール先生のレッスンを初めて受講される方は、60分レッスンが初回50%OFFとなります。
+                </p>
                 <PaymentBrands
                   className="mt-6 border-t border-rule pt-7"
                   label="月初めにお送りする請求書から、各カードでお支払いいただけます。"
