@@ -20,6 +20,7 @@ import SocialLinks from "@/components/SocialIcons";
 export const IMAIKE_PATH = "/imaike_jazzpiano_lesson/";
 export const NEWS_PATH = "/news/";
 export const ABOUT_PATH = "/about/";
+export const BOOKS_PATH = "/jazz-piano-books/";
 
 // 別アプリ(vanilla JSの単体ツール)として public/tools/ に配置しているため、
 // Next.jsのLinkによるソフトナビゲーションは使わずタブで開く
@@ -43,6 +44,7 @@ const HOME_NAV: NavLink[] = [
   { href: IMAIKE_PATH, label: "今池の対面レッスン", en: "In person" },
   { href: "/#access", label: "アクセス", en: "Access" },
   { href: NEWS_PATH, label: "お知らせ", en: "News" },
+  { href: BOOKS_PATH, label: "おすすめ教則本", en: "Books" },
   { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", en: "Tool", external: true },
   { href: "/#contact", label: "お問い合わせ", en: "Contact" },
 ];
@@ -55,6 +57,7 @@ const IMAIKE_NAV: NavLink[] = [
   { href: `${IMAIKE_PATH}#access`, label: "会場とスケジュール", en: "Access" },
   { href: ABOUT_PATH, label: "教室について", en: "About" },
   { href: NEWS_PATH, label: "お知らせ", en: "News" },
+  { href: BOOKS_PATH, label: "おすすめ教則本", en: "Books" },
   { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", en: "Tool", external: true },
   { href: "/", label: "オンラインレッスン", en: "Online" },
 ];

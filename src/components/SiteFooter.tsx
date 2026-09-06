@@ -8,6 +8,7 @@ import SectionLabel from "@/components/SectionLabel";
 import SocialLinks from "@/components/SocialIcons";
 import {
   ABOUT_PATH,
+  BOOKS_PATH,
   CHORD_TOOL_PATH,
   IMAIKE_FORM_URL,
   IMAIKE_PATH,
@@ -33,6 +34,7 @@ const FOOTER_LINKS = [
   { href: IMAIKE_PATH, label: "今池での対面レッスン" },
   { href: "/#access", label: "アクセス" },
   { href: NEWS_PATH, label: "お知らせ" },
+  { href: BOOKS_PATH, label: "おすすめ教則本" },
   { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", external: true },
   { href: "/privacypolicy/", label: "プライバシーポリシー" },
 ];

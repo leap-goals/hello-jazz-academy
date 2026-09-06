@@ -617,6 +617,9 @@ export default async function Home() {
                 ¥3,000
               </span>
             </div>
+            <p className="caption measure mt-3">
+              ※ご入会の場合、体験レッスン受講料は入会金より差し引かせていただきます。
+            </p>
           </Reveal>
 
           <ol className="mt-12 grid gap-x-10 gap-y-9 md:mt-16 md:grid-cols-4 md:gap-x-8">
