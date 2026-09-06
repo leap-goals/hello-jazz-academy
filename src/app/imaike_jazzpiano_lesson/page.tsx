@@ -291,17 +291,12 @@ export default function ImaikeLesson() {
 
           {/* 期間限定であることは、このページで一番伝わってほしい約束 */}
           <Reveal delay={160} className="mt-14 md:mt-20">
-            <div className="flex flex-col gap-5 border-y border-magenta py-10 md:flex-row md:items-center md:justify-between md:gap-12 md:py-12">
-              <div>
-                <p className="eyebrow eyebrow-magenta">Limited period</p>
-                <p className="heading mt-4">
-                  2026年5月から2027年3月までの、
-                  <br className="hidden lg:block" />
-                  期間限定レッスンです。
-                </p>
-              </div>
-              <p className="caption measure shrink-0 md:max-w-xs">
-                お会いできる月は多くありません。気になっている方は、どうぞお早めに。
+            <div className="border-y border-magenta py-10 md:py-12">
+              <p className="eyebrow eyebrow-magenta">Limited period</p>
+              <p className="heading mt-4">
+                2026年5月から2027年3月までの、
+                <br className="hidden lg:block" />
+                期間限定レッスンです。
               </p>
             </div>
           </Reveal>

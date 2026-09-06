@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
 import SectionLabel from "@/components/SectionLabel";
+import { TRIAL_FORM_URL } from "@/components/SiteHeader";
 
 /*
  * プライバシーポリシー。
@@ -72,7 +73,7 @@ const CONTACT_ROWS = [
   { en: "Name", body: "Hello Jazz Academy" },
   { en: "Director", body: "河地 里咲" },
   { en: "Address", body: "愛知県名古屋市天白区" },
-  { en: "E-mail", body: "info@hellojazzacademy.com" },
+  { en: "Contact", body: "お問い合わせフォーム", href: TRIAL_FORM_URL },
 ];
 
 export default function PrivacyPolicy() {
@@ -127,7 +128,20 @@ export default function PrivacyPolicy() {
                     className="flex flex-col gap-1.5 border-b border-rule py-4 sm:flex-row sm:gap-8"
                   >
                     <dt className="eyebrow eyebrow-faint shrink-0 pt-1 sm:w-28">{row.en}</dt>
-                    <dd className="body-text">{row.body}</dd>
+                    <dd className="body-text">
+                      {row.href ? (
+                        <a
+                          href={row.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="link-quiet"
+                        >
+                          {row.body}
+                        </a>
+                      ) : (
+                        row.body
+                      )}
+                    </dd>
                   </div>
                 ))}
               </dl>

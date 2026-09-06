@@ -57,8 +57,8 @@ const RATIOS = [
   {
     title: "ジャズを学ぶ割合",
     note: null,
-    major: { label: "ジャズ", percent: 60 },
-    minor: { label: "ポップス", percent: 40 },
+    major: { label: "ジャズ", percent: 70 },
+    minor: { label: "ポップス", percent: 30 },
   },
 ];
 
@@ -79,6 +79,27 @@ const PRICES = [
     unit: "/ 月　45分",
     tag: null,
     variant: "main" as const,
+  },
+];
+
+// 申し込みフォーム以外の接点。文言はユーザー指定のものをそのまま置く
+// LINEのURLは問い合わせ用の導線として指定されたもので、フッターのアイコン列とは別に持つ
+const SOCIAL_CTA = [
+  {
+    en: "LINE",
+    src: "/images/social/line.png",
+    title: "公式LINEでお問い合わせ受付中！",
+    body: "レッスンや空き状況のご確認など、公式LINEよりお気軽にお問い合わせください。",
+    button: "公式LINEを開く",
+    href: "https://lin.ee/9RXKZZhd",
+  },
+  {
+    en: "Instagram",
+    src: "/images/social/instagram.png",
+    title: "Instagramでも発信中！",
+    body: "レッスンの様子や最新のお知らせ、演奏動画などをInstagramで更新しています。ぜひフォローしてチェックしてみてください！",
+    button: "Instagramを見る",
+    href: "https://www.instagram.com/hellojazzacademy",
   },
 ];
 
@@ -672,6 +693,43 @@ export default async function Home() {
               ))}
             </dl>
           </Reveal>
+        </div>
+      </section>
+
+      {/* ============================== SOCIAL ============================== */}
+      {/* 申し込みフォーム(フッター)の手前に、もっと軽い接点を2つ置く */}
+      <section id="social" className="section pt-0 md:pt-0">
+        <div className="container-page">
+          <Reveal>
+            <SectionLabel>Follow</SectionLabel>
+          </Reveal>
+
+          <ul className="mt-10 grid gap-x-12 gap-y-10 md:mt-12 md:grid-cols-2">
+            {SOCIAL_CTA.map((s, i) => (
+              <Reveal as="li" key={s.en} delay={i * 80} className="border-t border-rule pt-6">
+                <div className="flex items-center gap-3">
+                  <Image
+                    src={s.src}
+                    alt=""
+                    width={160}
+                    height={160}
+                    className="w-7 shrink-0 rounded-full"
+                  />
+                  <p className="eyebrow">{s.en}</p>
+                </div>
+                <h3 className="subheading mt-4">{s.title}</h3>
+                <p className="body-text measure mt-3">{s.body}</p>
+                <a
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary btn-sm mt-6"
+                >
+                  {s.button}
+                </a>
+              </Reveal>
+            ))}
+          </ul>
         </div>
       </section>
     </main>
