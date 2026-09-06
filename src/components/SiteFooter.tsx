@@ -64,8 +64,21 @@ export default function SiteFooter() {
   return (
     <footer>
       {/* ---- 申し込み ---- */}
-      <section id="contact" className="surface-violet section">
-        <div className="container-page">
+      {/* オンライン側だけ写真背景+暗いレイヤーにする。今池は専用のマゼンタ地のまま */}
+      <section id="contact" className="surface-violet section relative overflow-hidden">
+        {!isImaike && (
+          <>
+            <Image
+              src="/images/piano-plant.jpeg"
+              alt=""
+              fill
+              sizes="100vw"
+              className="object-cover object-[72%_60%]"
+            />
+            <div className="absolute inset-0 bg-ink/65" />
+          </>
+        )}
+        <div className="container-page relative">
           <Reveal className="max-w-3xl">
             <SectionLabel tone="cyan">Contact</SectionLabel>
             <h2 className="heading mt-6 text-paper">
