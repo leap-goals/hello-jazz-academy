@@ -11,9 +11,8 @@ import { IMAIKE_FORM_URL } from "@/components/SiteHeader";
 /*
  * 今池(千種区)の対面スポットレッスンLP。
  *
- * 色・書体・罫線・余白のとり方はトップと同じシステムを使う。
- * 違えるのは「組み方」と「主色」の2つだけ。
- *   主色  … トップはバイオレット、こちらはマゼンタ。押せるものの色も入れ替える
+ * 色・書体・罫線・余白のとり方はトップと同じシステムを使う。主色もトップと同じバイオレット。
+ * 違えるのは「組み方」だけにする。
  *   ヒーロー … トップは紙の上に文字だけ。こちらは講師の写真を全面に敷き、暗いレイヤー越しに白文字で置く
  *   暗い面 … トップはレッスン紹介に置く。こちらはヒーローと料金に置く(このページの決め手が価格のため)
  *   本文の並び … トップは「ラベル左・中身右」。こちらは見出しを段の頭に置いて2列で流す
@@ -95,7 +94,7 @@ export default function ImaikeLesson() {
         <div className="absolute inset-0 bg-ink/55" />
         <div className="container-page relative">
           <div className="rise">
-            <SectionLabel tone="magenta">In-person spot lesson — Imaike, Nagoya</SectionLabel>
+            <SectionLabel tone="violet-light">In-person spot lesson — Imaike, Nagoya</SectionLabel>
           </div>
           <h1 className="display-compact rise mt-7 text-paper md:mt-9" style={riseDelay(70)}>
             ＼ ポール先生による ／
@@ -103,10 +102,10 @@ export default function ImaikeLesson() {
             対面スポットレッスン
           </h1>
           <p
-            className="rise mt-7 inline-flex items-center gap-2 rounded-full bg-magenta-tint px-3.5 py-1.5 text-xs font-medium text-magenta"
+            className="rise mt-7 inline-flex items-center gap-2 rounded-full bg-violet-tint px-3.5 py-1.5 text-xs font-medium text-violet"
             style={riseDelay(140)}
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-magenta" />
+            <span className="h-1.5 w-1.5 rounded-full bg-violet" />
             2026.05 — 2027.03 期間限定
           </p>
           <div className="rise mt-6 space-y-4" style={riseDelay(200)}>
@@ -130,7 +129,7 @@ export default function ImaikeLesson() {
               href={IMAIKE_FORM_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-magenta"
+              className="btn btn-primary"
             >
               レッスンを申し込む
               <span className="btn-note">60min ¥10,000</span>
@@ -146,14 +145,14 @@ export default function ImaikeLesson() {
       <section id="point" className="section">
         <div className="container-page">
           <Reveal>
-            <SectionLabel tone="magenta">Point</SectionLabel>
+            <SectionLabel>Point</SectionLabel>
           </Reveal>
 
           <ul className="mt-12 md:mt-16 md:grid md:grid-cols-2 md:gap-x-14">
             {POINTS.map((p, i) => (
               <Reveal as="li" key={p.title} delay={(i % 2) * 70} className="border-t border-rule">
                 <div className="py-7">
-                  <p className="eyebrow eyebrow-magenta">{p.en}</p>
+                  <p className="eyebrow">{p.en}</p>
                   <h3 className="subheading mt-3">{p.title}</h3>
                 </div>
               </Reveal>
@@ -168,7 +167,7 @@ export default function ImaikeLesson() {
         <div className="container-page">
           <div className="border-t border-rule pt-12 lg:grid lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:gap-12 lg:pt-16">
             <Reveal>
-              <SectionLabel tone="magenta">Instructor</SectionLabel>
+              <SectionLabel>Instructor</SectionLabel>
               <div className="mt-7 flex items-center gap-5">
                 <div className="media relative h-20 w-20 shrink-0 rounded-full md:h-24 md:w-24">
                   <Image
@@ -184,8 +183,8 @@ export default function ImaikeLesson() {
                   <p className="eyebrow eyebrow-faint mt-3">Paul Cortez</p>
                 </div>
               </div>
-              <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-magenta-tint px-3.5 py-1.5 text-xs font-medium text-magenta">
-                <span className="h-1.5 w-1.5 rounded-full bg-magenta" />
+              <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-violet-tint px-3.5 py-1.5 text-xs font-medium text-violet">
+                <span className="h-1.5 w-1.5 rounded-full bg-violet" />
                 今池・対面レッスン 受付中
               </p>
             </Reveal>
@@ -205,7 +204,7 @@ export default function ImaikeLesson() {
                 オンラインレッスンはこちら
                 <span
                   aria-hidden="true"
-                  className="figure text-magenta transition-transform duration-300 ease-out group-hover:translate-x-1"
+                  className="figure text-violet transition-transform duration-300 ease-out group-hover:translate-x-1"
                 >
                   →
                 </span>
@@ -248,7 +247,7 @@ export default function ImaikeLesson() {
                     </div>
                   ))}
                 </dl>
-                <p className="mt-6 rounded-xl bg-magenta-tint px-4 py-3.5 text-[0.9375rem] leading-7 text-magenta">
+                <p className="mt-6 rounded-xl bg-violet-tint px-4 py-3.5 text-[0.9375rem] leading-7 text-violet">
                   ポール先生のレッスンを初めて受講される方は、60分レッスンが初回50%OFFとなります。
                 </p>
                 <PaymentBrands
@@ -271,14 +270,14 @@ export default function ImaikeLesson() {
       <section id="policy" className="section">
         <div className="container-page">
           <Reveal>
-            <SectionLabel tone="magenta">Guide</SectionLabel>
+            <SectionLabel>Guide</SectionLabel>
             <h2 className="heading mt-6">受講のご案内</h2>
           </Reveal>
 
           <div className="mt-12 grid gap-x-12 gap-y-9 md:mt-16 md:grid-cols-3">
             {GUIDES.map((g, i) => (
               <Reveal key={g.title} delay={i * 70} className="border-t border-rule pt-6">
-                <p className="eyebrow eyebrow-magenta">{g.en}</p>
+                <p className="eyebrow">{g.en}</p>
                 <h3 className="subheading mt-3">{g.title}</h3>
                 <p className="body-text mt-3">{g.body}</p>
               </Reveal>
@@ -287,8 +286,8 @@ export default function ImaikeLesson() {
 
           {/* 期間限定であることは、このページで一番伝わってほしい約束 */}
           <Reveal delay={160} className="mt-14 md:mt-20">
-            <div className="border-y border-magenta py-10 md:py-12">
-              <p className="eyebrow eyebrow-magenta">Limited period</p>
+            <div className="border-y border-violet py-10 md:py-12">
+              <p className="eyebrow">Limited period</p>
               <p className="heading mt-4">
                 2026年5月から2027年3月までの、
                 <br className="hidden lg:block" />
@@ -303,7 +302,7 @@ export default function ImaikeLesson() {
       <section id="access" className="section pt-0 md:pt-0">
         <div className="container-page lg:grid lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:gap-12">
           <Reveal>
-            <SectionLabel tone="magenta">Access</SectionLabel>
+            <SectionLabel>Access</SectionLabel>
             <h2 className="heading mt-6">会場とスケジュール</h2>
           </Reveal>
           <Reveal delay={100} className="mt-10 lg:mt-2">

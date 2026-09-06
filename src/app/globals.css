@@ -36,6 +36,7 @@
   --color-violet: #6618d5;
   --color-violet-deep: #4a0fa0; /* hoverと、フッターのような大面積 */
   --color-violet-tint: #f2ecfd; /* ごく薄い面。タグや強調ブロック */
+  --color-violet-light: #b7a3ef; /* 暗い面の上に置くラベル。白地では薄すぎるので使わない */
   --color-magenta: #e21bd5;
   --color-magenta-tint: #fdeafb;
   --color-cyan: #72dafe;        /* 暗い面の上のラベル専用 */
@@ -60,6 +61,7 @@
   --color-violet: var(--color-violet);
   --color-violet-deep: var(--color-violet-deep);
   --color-violet-tint: var(--color-violet-tint);
+  --color-violet-light: var(--color-violet-light);
   --color-magenta: var(--color-magenta);
   --color-magenta-tint: var(--color-magenta-tint);
   --color-cyan: var(--color-cyan);
@@ -167,6 +169,10 @@
 
   .eyebrow-magenta {
     color: var(--color-magenta);
+  }
+
+  .eyebrow-violet-light {
+    color: var(--color-violet-light);
   }
 
   /*

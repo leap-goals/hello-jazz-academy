@@ -71,7 +71,7 @@ export default function SiteHeader() {
         label: "レッスンを申し込む",
         price: "60min ¥10,000",
         href: IMAIKE_FORM_URL,
-        className: "btn-magenta",
+        className: "btn-primary",
       }
     : {
         label: "体験レッスンに申し込む",
