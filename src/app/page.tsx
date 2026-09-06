@@ -87,7 +87,7 @@ const PRICES = [
 const SOCIAL_CTA = [
   {
     en: "LINE",
-    src: "/images/social/line.png",
+    src: "/images/sns/line.png",
     title: "公式LINEでお問い合わせ受付中！",
     body: "レッスンや空き状況のご確認など、公式LINEよりお気軽にお問い合わせください。",
     button: "公式LINEを開く",
@@ -95,7 +95,7 @@ const SOCIAL_CTA = [
   },
   {
     en: "Instagram",
-    src: "/images/social/instagram-v2.png",
+    src: "/images/sns/instagram-v2.png",
     title: "Instagramでも発信中！",
     body: "レッスンの様子や最新のお知らせ、演奏動画などをInstagramで更新しています。ぜひフォローしてチェックしてみてください！",
     button: "Instagramを見る",
@@ -698,7 +698,7 @@ export default async function Home() {
 
       {/* ============================== SOCIAL ============================== */}
       {/* 申し込みフォーム(フッター)の手前に、もっと軽い接点を2つ置く */}
-      <section id="social" className="section pt-0 md:pt-0">
+      <section id="follow" className="section pt-0 md:pt-0">
         <div className="container-page">
           <Reveal>
             <SectionLabel>Follow</SectionLabel>
