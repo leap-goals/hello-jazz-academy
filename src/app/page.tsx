@@ -62,10 +62,9 @@ const RATIOS = [
   },
 ];
 
-// 体験 → 入会 → 月謝 の順。受講を検討する人が払う順番でそのまま並べる
-// 体験レッスンは補助的な項目として小さく、入会金はバッジのように軽く見せる
+// 入会 → 月謝 の順。体験レッスンの料金は「入会までの流れ」側にバッジ表示するため、料金表には載せない
+// 入会金はバッジのように軽く見せる
 const PRICES = [
-  { label: "体験レッスン（45分）", price: "¥3,000", unit: null, tag: null, variant: "compact" as const },
   { label: "入会金（事務手数料）", price: "¥5,000", unit: null, tag: null, variant: "badge" as const },
   {
     label: "オンラインレッスン（月2回・大人）",
@@ -529,17 +528,9 @@ export default async function Home() {
                 ) : (
                   <div
                     key={row.label}
-                    className={`flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-rule ${
-                      row.variant === "compact" ? "py-5" : "py-6"
-                    }`}
+                    className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-rule py-6"
                   >
-                    <dt
-                      className={`flex items-center gap-3 ${
-                        row.variant === "compact"
-                          ? "text-sm text-ink-soft md:text-[0.9375rem]"
-                          : "text-[0.9375rem] md:text-base"
-                      }`}
-                    >
+                    <dt className="flex items-center gap-3 text-[0.9375rem] md:text-base">
                       {row.label}
                       {row.tag ? (
                         <span className="rounded-full bg-violet-tint px-2.5 py-1 text-[0.6875rem] font-medium text-violet">
@@ -547,11 +538,7 @@ export default async function Home() {
                         </span>
                       ) : null}
                     </dt>
-                    <dd
-                      className={`figure text-ink ${
-                        row.variant === "compact" ? "text-xl md:text-2xl" : "text-3xl md:text-[2.25rem]"
-                      }`}
-                    >
+                    <dd className="figure text-3xl text-ink md:text-[2.25rem]">
                       {row.price}
                       {row.unit ? (
                         <span className="ml-2 font-body text-sm text-ink-faint">{row.unit}</span>
@@ -579,7 +566,12 @@ export default async function Home() {
           <Reveal>
             <SectionLabel>Flow</SectionLabel>
             <h2 className="heading mt-6">入会までの流れ</h2>
-            <p className="lead measure mt-6">体験レッスン　受講料¥3,000</p>
+            <div className="lead measure mt-6 flex flex-wrap items-center gap-3">
+              <span>体験レッスン　受講料</span>
+              <span className="figure inline-flex items-center rounded-full border border-rule-strong px-4 py-1.5 text-base text-ink">
+                ¥3,000
+              </span>
+            </div>
           </Reveal>
 
           <ol className="mt-12 grid gap-x-10 gap-y-9 md:mt-16 md:grid-cols-4 md:gap-x-8">

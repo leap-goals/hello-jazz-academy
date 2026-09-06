@@ -55,7 +55,7 @@ export default function NewsTicker({ posts }: { posts: TickerPost[] }) {
       <div className="relative h-10 flex-1 overflow-hidden">
         <ul
           className="absolute inset-x-0 top-0 transition-transform duration-500 ease-out"
-          style={{ transform: `translateY(-${index * 100}%)` }}
+          style={{ transform: `translateY(-${(index * 100) / posts.length}%)` }}
         >
           {posts.map((post) => (
             <li key={post.slug} className="flex h-10 items-center">

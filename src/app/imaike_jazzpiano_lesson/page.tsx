@@ -35,38 +35,15 @@ export const metadata: Metadata = {
   },
 };
 
-// 見出しと欧文ラベルは旧サイト(imaike_jazzpiano_lesson.md)の「01 / FLEXIBLE」等をそのまま引き継ぐ
+// 見出し・欧文ラベルは旧サイト(imaike_jazzpiano_lesson.md)の「01 / FLEXIBLE」等をそのまま引き継ぐ
+// 旧サイトにはPointの導入文・各項目の説明文(body)は存在しないため追加しない
 const POINTS = [
-  {
-    en: "Flexible",
-    title: "単発（スポット）受講OK",
-    body: "継続の契約はありません。「今月だけ」「一度だけ」でも歓迎です。通えるときに、通えるぶんだけ。",
-  },
-  {
-    en: "Intensive",
-    title: "60分じっくりマンツーマン指導",
-    body: "いま抱えている課題も、弾きたい曲も。ひとりぶんの60分を、まるごと使います。",
-  },
-  {
-    en: "Access",
-    title: "今池駅より徒歩3分",
-    body: "地下鉄東山線・桜通線の今池駅からすぐ。仕事帰りや、お出かけのついでにも立ち寄れます。",
-  },
-  {
-    en: "Quality",
-    title: "グランドピアノ完備のスタジオ",
-    body: "響きのある部屋で、生ピアノの手ごたえを確かめられます。タッチもペダルも、その場で直せます。",
-  },
-  {
-    en: "Schedule",
-    title: "毎月1回開催",
-    body: "開催日はお申し込みの際にご案内します。受講経験のある方へはLINEでもお知らせします。",
-  },
-  {
-    en: "English available",
-    title: "英語でのピアノレッスンもOK",
-    body: "音楽の専門用語を英語で覚えたり、英会話を楽しみながら弾いたり。日本語・英語どちらでも。",
-  },
+  { en: "01 / FLEXIBLE", title: "単発（スポット）受講OK" },
+  { en: "02 / INTENSIVE", title: "60分じっくりマンツーマン指導" },
+  { en: "03 / ACCESS", title: "今池駅より徒歩3分" },
+  { en: "04 / QUALITY", title: "グランドピアノ完備のスタジオ" },
+  { en: "05 / SCHEDULE", title: "毎月1回開催" },
+  { en: "06 / English Available", title: "英語でのピアノレッスンもOK" },
 ];
 
 const PRICES = [
@@ -175,18 +152,8 @@ export default function ImaikeLesson() {
       {/* ============================== POINT ============================== */}
       <section id="point" className="section">
         <div className="container-page">
-          <Reveal className="md:flex md:items-end md:justify-between md:gap-14">
-            <div>
-              <SectionLabel tone="magenta">Point</SectionLabel>
-              <h2 className="heading mt-6">
-                今池のレッスン、
-                <br />
-                6つのこと。
-              </h2>
-            </div>
-            <p className="lead measure mt-6 md:mt-0">
-              入会金も、毎週の予定合わせも要りません。受けたい月に1回だけ申し込む——それがこのレッスンのかたちです。
-            </p>
+          <Reveal>
+            <SectionLabel tone="magenta">Point</SectionLabel>
           </Reveal>
 
           <ul className="mt-12 md:mt-16 md:grid md:grid-cols-2 md:gap-x-14">
@@ -195,7 +162,6 @@ export default function ImaikeLesson() {
                 <div className="py-7">
                   <p className="eyebrow eyebrow-magenta">{p.en}</p>
                   <h3 className="subheading mt-3">{p.title}</h3>
-                  <p className="body-text mt-3">{p.body}</p>
                 </div>
               </Reveal>
             ))}
