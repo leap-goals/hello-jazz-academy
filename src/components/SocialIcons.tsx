@@ -16,7 +16,7 @@ import Image from "next/image";
 // 共有時に付く計測パラメータ(?si= / ?igsi= / ?_t= など)は落とし、素のURLで置く
 export const SOCIAL_LINKS = [
   { name: "YouTube", href: "https://youtube.com/@hellojazzacademy", src: "/images/social/youtube.png" },
-  { name: "Instagram", href: "https://www.instagram.com/hellojazzacademy", src: "/images/social/instagram.png" },
+  { name: "Instagram", href: "https://www.instagram.com/hellojazzacademy", src: "/images/social/instagram-v2.png" },
   { name: "TikTok", href: "https://www.tiktok.com/@hellojazzacademy", src: "/images/social/tiktok.png" },
   { name: "LINE", href: "https://lin.ee/XbPZKgA", src: "/images/social/line.png" },
 ] as const;

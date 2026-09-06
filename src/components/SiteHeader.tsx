@@ -71,7 +71,7 @@ export default function SiteHeader() {
         label: "レッスンを申し込む",
         price: "60min ¥10,000",
         href: IMAIKE_FORM_URL,
-        className: "btn-magenta",
+        className: "btn-primary",
       }
     : {
         label: "体験レッスンに申し込む",
@@ -79,6 +79,10 @@ export default function SiteHeader() {
         href: TRIAL_FORM_URL,
         className: "btn-primary",
       };
+
+  // 今池のヒーローだけ暗い写真なので、その上にいる間はロゴと文字を紙色へ反転させる。
+  // スクロールで紙色の面が出たあと、メニューを開いたあとは通常の配色に戻す
+  const onDarkHero = isImaike && !scrolled && !open;
 
   // 紙の上にいる間は何も出さない。動き出してはじめて材質を出す
   useEffect(() => {
@@ -128,7 +132,7 @@ export default function SiteHeader() {
             onClick={() => setOpen(false)}
           >
             <Image
-              src="/images/logo.png"
+              src={onDarkHero ? "/images/logo-light.png" : "/images/logo.png"}
               alt="Hello Jazz Academy"
               width={1532}
               height={629}
@@ -146,7 +150,9 @@ export default function SiteHeader() {
             aria-expanded={open}
             aria-label={open ? "メニューを閉じる" : "メニューを開く"}
             onClick={() => setOpen((v) => !v)}
-            className="-mr-1 flex items-center gap-2.5 px-1 py-2 text-ink transition-opacity duration-200 hover:opacity-60"
+            className={`-mr-1 flex items-center gap-2.5 px-1 py-2 transition-opacity duration-200 hover:opacity-60 ${
+              onDarkHero ? "text-paper" : "text-ink"
+            }`}
           >
             {/* 3本線。開くと上下の2本が交差してばつ印になり、中央の1本は消える */}
             <span className="relative block h-3 w-[1.375rem]" aria-hidden="true">
