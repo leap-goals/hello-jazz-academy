@@ -65,15 +65,15 @@ const HOME_NAV: NavSection[] = [
     ],
   },
   {
+    items: [{ href: "/#contact", label: "お問い合わせ", en: "Contact" }],
+  },
+  {
     label: "教材・ツール",
     en: "Contents & Tools",
     items: [
       { href: BOOKS_PATH, label: "おすすめ教則本", en: "Books" },
       { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", en: "Tool", external: true },
     ],
-  },
-  {
-    items: [{ href: "/#contact", label: "お問い合わせ", en: "Contact" }],
   },
 ];
 
