@@ -14,6 +14,8 @@ import {
   IMAIKE_FORM_URL,
   IMAIKE_PATH,
   NEWS_PATH,
+  PRIVACY_PATH,
+  TOKUSHOHO_PATH,
   TRIAL_FORM_URL,
 } from "@/components/SiteHeader";
 
@@ -24,19 +26,30 @@ import {
  * 濃い面を続けて2つ置かないことで、上段のCTAだけが立つ。
  */
 
-// サイトマップは全ページ共通。トップ内のアンカーは下層からも辿れるよう絶対パスで書く
-const FOOTER_LINKS = [
-  { href: ABOUT_PATH, label: "教室について" },
-  { href: "/#lesson", label: "レッスンについて" },
-  { href: "/#teacher", label: "講師紹介" },
-  { href: "/#price", label: "料金" },
-  { href: "/#flow", label: "入会までの流れ" },
-  { href: FAQ_PATH, label: "FAQ" },
-  { href: IMAIKE_PATH, label: "今池での対面レッスン" },
-  { href: NEWS_PATH, label: "お知らせ" },
-  { href: BOOKS_PATH, label: "おすすめ教則本" },
-  { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", external: true },
-  { href: "/privacypolicy/", label: "プライバシーポリシー" },
+// サイトマップは全ページ共通。トップ内のアンカーは下層からも辿れるよう絶対パスで書く。
+// 「サービス案内」は教室・レッスンにまつわる情報、「コンテンツ」は付随する読み物・ツール
+const FOOTER_GROUPS = [
+  {
+    label: "サービス案内",
+    links: [
+      { href: ABOUT_PATH, label: "教室について" },
+      { href: NEWS_PATH, label: "お知らせ" },
+      { href: "/#teacher", label: "講師紹介" },
+      { href: "/#lesson", label: "レッスン・料金" },
+      { href: IMAIKE_PATH, label: "今池対面レッスン" },
+      { href: "/#flow", label: "入会までの流れ" },
+      { href: FAQ_PATH, label: "FAQ" },
+      { href: PRIVACY_PATH, label: "プライバシーポリシー" },
+      { href: TOKUSHOHO_PATH, label: "特定商取引法に基づく表記" },
+    ],
+  },
+  {
+    label: "コンテンツ",
+    links: [
+      { href: BOOKS_PATH, label: "おすすめ教則本" },
+      { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", external: true },
+    ],
+  },
 ];
 
 // 締めのCTAだけは、いま見ているページで売っているものに合わせて差し替える
@@ -130,33 +143,36 @@ export default function SiteFooter() {
               </div>
             </div>
 
-            <nav aria-label="サイトマップ" className="md:min-w-[20rem]">
-              <p className="eyebrow eyebrow-faint">Sitemap</p>
-              {/* 縦に読ませたいので、行送りではなく列送りで流す(左の段を上から下、次に右の段) */}
-              <ul className="mt-4 grid gap-x-10 sm:grid-flow-col sm:grid-rows-6">
-                {FOOTER_LINKS.map((link) => (
-                  <li key={link.href}>
-                    {link.external ? (
-                      <a
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block py-2 text-[0.8125rem] text-ink-soft transition-colors duration-200 hover:text-violet"
-                      >
-                        {link.label}
-                      </a>
-                    ) : (
-                      <Link
-                        href={link.href}
-                        className="block py-2 text-[0.8125rem] text-ink-soft transition-colors duration-200 hover:text-violet"
-                      >
-                        {link.label}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </nav>
+            <div className="flex flex-col gap-10 sm:flex-row sm:gap-16">
+              {FOOTER_GROUPS.map((group) => (
+                <nav key={group.label} aria-label={group.label} className="md:min-w-[13rem]">
+                  <p className="eyebrow eyebrow-faint">{group.label}</p>
+                  <ul className="mt-4">
+                    {group.links.map((link) => (
+                      <li key={link.href}>
+                        {link.external ? (
+                          <a
+                            href={link.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block py-2 text-[0.8125rem] text-ink-soft transition-colors duration-200 hover:text-violet"
+                          >
+                            {link.label}
+                          </a>
+                        ) : (
+                          <Link
+                            href={link.href}
+                            className="block py-2 text-[0.8125rem] text-ink-soft transition-colors duration-200 hover:text-violet"
+                          >
+                            {link.label}
+                          </Link>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              ))}
+            </div>
           </div>
 
           <p className="caption mt-14 border-t border-rule pt-7">© 2026 Hello Jazz Academy</p>
