@@ -51,6 +51,17 @@ export default function About() {
             <SectionLabel>About</SectionLabel>
             <h1 className="heading mt-6">教室について</h1>
           </Reveal>
+          <Reveal delay={100} className="measure mx-auto mt-8 space-y-5 text-center">
+            <p className="lead">
+              楽しく学べる場でありながら、圧倒的な成長を遂げられるコミュニティを目指しています。
+            </p>
+            <p className="lead">
+              子どもたちがジャズを楽しみ、大人が初心者からでも挑戦できるという、当初からの理念はこれからも変わりません。
+            </p>
+            <p className="lead">
+              通ってくださる皆さんが楽しく学び、成長できる場を作るために、私たち自身も知識と技術を日々アップデートしています。
+            </p>
+          </Reveal>
         </div>
       </section>
 
