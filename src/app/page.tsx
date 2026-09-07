@@ -7,7 +7,13 @@ import { Metronome, Record, StaffLine } from "@/components/Illustrations";
 import PaymentBrands from "@/components/PaymentBrands";
 import SectionLabel from "@/components/SectionLabel";
 import { riseDelay } from "@/components/motion";
-import { CHORD_TOOL_PATH, FAQ_PATH, IMAIKE_PATH, TRIAL_FORM_URL } from "@/components/SiteHeader";
+import {
+  BOOKS_PATH,
+  CHORD_TOOL_PATH,
+  FAQ_PATH,
+  IMAIKE_PATH,
+  TRIAL_FORM_URL,
+} from "@/components/SiteHeader";
 import { INSTAGRAM_ICON, LINE_ICON } from "@/components/snsIconData";
 import { getAllNewsPosts } from "@/lib/news";
 
@@ -85,11 +91,12 @@ const PRICES = [
 
 // 申し込みフォーム以外の接点。文言はユーザー指定のものをそのまま置く
 // LINEのURLは問い合わせ用の導線として指定されたもので、フッターのアイコン列とは別に持つ
-// srcを持たない項目(ツール)は、SNSの丸アイコンと同じ寸法の印を代わりに置いて行頭を揃える
+// SNS以外(教則本・ツール)は配布アイコンが無いので、markで指定した印を同じ寸法で置いて行頭を揃える
 const SOCIAL_CTA = [
   {
     en: "LINE",
     src: LINE_ICON,
+    mark: null,
     title: "公式LINEでお問い合わせ受付中！",
     body: "レッスンや空き状況のご確認など、公式LINEよりお気軽にお問い合わせください。",
     button: "公式LINEを開く",
@@ -98,14 +105,25 @@ const SOCIAL_CTA = [
   {
     en: "Instagram",
     src: INSTAGRAM_ICON,
+    mark: null,
     title: "Instagramでも発信中！",
     body: "レッスンの様子や最新のお知らせ、演奏動画などをInstagramで更新しています。ぜひフォローしてチェックしてみてください！",
     button: "Instagramを見る",
     href: "https://www.instagram.com/hellojazzacademy",
   },
   {
+    en: "Books",
+    src: null,
+    mark: "books" as const,
+    title: "おすすめ教則本＆必読書10選",
+    body: "定番の「黒本」やマーク・レヴィンの理論書から、グルーヴや脳科学・脱力を学べる書籍まで、レベル・目的別にまとめました。",
+    button: "教則本を見る",
+    href: BOOKS_PATH,
+  },
+  {
     en: "Tool",
     src: null,
+    mark: "tool" as const,
     title: "コード・スケールアナライザー",
     body: "このコードで使える音は何？がわかるツール「コード・スケールアナライザー」をご用意してます。練習にどうぞご活用ください！",
     button: "ツールを開く",
@@ -113,16 +131,28 @@ const SOCIAL_CTA = [
   },
 ];
 
-/** ツールの印。鍵盤を3本の白い帯で表すだけに留め、SNSの丸アイコンと寸法を合わせる */
-function ToolMark() {
+/**
+ * SNS以外の項目に置く印。SNSの丸アイコンと寸法を合わせ、行頭を揃えるためだけのもの。
+ *   tool  … 鍵盤を3本の白い帯で
+ *   books … 開いた本を見開きの2面で
+ */
+function IconMark({ kind }: { kind: "tool" | "books" }) {
   return (
     <svg viewBox="0 0 96 96" aria-hidden="true" className="w-7 shrink-0 text-violet">
       <circle cx="48" cy="48" r="48" fill="currentColor" />
-      <g fill="#fff">
-        <rect x="26" y="30" width="11" height="36" rx="2" />
-        <rect x="42" y="30" width="11" height="36" rx="2" />
-        <rect x="58" y="30" width="11" height="36" rx="2" />
-      </g>
+      {kind === "tool" ? (
+        <g fill="#fff">
+          <rect x="26" y="30" width="11" height="36" rx="2" />
+          <rect x="42" y="30" width="11" height="36" rx="2" />
+          <rect x="58" y="30" width="11" height="36" rx="2" />
+        </g>
+      ) : (
+        <g fill="none" stroke="#fff" strokeWidth="5" strokeLinejoin="round">
+          <path d="M48 34c-6-5-14-6-21-5v34c7-1 15 0 21 5" />
+          <path d="M48 34c6-5 14-6 21-5v34c-7-1-15 0-21 5" />
+          <path d="M48 34v34" />
+        </g>
+      )}
     </svg>
   );
 }
@@ -588,21 +618,21 @@ export default async function Home() {
             <SectionLabel>Follow</SectionLabel>
           </Reveal>
 
-          <ul className="mt-10 grid gap-x-12 gap-y-10 md:mt-12 md:grid-cols-3">
+          <ul className="mt-10 grid gap-x-12 gap-y-10 md:mt-12 md:grid-cols-2">
             {SOCIAL_CTA.map((s, i) => (
               <Reveal as="li" key={s.en} delay={i * 80} className="border-t border-rule pt-6">
                 <div className="flex items-center gap-3">
-                  {s.src ? (
+                  {s.mark ? (
+                    <IconMark kind={s.mark} />
+                  ) : (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img
-                      src={s.src}
+                      src={s.src!}
                       alt=""
                       width={96}
                       height={96}
                       className="w-7 shrink-0 rounded-full"
                     />
-                  ) : (
-                    <ToolMark />
                   )}
                   <p className="eyebrow">{s.en}</p>
                 </div>
