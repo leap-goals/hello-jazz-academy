@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 
 export default function Tokushoho() {
   const rows: { en: string; body: React.ReactNode }[] = [
-    { en: "Seller", body: "Hello Jazz Academy（個人事業主：河地 里咲）" },
+    { en: "Seller", body: "Hello Jazz Academy" },
     { en: "Director", body: "河地 里咲" },
     { en: "Address", body: "愛知県名古屋市天白区（ご請求をいただいた場合には、遅滞なく開示いたします）" },
     { en: "Tel", body: "ご請求をいただいた場合には、遅滞なく開示いたします。" },
