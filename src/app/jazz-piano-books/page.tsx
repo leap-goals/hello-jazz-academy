@@ -16,9 +16,9 @@ import { TRIAL_FORM_URL } from "@/components/SiteHeader";
  */
 
 const DESCRIPTION =
-  "ジャズピアノの独学や上達に悩む方へ。定番の「黒本」やマーク・レヴィンの理論書から、グルーヴや脳科学・脱力を学べる書籍まで、厳選したおすすめ11冊をレベル別に解説します。";
+  "ジャズピアノの独学や上達に悩む方へ。定番の「黒本」やマーク・レヴィンの理論書から、グルーヴや脳科学・脱力を学べる書籍まで、厳選したおすすめ10冊をレベル別に解説します。";
 
-const TITLE = "ジャズピアノおすすめ教則本＆必読書11選 | Hello Jazz Academy";
+const TITLE = "ジャズピアノおすすめ教則本＆必読書10選 | Hello Jazz Academy";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -266,9 +266,11 @@ export default function JazzPianoBooks() {
             <h1 className="heading mt-6">
               上達を加速させる！
               <br className="hidden md:block" />
-              ジャズピアノおすすめ教則本＆必読書11選
+              ジャズピアノおすすめ教則本＆必読書10選
             </h1>
-            <p className="lead measure mt-8">
+            {/* ステマ規制(景表法)の表示。読者が本文より先に目にする位置に置く */}
+            <p className="caption mt-6">本記事にはプロモーションが含まれています。</p>
+            <p className="lead measure mt-6">
               「ジャズピアノを始めたいけれど、どの本を買えばいいかわからない」「譜面は読めるのにジャズらしい演奏にならない」と悩んでいるあなたに。
             </p>
           </Reveal>
@@ -297,7 +299,7 @@ export default function JazzPianoBooks() {
           <Reveal className="border-t border-ink pt-10">
             <SectionLabel>Reading list</SectionLabel>
             <h2 className="heading mt-6">
-              【科学・身体論】演奏と練習の効率を劇的に変える必読書5選
+              【科学・身体論】演奏と練習の効率を劇的に変える必読書4選
             </h2>
           </Reveal>
 

@@ -7,7 +7,7 @@ import { Metronome, Record, StaffLine } from "@/components/Illustrations";
 import PaymentBrands from "@/components/PaymentBrands";
 import SectionLabel from "@/components/SectionLabel";
 import { riseDelay } from "@/components/motion";
-import { CHORD_TOOL_PATH, IMAIKE_PATH, TRIAL_FORM_URL } from "@/components/SiteHeader";
+import { CHORD_TOOL_PATH, FAQ_PATH, IMAIKE_PATH, TRIAL_FORM_URL } from "@/components/SiteHeader";
 import { INSTAGRAM_ICON, LINE_ICON } from "@/components/snsIconData";
 import { getAllNewsPosts } from "@/lib/news";
 
@@ -146,107 +146,6 @@ const FLOW_STEPS = [
     body: "体験レッスン終了後、入会申し込みフォームをお送りいたします。入会手続きが完了次第、初回レッスンの日程や詳細をご案内いたします。",
   },
 ];
-
-// 教材・機材・規約は読み物というより「必要になったとき引く」情報なので、
-// 見出しだけを並べて畳んでおき、必要な項目だけ開ける形にする
-const FAQ_GROUPS = [
-  {
-    label: "教材",
-    items: [
-      {
-        title: "教材について",
-        paragraphs: [
-          "レッスン時に講師から楽譜をpdfで共有させていただき、用意してもらうように指示することもございます。レッスン前に、印刷したり、タブレットで見れるように準備しておきましょう。",
-          "その他の教材につきましては、講師から指定のものを生徒様に購入して頂く場合もございます。",
-        ],
-      },
-    ],
-  },
-  {
-    label: "オンラインレッスンの注意点",
-    items: [
-      {
-        title: "スマホやタブレットの配置について",
-        paragraphs: [
-          "テレビ通話用のスマホまたは、タブレット、パソコンは、ピアノから横からの画角で配置していただけると、姿勢やフォームの指導がスムーズです。",
-          "スマホスタンドなどは、特に指定はございませんが脚立タイプが使用しやすいです。",
-        ],
-      },
-      {
-        title: "ZOOMの設定について",
-        paragraphs: [
-          "マイクとカメラはオンにして頂き、「ミュージシャン用オリジナルサウンド」をオンにする必要があります。",
-          "1.＜ミュージシャン用のオリジナルサウンド＞に○をつけます。",
-          "2.＜高忠実度音楽モード＞と＜エコー除去＞にチェックが入っている状態にします。",
-        ],
-      },
-      {
-        title: "FaceTimeについて",
-        paragraphs: [
-          "Apple端末をご利用の方には、FaceTimeでのご利用をお願いしております。音の遅延が少なく、スムーズにレッスンを進められるためです。",
-          "FaceTimeが使える端末は、iPhone 4以降（iOS 4以降を搭載）、iPad 2以降・iPad mini（初代以降）、Macです。",
-        ],
-      },
-    ],
-  },
-  {
-    label: "受講のご案内",
-    items: [
-      {
-        title: "レッスンスケジュール",
-        paragraphs: [
-          "レッスンは固定の曜日・時間帯もしくは、毎月予約制で隔週月2回のペースで行います。一度決定したスケジュールを基本としますが、やむを得ない事情でご都合がつかない場合、月に1回まで無料で振替が可能です。振替をご希望の場合は、前日までにご相談いただければ対応が可能ですが、振替がご希望の場合にはお早めにお知らせください。",
-          "なお、当日のキャンセルについては振替ができず、キャンセル料が発生しますのでご注意ください。スムーズなレッスン運営のため、ご理解いただけますと幸いです。",
-        ],
-      },
-      {
-        title: "キャンセルポリシー",
-        paragraphs: [
-          "講師都合によるキャンセルに関しては、無料でのキャンセル、払い戻し、振替で対応いたします。ただし、当日欠席には100%キャンセル料が発生します（返金不可）。",
-          "体調不良等がある場合には、前日までにご連絡いただければ振替対応させていただきます。ご理解とご協力をお願いいたします。",
-          "また、毎月2回でのコースにおいて、試験やお仕事、ご旅行など1回のレッスンしか受講できない月においては、年4回までキャンセルが可能です。その場合は、1回分のレッスン料金の請求になります。",
-        ],
-      },
-      {
-        title: "休会について",
-        paragraphs: [
-          "休会につきましては、2ヶ月以内の場合レッスン枠を確保し手続きなどは不要で休会が可能です。2ヶ月以上、無期限の場合は、退会の手続きが必要です。場合によってはレッスン枠を確保した上で休会も可能ですので、まずはご相談ください。",
-          "再入会の際には、入会費はかかりません。",
-        ],
-      },
-      {
-        title: "退会について",
-        paragraphs: [
-          "退会をご希望の場合、その旨を講師にご連絡頂き、退会希望月の前月末日までに退会フォームのご提出をお願いいたします。",
-          "例えば、4月末日をもって退会をご希望の場合は、3月末日までに退会フォームを完了していただく必要があります。",
-          "ご提出が上記の期限を過ぎた場合、残念ながら次月分の月謝が発生いたします。この点につきましては、教室の運営上の規定に基づいており、どうかご了承ください。",
-        ],
-      },
-    ],
-  },
-];
-
-/** 開閉できる質問1件。marker は縦棒を畳んで + を − に変えるだけに留める */
-function Question({ title, paragraphs }: { title: string; paragraphs: string[] }) {
-  return (
-    <details className="group border-b border-rule [&_summary::-webkit-details-marker]:hidden">
-      <summary className="flex cursor-pointer list-none items-start gap-5 py-5 transition-colors duration-200 hover:text-violet">
-        <span className="flex-1 text-[0.9375rem] font-medium leading-7 md:text-base">{title}</span>
-        <span aria-hidden="true" className="relative mt-2.5 h-3 w-3 shrink-0">
-          <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-current" />
-          <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-current transition-transform duration-300 ease-out group-open:scale-y-0" />
-        </span>
-      </summary>
-      <div className="measure flex flex-col gap-4 pb-7">
-        {paragraphs.map((text) => (
-          <p key={text} className="body-text">
-            {text}
-          </p>
-        ))}
-      </div>
-    </details>
-  );
-}
 
 export default async function Home() {
   // 新着順の先頭6件だけを送る。ティッカーは「最新のお知らせ」の索引で、全件表示は/news/の役目
@@ -633,32 +532,19 @@ export default async function Home() {
               </Reveal>
             ))}
           </ol>
-        </div>
-      </section>
 
-      {/* =============================== FAQ =============================== */}
-      <section id="faq" className="section">
-        <div className="container-page lg:grid lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:gap-12">
-          <Reveal>
-            <SectionLabel>Guide</SectionLabel>
-            <h2 className="heading mt-6">受講のご案内</h2>
+          <Reveal delay={340} className="mt-14 border-t border-rule pt-7 md:mt-20">
+            <p className="eyebrow">FAQ</p>
+            <Link href={FAQ_PATH} className="link-quiet group mt-4 inline-flex">
+              受講のご案内（よくあるご質問）
+              <span
+                aria-hidden="true"
+                className="figure text-violet transition-transform duration-300 ease-out group-hover:translate-x-1"
+              >
+                →
+              </span>
+            </Link>
           </Reveal>
-
-          <div className="mt-10 lg:mt-2">
-            {FAQ_GROUPS.map((group, gi) => (
-              <Reveal key={group.label} delay={gi * 60} className="mt-12 first:mt-0">
-                {/* 和文の小見出しは字送りを詰める。欧文ラベルと同じ組みにすると読めなくなる */}
-                <h3 className="text-[0.8125rem] font-medium tracking-[0.06em] text-ink-faint">
-                  {group.label}
-                </h3>
-                <div className="mt-4 border-t border-rule">
-                  {group.items.map((item) => (
-                    <Question key={item.title} title={item.title} paragraphs={item.paragraphs} />
-                  ))}
-                </div>
-              </Reveal>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -693,35 +579,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ============================= ACCESS ============================= */}
-      <section id="access" className="section pt-0 md:pt-0">
-        <div className="container-page lg:grid lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:gap-12">
-          <Reveal>
-            <SectionLabel>Access</SectionLabel>
-            <h2 className="heading mt-6">アクセス</h2>
-          </Reveal>
-          <Reveal delay={100} className="mt-10 lg:mt-2">
-            <dl className="border-t border-rule">
-              {[
-                { en: "Base", body: "天白教室（名古屋市天白区）" },
-                { en: "Online", body: "Zoom / FaceTime（全国・海外から受講可能）" },
-                {
-                  en: "In person",
-                  body: "今池教室（名古屋市千種区）／月1回・2027年3月までの期間限定",
-                },
-              ].map((row) => (
-                <div
-                  key={row.en}
-                  className="flex flex-col gap-1.5 border-b border-rule py-5 sm:flex-row sm:gap-8"
-                >
-                  <dt className="eyebrow eyebrow-faint shrink-0 pt-1.5 sm:w-28">{row.en}</dt>
-                  <dd className="text-[0.9375rem] leading-8">{row.body}</dd>
-                </div>
-              ))}
-            </dl>
-          </Reveal>
-        </div>
-      </section>
 
       {/* ============================== SOCIAL ============================== */}
       {/* 申し込みフォーム(フッター)の手前に、もっと軽い接点を2つ置く */}

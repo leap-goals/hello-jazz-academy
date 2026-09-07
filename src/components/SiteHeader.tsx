@@ -21,6 +21,7 @@ export const IMAIKE_PATH = "/imaike_jazzpiano_lesson/";
 export const NEWS_PATH = "/news/";
 export const ABOUT_PATH = "/about/";
 export const BOOKS_PATH = "/jazz-piano-books/";
+export const FAQ_PATH = "/faq/";
 
 // 別アプリ(vanilla JSの単体ツール)として public/tools/ に配置しているため、
 // Next.jsのLinkによるソフトナビゲーションは使わずタブで開く
@@ -40,9 +41,8 @@ const HOME_NAV: NavLink[] = [
   { href: "/#teacher", label: "講師紹介", en: "Instructor" },
   { href: "/#price", label: "料金", en: "Price" },
   { href: "/#flow", label: "入会までの流れ", en: "Flow" },
-  { href: "/#faq", label: "受講のご案内", en: "Guide" },
+  { href: FAQ_PATH, label: "受講のご案内", en: "Guide" },
   { href: IMAIKE_PATH, label: "今池の対面レッスン", en: "In person" },
-  { href: "/#access", label: "アクセス", en: "Access" },
   { href: NEWS_PATH, label: "お知らせ", en: "News" },
   { href: BOOKS_PATH, label: "おすすめ教則本", en: "Books" },
   { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", en: "Tool", external: true },

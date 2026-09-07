@@ -40,6 +40,19 @@ export const metadata: Metadata = {
   title: "Hello Jazz Academy | オンラインジャズピアノレッスン",
   description:
     "自宅から受けられるオンラインジャズピアノレッスン。Zoom / FaceTimeで世界中どこからでも、初心者もゼロから。月2回・オーダーメイドのカリキュラムで、コードもアドリブも身につきます。",
+  // アイコンはロゴのピアノだけを黄色地の正方形に切り出したもの(public/配下)。
+  // src/app/favicon.ico による自動検出とは併用できないため、指定はここに一本化する
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "16x16 32x32", type: "image/x-icon" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
