@@ -41,7 +41,7 @@ const HOME_NAV: NavLink[] = [
   { href: "/#teacher", label: "講師紹介", en: "Instructor" },
   { href: "/#price", label: "料金", en: "Price" },
   { href: "/#flow", label: "入会までの流れ", en: "Flow" },
-  { href: FAQ_PATH, label: "受講のご案内", en: "Guide" },
+  { href: FAQ_PATH, label: "FAQ", en: "Guide" },
   { href: IMAIKE_PATH, label: "今池の対面レッスン", en: "In person" },
   { href: NEWS_PATH, label: "お知らせ", en: "News" },
   { href: BOOKS_PATH, label: "おすすめ教則本", en: "Books" },
