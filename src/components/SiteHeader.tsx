@@ -22,6 +22,8 @@ export const NEWS_PATH = "/news/";
 export const ABOUT_PATH = "/about/";
 export const BOOKS_PATH = "/jazz-piano-books/";
 export const FAQ_PATH = "/faq/";
+export const PRIVACY_PATH = "/privacypolicy/";
+export const TOKUSHOHO_PATH = "/tokushoho/";
 
 // 別アプリ(vanilla JSの単体ツール)として public/tools/ に配置しているため、
 // Next.jsのLinkによるソフトナビゲーションは使わずタブで開く
@@ -34,39 +36,71 @@ export const IMAIKE_FORM_URL = "https://share.hsforms.com/1loLPVQtPQ1-NgA-F8kpuW
 export const TRIAL_FORM_URL = "https://share-na2.hsforms.com/1S5stbn3TSFWNdjswTHg8Lwdtnw5";
 
 type NavLink = { href: string; label: string; en: string; external?: boolean };
+// label/enがあれば見出し付きのグループとして、無ければ見出しなしでそのまま並べる
+type NavSection = { label?: string; en?: string; items: NavLink[] };
 
-const HOME_NAV: NavLink[] = [
-  { href: ABOUT_PATH, label: "教室について", en: "About" },
-  { href: "/#lesson", label: "レッスンについて", en: "Lesson" },
-  { href: "/#teacher", label: "講師紹介", en: "Instructor" },
-  { href: "/#price", label: "料金", en: "Price" },
-  { href: "/#flow", label: "入会までの流れ", en: "Flow" },
-  { href: FAQ_PATH, label: "FAQ", en: "Guide" },
-  { href: IMAIKE_PATH, label: "今池の対面レッスン", en: "In person" },
-  { href: NEWS_PATH, label: "お知らせ", en: "News" },
-  { href: BOOKS_PATH, label: "おすすめ教則本", en: "Books" },
-  { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", en: "Tool", external: true },
-  { href: "/#contact", label: "お問い合わせ", en: "Contact" },
+// フラットな11項目は縦に長く探しにくいため、属性・目的別の4グループに階層化する。
+// 単独項目だけの最後の1件は、見出しと項目名が重複するため見出しを付けない
+const HOME_NAV: NavSection[] = [
+  {
+    label: "教室案内",
+    en: "About",
+    items: [
+      { href: ABOUT_PATH, label: "教室について", en: "About" },
+      { href: "/#teacher", label: "講師紹介", en: "Instructor" },
+      { href: NEWS_PATH, label: "お知らせ", en: "News" },
+      { href: PRIVACY_PATH, label: "プライバシーポリシー", en: "Privacy" },
+      { href: "/#contact", label: "お問い合わせ", en: "Contact" },
+    ],
+  },
+  {
+    label: "レッスン・料金",
+    en: "Lesson & Price",
+    items: [
+      { href: "/#lesson", label: "レッスンについて", en: "Lesson" },
+      { href: IMAIKE_PATH, label: "今池の対面レッスン", en: "In person" },
+      { href: "/#price", label: "料金", en: "Price" },
+      { href: "/#flow", label: "入会までの流れ", en: "Flow" },
+      { href: FAQ_PATH, label: "FAQ", en: "Guide" },
+    ],
+  },
+  {
+    items: [{ href: "/#contact", label: "お問い合わせ", en: "Contact" }],
+  },
+  {
+    label: "教材・ツール",
+    en: "Contents & Tools",
+    items: [
+      { href: BOOKS_PATH, label: "おすすめ教則本", en: "Books" },
+      { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", en: "Tool", external: true },
+    ],
+  },
 ];
 
-const IMAIKE_NAV: NavLink[] = [
-  { href: `${IMAIKE_PATH}#point`, label: "レッスンの特徴", en: "Point" },
-  { href: `${IMAIKE_PATH}#teacher`, label: "講師紹介", en: "Instructor" },
-  { href: `${IMAIKE_PATH}#price`, label: "料金", en: "Price" },
-  { href: `${IMAIKE_PATH}#policy`, label: "受講のご案内", en: "Guide" },
-  { href: `${IMAIKE_PATH}#access`, label: "会場とスケジュール", en: "Access" },
-  { href: ABOUT_PATH, label: "教室について", en: "About" },
-  { href: NEWS_PATH, label: "お知らせ", en: "News" },
-  { href: BOOKS_PATH, label: "おすすめ教則本", en: "Books" },
-  { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", en: "Tool", external: true },
-  { href: "/", label: "オンラインレッスン", en: "Online" },
+const IMAIKE_NAV: NavSection[] = [
+  {
+    items: [
+      { href: `${IMAIKE_PATH}#point`, label: "レッスンの特徴", en: "Point" },
+      { href: `${IMAIKE_PATH}#teacher`, label: "講師紹介", en: "Instructor" },
+      { href: `${IMAIKE_PATH}#price`, label: "料金", en: "Price" },
+      { href: `${IMAIKE_PATH}#policy`, label: "受講のご案内", en: "Guide" },
+      { href: `${IMAIKE_PATH}#access`, label: "会場とスケジュール", en: "Access" },
+      { href: ABOUT_PATH, label: "教室について", en: "About" },
+      { href: NEWS_PATH, label: "お知らせ", en: "News" },
+      { href: BOOKS_PATH, label: "おすすめ教則本", en: "Books" },
+      { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", en: "Tool", external: true },
+      { href: "/", label: "オンラインレッスン", en: "Online" },
+    ],
+  },
 ];
 
 export default function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const isImaike = usePathname().startsWith(IMAIKE_PATH.replace(/\/$/, ""));
-  const navLinks = isImaike ? IMAIKE_NAV : HOME_NAV;
+  const navSections = isImaike ? IMAIKE_NAV : HOME_NAV;
+  // 見出しも含めて通し番号を振り、ずらしフェードの遅延に使う
+  let entryIndex = 0;
 
   // ページごとに売っているものが違うので、申し込み先も文言も持ち替える
   const cta = isImaike
@@ -196,54 +230,74 @@ export default function SiteHeader() {
           <div className="m-auto w-full max-w-2xl">
             <p className="eyebrow eyebrow-faint">Menu</p>
 
-            <ul className="mt-6 border-t border-rule md:mt-8">
-              {navLinks.map((link, i) => {
-                const className =
-                  "group flex items-center gap-4 border-b border-rule py-3 transition-colors duration-200 hover:text-violet md:py-4";
-                const style = {
-                  opacity: open ? 1 : 0,
-                  transform: open ? "none" : "translateY(8px)",
-                  transition: "opacity 420ms ease-out, transform 420ms ease-out",
-                  transitionDelay: open ? `${80 + i * 35}ms` : "0ms",
-                };
-                const content = (
-                  <>
-                    <span className="text-[1.0625rem] font-medium leading-8 md:text-xl">
-                      {link.label}
-                    </span>
-                    <span className="eyebrow eyebrow-faint ml-auto transition-colors duration-200 group-hover:text-violet">
-                      {link.en}
-                    </span>
-                  </>
-                );
+            <div className="mt-6 md:mt-8">
+              {navSections.map((section, si) => (
+                <div key={section.label ?? section.items[0].href} className={si > 0 ? "mt-8 md:mt-10" : ""}>
+                  {section.label ? (
+                    <p
+                      className="eyebrow eyebrow-faint flex items-baseline justify-between border-t border-ink pt-3"
+                      style={{
+                        opacity: open ? 1 : 0,
+                        transform: open ? "none" : "translateY(8px)",
+                        transition: "opacity 420ms ease-out, transform 420ms ease-out",
+                        transitionDelay: open ? `${80 + entryIndex++ * 35}ms` : "0ms",
+                      }}
+                    >
+                      <span>{section.label}</span>
+                      <span>{section.en}</span>
+                    </p>
+                  ) : null}
+                  <ul className={section.label ? "mt-1" : "border-t border-rule"}>
+                    {section.items.map((link) => {
+                      const className =
+                        "group flex items-center gap-4 border-b border-rule py-3 transition-colors duration-200 hover:text-violet md:py-4";
+                      const style = {
+                        opacity: open ? 1 : 0,
+                        transform: open ? "none" : "translateY(8px)",
+                        transition: "opacity 420ms ease-out, transform 420ms ease-out",
+                        transitionDelay: open ? `${80 + entryIndex++ * 35}ms` : "0ms",
+                      };
+                      const content = (
+                        <>
+                          <span className="text-[1.0625rem] font-medium leading-8 md:text-xl">
+                            {link.label}
+                          </span>
+                          <span className="eyebrow eyebrow-faint ml-auto transition-colors duration-200 group-hover:text-violet">
+                            {link.en}
+                          </span>
+                        </>
+                      );
 
-                return (
-                  <li key={link.href}>
-                    {link.external ? (
-                      <a
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => setOpen(false)}
-                        className={className}
-                        style={style}
-                      >
-                        {content}
-                      </a>
-                    ) : (
-                      <Link
-                        href={link.href}
-                        onClick={() => setOpen(false)}
-                        className={className}
-                        style={style}
-                      >
-                        {content}
-                      </Link>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
+                      return (
+                        <li key={link.href}>
+                          {link.external ? (
+                            <a
+                              href={link.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={() => setOpen(false)}
+                              className={className}
+                              style={style}
+                            >
+                              {content}
+                            </a>
+                          ) : (
+                            <Link
+                              href={link.href}
+                              onClick={() => setOpen(false)}
+                              className={className}
+                              style={style}
+                            >
+                              {content}
+                            </Link>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ))}
+            </div>
 
             <div
               className="mt-9 flex flex-wrap items-center justify-between gap-6"
