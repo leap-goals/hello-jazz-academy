@@ -31,7 +31,7 @@ const FOOTER_LINKS = [
   { href: "/#teacher", label: "講師紹介" },
   { href: "/#price", label: "料金" },
   { href: "/#flow", label: "入会までの流れ" },
-  { href: FAQ_PATH, label: "受講のご案内" },
+  { href: FAQ_PATH, label: "FAQ" },
   { href: IMAIKE_PATH, label: "今池での対面レッスン" },
   { href: NEWS_PATH, label: "お知らせ" },
   { href: BOOKS_PATH, label: "おすすめ教則本" },

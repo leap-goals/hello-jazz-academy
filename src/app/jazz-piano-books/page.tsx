@@ -18,7 +18,7 @@ import { TRIAL_FORM_URL } from "@/components/SiteHeader";
 const DESCRIPTION =
   "ジャズピアノの独学や上達に悩む方へ。定番の「黒本」やマーク・レヴィンの理論書から、グルーヴや脳科学・脱力を学べる書籍まで、厳選したおすすめ10冊をレベル別に解説します。";
 
-const TITLE = "ジャズピアノおすすめ教則本＆必読書10選 | Hello Jazz Academy";
+const TITLE = "ジャズピアノおすすめ教則本＆書籍10選 | Hello Jazz Academy";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -180,7 +180,7 @@ const SCIENCE_BOOKS: Category[] = [
 const BOOK_LIST_JSON_LD = {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  name: "上達を加速させる！ジャズピアノおすすめ教則本＆必読書",
+  name: "上達を加速させる！ジャズピアノおすすめ教則本＆書籍",
   description: DESCRIPTION,
   itemListElement: [...METHOD_BOOKS, ...SCIENCE_BOOKS]
     .flatMap((c) => c.books)
@@ -266,7 +266,7 @@ export default function JazzPianoBooks() {
             <h1 className="heading mt-6">
               上達を加速させる！
               <br className="hidden md:block" />
-              ジャズピアノおすすめ教則本＆必読書10選
+              ジャズピアノおすすめ教則本＆書籍10選
             </h1>
             {/* ステマ規制(景表法)の表示。読者が本文より先に目にする位置に置く */}
             <p className="caption mt-6">本記事にはプロモーションが含まれています。</p>

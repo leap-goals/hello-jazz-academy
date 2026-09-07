@@ -115,7 +115,7 @@ const SOCIAL_CTA = [
     en: "Books",
     src: null,
     mark: "books" as const,
-    title: "おすすめ教則本＆必読書10選",
+    title: "おすすめ教則本＆書籍10選",
     body: "定番の「黒本」やマーク・レヴィンの理論書から、グルーヴや脳科学・脱力を学べる書籍まで、レベル・目的別にまとめました。",
     button: "教則本を見る",
     href: BOOKS_PATH,

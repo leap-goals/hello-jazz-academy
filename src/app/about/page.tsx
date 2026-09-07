@@ -11,7 +11,7 @@ import SectionLabel from "@/components/SectionLabel";
  *   今池     … 写真+横組みのヒーロー、暗い面は料金に置く
  *   このページ … 1本の狭い版面だけで進む、見出しと会社概要だけの簡潔な作り。暗い面は置かない
  *
- * 会社概要は「教室名・代表・創業・事業内容・URL」のみを掲載し、
+ * 会社概要は「教室名・代表・創業・所在地・事業内容・URL」のみを掲載し、
  * 旧IRページ(商号・決算公告など)の内容は法人成りするタイミングまで反映しない。
  */
 
@@ -36,6 +36,7 @@ const PROFILE_ROWS = [
   { en: "Name", body: "Hello Jazz Academy（ハロージャズ・アカデミー）" },
   { en: "Founder", body: "河地里咲" },
   { en: "Founded", body: "2020年8月1日" },
+  { en: "Address", body: "愛知県名古屋市天白区" },
   { en: "Business", body: "楽器指導、セミナー・ワークショップ、アプリ制作、音楽教室の運営" },
   { en: "URL", body: "https://www.hellojazzacademy.com/" },
 ];
