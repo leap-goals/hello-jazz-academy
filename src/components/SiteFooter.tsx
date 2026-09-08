@@ -8,11 +8,12 @@ import SectionLabel from "@/components/SectionLabel";
 import SocialLinks from "@/components/SocialIcons";
 import {
   ABOUT_PATH,
-  BOOKS_PATH,
+  BOOKS_URL,
   CHORD_TOOL_PATH,
   FAQ_PATH,
   IMAIKE_FORM_URL,
   IMAIKE_PATH,
+  LEAP_GOALS_URL,
   NEWS_PATH,
   PRIVACY_PATH,
   TOKUSHOHO_PATH,
@@ -26,9 +27,11 @@ import {
  * 濃い面を続けて2つ置かないことで、上段のCTAだけが立つ。
  */
 
+type FooterLink = { href: string; label: string; external?: boolean };
+
 // サイトマップは全ページ共通。トップ内のアンカーは下層からも辿れるよう絶対パスで書く。
 // 「サービス案内」は教室・レッスンにまつわる情報、「コンテンツ」は付随する読み物・ツール
-const FOOTER_GROUPS = [
+const FOOTER_GROUPS: { label: string; links: FooterLink[] }[] = [
   {
     label: "サービス案内",
     links: [
@@ -46,8 +49,9 @@ const FOOTER_GROUPS = [
   {
     label: "コンテンツ",
     links: [
-      { href: BOOKS_PATH, label: "おすすめ教則本" },
+      { href: BOOKS_URL, label: "おすすめ教則本", external: true },
       { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", external: true },
+      { href: LEAP_GOALS_URL, label: "Leap Goals（ゴール設定アプリ）", external: true },
     ],
   },
 ];

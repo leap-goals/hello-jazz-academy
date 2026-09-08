@@ -20,7 +20,6 @@ import SocialLinks from "@/components/SocialIcons";
 export const IMAIKE_PATH = "/imaike_jazzpiano_lesson/";
 export const NEWS_PATH = "/news/";
 export const ABOUT_PATH = "/about/";
-export const BOOKS_PATH = "/jazz-piano-books/";
 export const FAQ_PATH = "/faq/";
 export const PRIVACY_PATH = "/privacypolicy/";
 export const TOKUSHOHO_PATH = "/tokushoho/";
@@ -28,6 +27,12 @@ export const TOKUSHOHO_PATH = "/tokushoho/";
 // 別アプリ(vanilla JSの単体ツール)として public/tools/ に配置しているため、
 // Next.jsのLinkによるソフトナビゲーションは使わずタブで開く
 export const CHORD_TOOL_PATH = "/tools/chord-scale-analyzer";
+
+// 教則本LP(/jazz-piano-books/)は廃止し、Amazonのリストへ直リンクする
+export const BOOKS_URL = "https://amzn.asia/d/01uDSfaJ";
+
+// ゴール設定アプリ。トップページには置かず、メニュー/フッターの「教材・ツール」枠にのみ置く
+export const LEAP_GOALS_URL = "https://apps.apple.com/jp/app/leap-goals/id6794806973?l=en-US";
 
 // 今池の対面レッスンの申し込みはHubSpotのフォームで受ける
 export const IMAIKE_FORM_URL = "https://share.hsforms.com/1loLPVQtPQ1-NgA-F8kpuWwdtnw5";
@@ -71,8 +76,9 @@ const HOME_NAV: NavSection[] = [
     label: "教材・ツール",
     en: "Contents & Tools",
     items: [
-      { href: BOOKS_PATH, label: "おすすめ教則本", en: "Books" },
+      { href: BOOKS_URL, label: "おすすめ教則本", en: "Books", external: true },
       { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", en: "Tool", external: true },
+      { href: LEAP_GOALS_URL, label: "Leap Goals（ゴール設定アプリ）", en: "App", external: true },
     ],
   },
 ];
@@ -87,8 +93,9 @@ const IMAIKE_NAV: NavSection[] = [
       { href: `${IMAIKE_PATH}#access`, label: "会場とスケジュール", en: "Access" },
       { href: ABOUT_PATH, label: "教室について", en: "About" },
       { href: NEWS_PATH, label: "お知らせ", en: "News" },
-      { href: BOOKS_PATH, label: "おすすめ教則本", en: "Books" },
+      { href: BOOKS_URL, label: "おすすめ教則本", en: "Books", external: true },
       { href: CHORD_TOOL_PATH, label: "コード・スケール分析ツール", en: "Tool", external: true },
+      { href: LEAP_GOALS_URL, label: "Leap Goals（ゴール設定アプリ）", en: "App", external: true },
       { href: "/", label: "オンラインレッスン", en: "Online" },
     ],
   },
