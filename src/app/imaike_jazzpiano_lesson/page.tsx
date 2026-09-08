@@ -47,8 +47,7 @@ const POINTS = [
 
 const PRICES = [
   { label: "一般", minutes: "60分", price: "¥10,000" },
-  { label: "中学生以下", minutes: "60分", price: "¥8,500" },
-  { label: "中学生以下", minutes: "30分", price: "¥4,250" },
+  { label: "中学生以下", minutes: "45分", price: "¥6,500" },
 ];
 
 // 旧サイト(imaike_jazzpiano_lesson.md)の文言をそのまま採用

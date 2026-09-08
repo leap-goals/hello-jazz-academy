@@ -8,7 +8,7 @@ import PaymentBrands from "@/components/PaymentBrands";
 import SectionLabel from "@/components/SectionLabel";
 import { riseDelay } from "@/components/motion";
 import {
-  BOOKS_PATH,
+  BOOKS_URL,
   CHORD_TOOL_PATH,
   FAQ_PATH,
   IMAIKE_PATH,
@@ -116,9 +116,9 @@ const SOCIAL_CTA = [
     src: null,
     mark: "books" as const,
     title: "おすすめ教則本＆書籍10選",
-    body: "定番の「黒本」やマーク・レヴィンの理論書から、グルーヴや脳科学・脱力を学べる書籍まで、レベル・目的別にまとめました。",
-    button: "教則本を見る",
-    href: BOOKS_PATH,
+    body: "定番の「黒本」やマーク・レヴィンの理論書から、グルーヴや脳科学・脱力を学べる書籍まで、レベル・目的別にまとめたAmazonのリストです。",
+    button: "Amazonでチェックする",
+    href: BOOKS_URL,
   },
   {
     en: "Tool",
