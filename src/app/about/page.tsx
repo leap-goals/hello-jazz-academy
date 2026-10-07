@@ -35,7 +35,16 @@ export const metadata: Metadata = {
 const PROFILE_ROWS = [
   { en: "Name", body: "Hello Jazz Academy（ハロージャズ・アカデミー）" },
   { en: "Founder", body: "河地里咲" },
-  { en: "Founded", body: "2020年8月1日" },
+  {
+    en: "Founded",
+    body: (
+      <>
+        2020年8月1日
+        <br />
+        Hello Jazz Academyとしてリニューアルオープン：2022年10月28日
+      </>
+    ),
+  },
   { en: "Address", body: "愛知県名古屋市天白区" },
   { en: "Business", body: "楽器指導、セミナー・ワークショップ、アプリ制作、音楽教室の運営" },
   { en: "URL", body: "https://www.hellojazzacademy.com/" },
